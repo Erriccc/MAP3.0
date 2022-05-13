@@ -1,34 +1,23 @@
-import React from 'react'
-import PayVendor from 'components/payVendor';
-// Note that the actual componnent starts with a cmall letter but react components need to start in caps
+import React from 'react';
 
-export default function pay({walletAddress}) {
-    if (walletAddress) {
-      let VendorsWalletAddress = {walletAddress}
-      return (
-        <PayVendor walletAddress = {VendorsWalletAddress} /> 
-        // <PayVendor walletAddress />// try this if the one above does not work
-        // here we can display a different view if the reciver is a vendor
-      )
-    }
+
+
+
+
+export default function payVendor({walletAddress}) {
+       // here we are just keeping tractk of the wallet address passed down
   return (
-  <div className="w-full max-w-sm">
-                <form className=" shadow-md rounded px-8 pt-6 pb-8 mb-4" id="pay">
+      <div className="w-full max-w-xs">
+        <div>Pay {walletAddress} </div> 
+        <form className=" shadow-md rounded px-8 pt-6 pb-8 mb-4" id="pay">
                         <div className="mb-4 ">
                             <label className="block text-gray-700 text-sm font-bold mb-2" >
                                 Ammount
                             </label>
                             <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="amount" type="number" placeholder="100"/>
                         </div>
-                        <div className="mb-4 bg-white">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" >
-                                Wallet Address
-                            </label>
-                            <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="reciver" type="text" placeholder="0x**************"/>
-                            <h4 className="text-red-500 text-xs italic">Please Add a wallet Address</h4>
-                        </div>
-
                         <div className="  flex flex-col sm:flex-row items-center sm:justify-between py-2">
+                            
                             <a className="font-bold text-sm text-blue-500 hover:text-blue-800 p-4 mx-2" href="#">
                                 Quote:
                             </a>

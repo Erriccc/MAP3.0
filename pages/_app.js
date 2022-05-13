@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
 import Head from "next/head";
 import "tailwindcss/tailwind.css";
 import "pages/profile/profile.css"

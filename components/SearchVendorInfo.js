@@ -4,7 +4,7 @@ import {useState, useEffect, useLocation} from "react"
 import { useRouter } from "next/dist/client/router";
 import { Button, Icon, useNotification } from "web3uikit";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
-import Pay from './Pay';
+import pay from './pay';
 
 export default function SearchVendorInfo({walletAddress, city,name,imgUrl, distance, description}) {
     const [highLight, setHighLight] = useState();
@@ -42,7 +42,7 @@ export default function SearchVendorInfo({walletAddress, city,name,imgUrl, dista
                         />
                         </div>
           {/* Here will pass in the wallet addtress of each vendor to a pay componnent for UI */}
-          {/* <Pay walletAddress={walletAddress}/>  */}
+          {/* <pay walletAddress={walletAddress}/>  */}
 
 
       </div>
