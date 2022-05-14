@@ -153,8 +153,8 @@ export default function Rentals () {
           <h1 className="text-3xl font-semibold mx-1 px-1 mt-2 mb-6 text-[#64748b]">results for {map3Querry} </h1>
         </div>
 
-        {vendorsData.map(({ name,city, walletAddress,imgUrl,distance,description}) => (
-
+        {vendorsData.map(({ name,city, walletAddress,imgUrl,distance,description,vendorsToken}) => (
+          
         <SearchVendorInfo
 
         key={walletAddress}
@@ -164,6 +164,7 @@ export default function Rentals () {
          description={description}
          distance={distance}
          walletAddress={walletAddress}
+         vendorsToken={vendorsToken}
 
          />
               )

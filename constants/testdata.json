@@ -1,0 +1,46 @@
+[
+    {
+      
+        "name": "Jollof Shop on broadway",
+        "city": "New York",
+        "description": "fade trims lineup tapper dreads",
+        "imgUrl":
+          "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",
+        "lat": "40.716862",
+        "long": "-73.999005",
+        "walletAddress":"0xa9110224Df672c266569931F4e03f009651149E6",
+        "distance": "3",
+        "vendorsToken":"0xdAC17F958D2ee523a2206206994597C13D831ec7"
+
+      
+    },
+    {
+      
+        "name": "cofee Shop on division",
+        "city": "Chicago",
+        "description": "cofee latte expresso iced cofee",
+        "imgUrl":
+          "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",
+        "lat": "40.716862",
+        "long": "-60.999005",
+        "walletAddress":"0ya9110224Df672c266569931F4e03f009651149E6",
+        "distance": "4",
+        "vendorsToken":"0xdAC17F958D2ee523a2206206994597C13D831ec7"
+
+      
+    },
+    {
+      
+        "name": "Resturant on Georgia Avenue",
+        "city": "DC",
+        "description": "fries wings burgers burrito fast food",
+        "imgUrl":
+          "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",
+        "lat": "40.716862",
+        "long": "-70.999005",
+        "walletAddress":"0za9110224Df672c266569931F4e03f009651149E6",
+        "distance": "5",
+        "vendorsToken":"0xdAC17F958D2ee523a2206206994597C13D831ec7"
+      
+    }
+]

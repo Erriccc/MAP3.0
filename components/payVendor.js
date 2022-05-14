@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PayAnonymous from  "components/PayAnonymous.js"
 import tokenAdresses from '../constants/tokens.json'
 const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
@@ -14,11 +15,14 @@ const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther 
 
 const submitPayment = async (event) => {
     event.preventDefault();
-    const tokenOfChoice = event.target.token.value
+    const tokenOfChoice = event.target.token.value;
+    const reciversChoiceToken = event.target.reciversChoiceToken.value;
+
     const paymentData = {
         amount: event.target.amount.value,
         reciver: event.target.reciver.value,
-        sendersToken: tokenOfChoice,
+        reciversTokenOfChoice :reciversChoiceToken,
+        sendersToken: tokenOfChoice
       }
 
       const JSONdata = JSON.stringify(paymentData)
@@ -43,7 +47,11 @@ const API_PRICE_URL = 'https://api.0x.org/swap/v1/price';
 
 
 
-export default function PayVendor({walletAddress}) {
+export default function PayVendor({walletAddress,vendorsToken}) {
+
+
+    // This will be a little different from the regular pay, we have to access this wallets favourite token too
+    // find walletAddress.vendorsToken
 
 
     const [quote, setQuote] = React.useState(0);
@@ -52,7 +60,10 @@ export default function PayVendor({walletAddress}) {
 
     // default to USDT unless set to stable by vendor
     // here we can access the Vendors Preferedtoken token for recieving paymentss
-    const [reciversToken, setReciversToken] = React.useState("0xdAC17F958D2ee523a2206206994597C13D831ec7");
+    // we have to move this out of use state, and declare/access it at the top
+    // declaration should come from prop
+    // const [reciversToken, setReciversToken] = React.useState("0xdAC17F958D2ee523a2206206994597C13D831ec7");
+    const [reciversToken, setReciversToken] = React.useState(vendorsToken);
     const [amountToBeSent, setamountToBeSent] = React.useState(0);
 
 
@@ -73,7 +84,14 @@ export default function PayVendor({walletAddress}) {
     }
     fetchPrice()
   }, [sendersToken]);
+
        // here we are just keeping tractk of the wallet address passed down
+       if (!walletAddress && !vendorsToken) {
+        return (
+          <PayAnonymous/>
+        )
+      }
+
   return (
     <div className="w-full max-w-sm">
     <form className=" shadow-md rounded px-8 pt-6 pb-8 mb-4" id="pay" onSubmit={submitPayment}>
@@ -89,6 +107,11 @@ export default function PayVendor({walletAddress}) {
                 }}
                 />
             </div>
+
+            <div className="mb-4 bg-white invisible">
+                <input id="reciversChoiceToken" name='reciversChoiceToken' value={reciversToken} />
+            </div>
+
             <div className="  flex flex-col items-center justify-center py-2">
                 <a className="font-bold text-sm text-center text-blue-500 hover:text-blue-800 p-4 mx-2" href="#">
                     Rate: <h5 className='text-green-500'>{quote}</h5>
@@ -107,7 +130,13 @@ export default function PayVendor({walletAddress}) {
                                     className="appearance-none w-full  border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     id="token" name='token' onChange={(e)=>{
                                         const selectedSendersToken = e.target.value;
+
+                                        if (selectedSendersToken == reciversToken) {
+                                            setQuote("Tokens match, this will be a direct transfer!")
+                                            // do something else on transfer
+                                        } else {
                                         setSendersToken(selectedSendersToken);
+                                        }
                                     }}>
                                         {tokenAdresses.map(({ address,symbol}) => (
                                         <option key={address} value={address}>{symbol}</option>

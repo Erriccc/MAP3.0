@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PayVendor from 'components/payVendor';
+import PayVendor from 'components/PayVendor';
 import tokenAdresses from '../constants/tokens.json'
 const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
@@ -10,11 +10,13 @@ const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther 
 
 const submitPayment = async (event) => {
     event.preventDefault();
-    const tokenOfChoice = event.target.token.value
+    const sendersTokenOfChoice = event.target.token.value
+    const reciversChoiceToken = event.target.reciversChoiceToken.value 
     const paymentData = {
         amount: event.target.amount.value,
         reciver: event.target.reciver.value,
-        sendersToken: tokenOfChoice,
+        reciversTokenOfChoice :reciversChoiceToken,
+        sendersToken: sendersTokenOfChoice
       }
 
       const JSONdata = JSON.stringify(paymentData)
@@ -38,7 +40,7 @@ const submitPayment = async (event) => {
 const API_PRICE_URL = 'https://api.0x.org/swap/v1/price';
 
 
-export default function Pay({walletAddress}) {
+export default function PayAnonymous({walletAddress,vendorsToken}) {
 
 
     const [quote, setQuote] = React.useState(0);
@@ -64,13 +66,17 @@ export default function Pay({walletAddress}) {
           setQuote(quote.price)
         }
         fetchPrice()
-      }, [sendersToken]);
+      }, [sendersToken,reciversToken]);
 
 
-    if (walletAddress) {
+    if (walletAddress && vendorsToken) {
       let VendorsWalletAddress = {walletAddress}
+      let VendorsCurrencyToken = {vendorsToken}
       return (
-        <PayVendor walletAddress = {VendorsWalletAddress} />
+        <PayVendor
+         walletAddress = {VendorsWalletAddress}
+         vendorsToken ={VendorsCurrencyToken}
+         />
       )
     }
   return (
@@ -80,7 +86,7 @@ export default function Pay({walletAddress}) {
                             <label className="block text-gray-700 text-sm font-bold mb-2" >
                                 Ammount
                             </label>
-                            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                            <input className="shadow appearance-none border border-blue-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                             id="amount" name='amount' type="number" placeholder="100"
                             onChange={(e)=>{
                                 let userInputAmount = e.target.value;
@@ -94,6 +100,24 @@ export default function Pay({walletAddress}) {
                             </label>
                             <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="reciver" name='reciver' type="text" placeholder="0x**************"/>
                             <h4 className="text-red-500 text-xs italic">Please Add a wallet Address</h4>
+                        </div>
+                        <div className="mb-4 bg-white">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" >
+                                Recivers token
+                            </label>
+                            <input className="shadow appearance-none border border-blue-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
+                            id="reciversChoiceToken" name='reciversChoiceToken' value={reciversToken} type="text" placeholder="0x**************"
+                            onChange={(e)=>{
+                                const selectedReciversToken = e.target.value;
+                                if (selectedReciversToken == sendersToken) {
+                                    setQuote("Tokens match, this will be a direct transfer!")
+                                    // do something else on pay
+                                } else {
+                                setReciversToken(selectedReciversToken);
+                                }
+                            }}
+                            />
+                            <h4 className="text-blue-500 text-xs italic">USDT is default</h4>
                         </div>
 
                         <div className="  flex flex-col items-center justify-center py-2">
@@ -114,7 +138,12 @@ export default function Pay({walletAddress}) {
                                                 className="appearance-none w-full  border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                                 id="token" name='token' onChange={(e)=>{
                                                     const selectedSendersToken = e.target.value;
+                                                    if (selectedSendersToken == reciversToken) {
+                                                        setQuote("Tokens match, this will be a direct transfer!")
+                                                        // do something else on transfer
+                                                    } else {
                                                     setSendersToken(selectedSendersToken);
+                                                    }
                                                 }}>
                                                     {tokenAdresses.map(({ address,symbol}) => (
                                                     <option key={address} value={address}>{symbol}</option>

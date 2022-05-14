@@ -1,8 +1,10 @@
+// RegisterVendor
+
 import React from "react";
 import Link from "next/link";
 import { useMoralis, useWeb3ExecuteFunction  } from 'react-moralis';
 import Apphero from 'components/Apphero';
-import PayAnonymous from 'components/PayAnonymous';
+import RegisterVendor from 'components/RegisterVendor';
 import { useNotification, CreditCard } from "web3uikit";
 
 
@@ -17,7 +19,6 @@ export default function PAY () {
   // user is autenticated
   const {isAuthenticated} = useMoralis()
   if (!isAuthenticated) {
-    alert('please connect your wallet')
     return (
       <Apphero/>
     )
@@ -57,13 +58,13 @@ export default function PAY () {
          {account &&
          <>
             <div className="text-[#64748b] p-2 m-2 text-3xl font-semibold">
-             Who would you like to pay
+             Become a Vendor Today
             </div>
             <div>
               {/* 
               NOTE PASS VENDORS WALLET ADDRESS HERE AUTOMATICALY TO PAY VENDORS
               */}
-            <PayAnonymous/>
+            <RegisterVendor/>
             </div>
          </>
             }
