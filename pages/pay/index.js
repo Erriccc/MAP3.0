@@ -56,11 +56,12 @@ export default function PAY () {
          {account &&
          <>
             <div className="text-[#64748b] p-2 m-2 text-3xl font-semibold">
-            Welcome back,<br></br> 
-            {/* Hi, account number: {account} */}
-             Who would you like to pay today
+             Who would you like to pay
             </div>
             <div>
+              {/* 
+              NOTE PASS VENDORS WALLET ADDRESS HERE AUTOMATICALY TO PAY VENDORS
+              */}
             <Pay/>
             </div>
          </>
