@@ -17,7 +17,6 @@ export default function PAY () {
   // user is autenticated
   const {isAuthenticated} = useMoralis()
   if (!isAuthenticated) {
-    alert('please connect your wallet')
     return (
       <Apphero/>
     )

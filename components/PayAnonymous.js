@@ -38,6 +38,7 @@ const submitPayment = async (event) => {
       console.log(result)
   };
 const API_PRICE_URL = 'https://api.0x.org/swap/v1/price';
+const Ox_POLYGON_API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
 
 
 export default function PayAnonymous({walletAddress,vendorsToken}) {
@@ -59,6 +60,7 @@ export default function PayAnonymous({walletAddress,vendorsToken}) {
                 buyAmount: amountToBeSent,
             });
             const quoteUrl = `${API_PRICE_URL}?${qs}`;
+            // const quoteUrl = `${Ox_POLYGON_API_PRICE_URL}?${qs}`;
             const response = await fetch(quoteUrl);
             const quote = await response.json();
             console.log(quote);
