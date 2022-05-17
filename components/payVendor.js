@@ -3,48 +3,16 @@ import PayAnonymous from  "components/PayAnonymous.js"
 import tokenAdresses from '../constants/tokens.json'
 const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
-const process = require('process');
-const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther } = require('../Utilities/utils');
-
-// Note that the actual componnent starts with a small letter but react components need to start in caps
-
-
-
-
+const {oxPriceFetcher} = require('../Utilities/oxPriceFetcher');
+const {oxPaymentInfoRelayer} = require('../Utilities/oxPaymentInfoRelayer')
 
 
 const submitPayment = async (event) => {
-    event.preventDefault();
-    const tokenOfChoice = event.target.token.value;
-    const reciversChoiceToken = event.target.reciversChoiceToken.value;
-
-    const paymentData = {
-        amount: event.target.amount.value,
-        reciver: event.target.reciver.value,
-        reciversTokenOfChoice :reciversChoiceToken,
-        sendersToken: tokenOfChoice
-      }
-
-      const JSONdata = JSON.stringify(paymentData)
-      // API endpoint where we send form data.
-      const endpoint = 'api/paymentHandler'
-      // Form the request for sending data to the server.
-      const options = {
-        // The method is POST because we are sending data.
-        method: 'POST',
-        // Tell the server we're sending JSON.
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // Body of the request is the JSON data we created above.
-        body: JSONdata,
-      }
-      const response = await fetch(endpoint, options)
-      const result = await response.json()
-      console.log(result)
+  // Implimentation of this function was moved to oxPaymentRelayer
+    const oxPaymentRelayerResult = await oxPaymentInfoRelayer(event)
+    console.log("this is how we get info back from the server and then send to metamask for signature",
+    oxPaymentRelayerResult )
   };
-const API_PRICE_URL = 'https://api.0x.org/swap/v1/price';
-
 
 
 export default function PayVendor({walletAddress,vendorsToken}) {
@@ -68,22 +36,13 @@ export default function PayVendor({walletAddress,vendorsToken}) {
 
 
     useEffect(()=>{
-    const fetchPrice = async () => {
-        const qs = createQueryString({
-            // Directly Swap and Send Any Token for USDT online
-            sellToken: sendersToken,
-            buyToken: reciversToken,
-            buyAmount: amountToBeSent,
-            });
-            const quoteUrl = `${API_PRICE_URL}?${qs}`;
-            const response = await fetch(quoteUrl);
-            const quote = await response.json();
-            console.log(quote);
-
-        setQuote(quote.price)
-    }
-    fetchPrice()
-  }, [sendersToken]);
+        const fetchPrice = async () => {
+            // this function comes from the utililty folder
+        let quotePrice = await oxPriceFetcher(sendersToken,reciversToken,amountToBeSent)
+          setQuote(quotePrice)
+        }
+        fetchPrice()
+      }, [sendersToken]);
 
        // here we are just keeping tractk of the wallet address passed down
        if (!walletAddress && !vendorsToken) {

@@ -17,6 +17,7 @@ const submitRegistration = async (event) => {
         vendorsImageUrl: event.target.imageUrl.value,
         vendorsPhone: event.target.phone.value,
         vendorsWalletAddress: event.target.vendorsWallet.value,
+        vendorsStreetAddress:event.target.vendorsStreetAddress.value,
         vendorsCity: event.target.Gridcity.value,
         vendorsState: event.target.Gridstate.value,
         vendorsZip: event.target.Gridzip.value,
@@ -88,7 +89,13 @@ export default function Pay() {
                             <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="vendorsWallet" name='vendorsWallet' type="text" placeholder="0x**************"/>
                             <h4 className="text-red-500 text-xs italic">Please Add a wallet Address</h4>
                         </div>
-                            <div className="flex flex-wrap -mx-3 mb-5">
+                        <div className="flex flex-wrap -mx-3 mb-5">
+                            <div className="w-full px-3 mb-6 md:mb-0">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                Street Address
+                            </label>
+                            <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="vendorsStreetAddress" name="vendorsStreetAddress" type="text" placeholder="123 street Avenue"/>
+                            </div>
                             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                                 City

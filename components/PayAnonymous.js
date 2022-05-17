@@ -3,69 +3,31 @@ import PayVendor from 'components/PayVendor';
 import tokenAdresses from '../constants/tokens.json'
 const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
-const process = require('process');
-const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther } = require('../Utilities/utils');
+const {oxPriceFetcher} = require('../Utilities/oxPriceFetcher');
+const {oxPaymentInfoRelayer} = require('../Utilities/oxPaymentInfoRelayer')
 
-// Note that the actual componnent starts with a small letter but react components need to start in caps
 
 const submitPayment = async (event) => {
-    event.preventDefault();
-    const sendersTokenOfChoice = event.target.token.value
-    const reciversChoiceToken = event.target.reciversChoiceToken.value 
-    const paymentData = {
-        amount: event.target.amount.value,
-        reciver: event.target.reciver.value,
-        reciversTokenOfChoice :reciversChoiceToken,
-        sendersToken: sendersTokenOfChoice
-      }
-
-      const JSONdata = JSON.stringify(paymentData)
-      // API endpoint where we send form data.
-      const endpoint = 'api/paymentHandler'
-      // Form the request for sending data to the server.
-      const options = {
-        // The method is POST because we are sending data.
-        method: 'POST',
-        // Tell the server we're sending JSON.
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // Body of the request is the JSON data we created above.
-        body: JSONdata,
-      }
-      const response = await fetch(endpoint, options)
-      const result = await response.json()
-      console.log(result)
+  // Implimentation of this function was moved to oxPaymentRelayer
+    const oxPaymentRelayerResult = await oxPaymentInfoRelayer(event)
+    console.log("this is how we get info back from the server and then send to metamask for signature",
+    oxPaymentRelayerResult )
   };
-const API_PRICE_URL = 'https://api.0x.org/swap/v1/price';
-const Ox_POLYGON_API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
-
 
 export default function PayAnonymous({walletAddress,vendorsToken}) {
 
 
     const [quote, setQuote] = React.useState(0);
-    const [sendersToken, setSendersToken] = React.useState(0);
+    const [sendersToken, setSendersToken] = React.useState("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2");
     // default to USDT unless set to stable by vendor
     const [reciversToken, setReciversToken] = React.useState("0xdAC17F958D2ee523a2206206994597C13D831ec7"); 
     const [amountToBeSent, setamountToBeSent] = React.useState(0);
 
     useEffect(()=>{
-
         const fetchPrice = async () => {
-            const qs = createQueryString({
-                // Directly Swap and Send Any Token for USDT online
-                sellToken: sendersToken,
-                buyToken: reciversToken,
-                buyAmount: amountToBeSent,
-            });
-            const quoteUrl = `${API_PRICE_URL}?${qs}`;
-            // const quoteUrl = `${Ox_POLYGON_API_PRICE_URL}?${qs}`;
-            const response = await fetch(quoteUrl);
-            const quote = await response.json();
-            console.log(quote);
-
-          setQuote(quote.price)
+            // this function comes from the utililty folder
+        let quotePrice = await oxPriceFetcher(sendersToken,reciversToken,amountToBeSent)
+          setQuote(quotePrice)
         }
         fetchPrice()
       }, [sendersToken,reciversToken]);
@@ -129,7 +91,6 @@ export default function PayAnonymous({walletAddress,vendorsToken}) {
                             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-5 py-2 m-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                                 PAY
                             </button>
-                            {/* <div className='block bg-red-500'> */}
                                 <div className="  p-2 m-3 flex  flex-col justify-center ">
                                     <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                                         Token
@@ -157,7 +118,6 @@ export default function PayAnonymous({walletAddress,vendorsToken}) {
                                         </div>
                                     </div>
                                 </div>
-                            {/* </div> */}
                         </div>
                 </form>
 </div>
