@@ -3,44 +3,58 @@ import tokenAdresses from '../constants/tokens.json'
 const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
 const process = require('process');
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+const {oxPriceFetcher,oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
+const {oxQuoteRelayer} = require('../Utilities/oxQuoteRelayer')
+const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
+import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
+    WholeTOWeiDecimals,IERC20Abi } from'../Utilities/utils';
+import{map3RegisterVendor} from '../Utilities/map3RegisterVendor';
+import { ethers }from "ethers";
 const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther } = require('../Utilities/utils');
 
 // Note that the actual componnent starts with a small letter but react components need to start in caps
 
 const submitRegistration = async (event) => {
     event.preventDefault();
+    console.log("adding vendor......")
     const tokenOfChoice = event.target.token.value
-    const registrationData = {
-        vendorsToken: tokenOfChoice,
-        vendorsName: event.target.vendorName.value,
-        vendorsWebsiteUrl: event.target.websiteUrl.value,
-        vendorsImageUrl: event.target.imageUrl.value,
-        vendorsPhone: event.target.phone.value,
-        vendorsWalletAddress: event.target.vendorsWallet.value,
-        vendorsStreetAddress:event.target.vendorsStreetAddress.value,
-        vendorsCity: event.target.Gridcity.value,
-        vendorsState: event.target.Gridstate.value,
-        vendorsZip: event.target.Gridzip.value,
-        vendorsBio: event.target.aboutVendor.value
-      }
 
-      const JSONdata = JSON.stringify(registrationData)
-      // API endpoint where we send form data.
-      const endpoint = 'api/registerVendor'
-      // Form the request for sending data to the server.
-      const options = {
-        // The method is POST because we are sending data.
-        method: 'POST',
-        // Tell the server we're sending JSON.
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // Body of the request is the JSON data we created above.
-        body: JSONdata,
-      }
-      const response = await fetch(endpoint, options)
-      const result = await response.json()
-      console.log(result)
+      const newVendorRegistrationData = [
+        event.target.vendorsWallet.value,
+        event.target.vendorName.value,
+        event.target.vendorsStreetAddress.value,
+        event.target.Gridcity.value,
+        event.target.Gridstate.value,
+        event.target.Gridzip.value,
+        event.target.phone.value,
+        event.target.aboutVendor.value,
+        "41.9", // hardcoded for now
+        "-87.6", // hardcoded for now
+        event.target.imageUrl.value,
+        event.target.websiteUrl.value,
+        tokenOfChoice
+      ]
+   
+      map3RegisterVendor(newVendorRegistrationData);
+
+    //   const JSONdata = JSON.stringify(registrationData)
+    //   // API endpoint where we send form data.
+    //   const endpoint = 'api/registerVendor'
+    //   // Form the request for sending data to the server.
+    //   const options = {
+    //     // The method is POST because we are sending data.
+    //     method: 'POST',
+    //     // Tell the server we're sending JSON.
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     // Body of the request is the JSON data we created above.
+    //     body: JSONdata,
+    //   }
+    //   const response = await fetch(endpoint, options)
+    //   const result = await response.json()
+    //   console.log(result)
   };
 
 export default function Pay() {

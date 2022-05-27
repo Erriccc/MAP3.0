@@ -86,60 +86,6 @@ export default function Rentals () {
   //   fetchvendorsList();
   // }, [map3Querry]); // Note we are running the use effect every time we recieve a new search filter
 
-
-  // This wwill be where we set our contract functions params and transactions like Pay
-  // const bookRental = async function (start, end, id, dayPrice) { // This is where we need our own contract functions, params and abi
-  //         for (
-  //           var arr = [], dt = new Date(start);
-  //           dt <= end;
-  //           dt.setDate(dt.getDate() + 1)
-  //         ) {
-  //           arr.push(new Date(dt).toISOString().slice(0, 10)); // yyyy-mm-dd
-  //         }
-
-  //         let options = {
-  //           contractAddress: "0xa9110224Df672c266569931F4e03f009651149E6",
-  //           functionName: "addDatesBooked",
-  //           abi: [
-  //             {
-  //               "inputs": [
-  //                 {
-  //                   "internalType": "uint256",
-  //                   "name": "id",
-  //                   "type": "uint256"
-  //                 },
-  //                 {
-  //                   "internalType": "string[]",
-  //                   "name": "newBookings",
-  //                   "type": "string[]"
-  //                 }
-  //               ],
-  //               "name": "addDatesBooked",
-  //               "outputs": [],
-  //               "stateMutability": "payable",
-  //               "type": "function"
-  //             }
-  //           ],
-  //           params: {
-  //             id: id,
-  //             newBookings: arr,
-  //           },
-  //           msgValue: Moralis.Units.ETH(dayPrice * arr.length),
-  //         }
-  //     console.log(arr);
-
-  //     await contractProcessor.fetch({
-  //       params: options,
-  //       onSuccess: () => {
-  //         handleSuccess();
-  //       },
-  //       onError: (error) => {
-  //         handleError(error.data.message)
-  //       }
-  //     });
-
-  // }
-
   return (
     <div className=" mx-auto relative al m-2">
 
@@ -152,9 +98,9 @@ export default function Rentals () {
           <span className="text-lg font-semibold my-auto">3.0</span>
           <h1 className="text-3xl font-semibold mx-1 px-1 mt-2 mb-6 text-[#64748b]">results for {map3Querry} </h1>
         </div>
-
-        {vendorsData.map(({ name,city, walletAddress,imgUrl,distance,description,vendorsToken}) => (
-          
+        <div className="xl:overflow-y-auto xl:max-h-screen xl:h-full">
+        {vendorsData.map((
+          { name,city, walletAddress,imgUrl,distance,description,vendorsToken}) => (
         <SearchVendorInfo
 
         key={walletAddress}
@@ -165,10 +111,12 @@ export default function Rentals () {
          distance={distance}
          walletAddress={walletAddress}
          vendorsToken={vendorsToken}
+        //  vendorsTokenSymbol={vendorsTokenSymbol}
 
          />
               )
             )}
+            </div>
           <div/>
       </div>
       <section className=" hidden xl:px-5 xl:inline-flex xl:min-w-[600px]">

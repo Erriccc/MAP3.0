@@ -8,12 +8,8 @@ export default function form(req, res) {
     // in the command line where next.js app is running.
     console.log('body: ', body)
 
-
     ////////////////////////////////////////////////////
-
-
     //REMEMBER TO CHANGE CITY STATE AND ZIP T LONGITUTE AND LATITUDE
-
     ////////////////////////////////////////////////
     const responsePaymentData = {
         vendorsToken:body.vendorsToken,
@@ -32,8 +28,8 @@ export default function form(req, res) {
       // TUPLE MODEL FOR SIGNING UP VENDORS
     // Make sure there is no whitespace in address arguments
     const sampleVendor =[
-    "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4",
-    "Testing tupple formart",
+   "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4",
+   "Testing tupple formart",
    "Living on cloud 9",
    "chicago",
    "IL",

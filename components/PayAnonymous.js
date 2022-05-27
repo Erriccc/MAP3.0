@@ -2,31 +2,83 @@ import React, { useState, useEffect } from 'react';
 import PayVendor from 'components/PayVendor';
 import tokenAdresses from '../constants/tokens.json'
 const BigNumber = require('bignumber.js');
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 const fetch = require('node-fetch');
-const {oxPriceFetcher} = require('../Utilities/oxPriceFetcher');
-const {oxPaymentInfoRelayer} = require('../Utilities/oxPaymentInfoRelayer')
+const {oxPriceFetcher,oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
+const {oxQuoteRelayer} = require('../Utilities/oxQuoteRelayer')
+const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
+import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
+    WholeTOWeiDecimals,IERC20Abi,slippage
+ } from'../Utilities/utils';
+import{OxPay} from '../Utilities/OxPay';
+import { ethers }from "ethers";
 
 
-const submitPayment = async (event) => {
-  // Implimentation of this function was moved to oxPaymentRelayer
-    const oxPaymentRelayerResult = await oxPaymentInfoRelayer(event)
-    console.log("this is how we get info back from the server and then send to metamask for signature",
-    oxPaymentRelayerResult )
-  };
-
-export default function PayAnonymous({walletAddress,vendorsToken}) {
+export default function PayAnonymous({walletAddress,vendorsToken,User}) {
 
 
-    const [quote, setQuote] = React.useState(0);
-    const [sendersToken, setSendersToken] = React.useState("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2");
+
+// add input for expected slippage amount to complete swap!
+    const submitPayment = async (event) => {
+
+    event.preventDefault();
+    if (event.target.token.value == event.target.reciversChoiceToken.value) {
+        console.log("initiating simple SameTokenTransfer")
+       const tokenammount = await  WholeTOWeiDecimals(event.target.reciversChoiceToken.value,event.target.amount.value)
+       console.log("token amount vs converted token amount", event.target.amount.value,tokenammount)
+       const tx2 = await  approveSendersToken(event.target.token.value,Map3address,tokenammount)
+       await tx2.wait()
+       const tx3 = await  map3Pay(tokenammount,  event.target.reciver.value,  event.target.reciversChoiceToken.value,User)
+       const tx3Reciept =await tx3.wait()
+       const map3PayEvents = tx3Reciept.events[tx3Reciept.events.length-1]
+       console.log("sameTokenPay Reciept events: ", map3PayEvents)
+      } else {
+        const quotedAmmountToSell = await oxQuoteFetcher(
+            event.target.token.value,
+            event.target.reciversChoiceToken.value,
+            event.target.amount.value
+            )
+        console.log("this is amont to sell", quotedAmmountToSell)
+    const aprovalAmount = (quotedAmmountToSell *slippage).toFixed(0).toString() // change multiplier to come from slippage
+    console.log("this is the approval amount: ", numberExponentToLarge(aprovalAmount))
+    
+
+       const tx2 = await  approveSendersToken(event.target.token.value,Map3address,numberExponentToLarge(aprovalAmount))
+       await tx2.wait()
+          const oxQuoteResult = await oxQuoteRelayer(event,User)
+
+          const OxPayResult = await OxPay(
+          oxQuoteResult.sellTokenAddress,
+          oxQuoteResult.buyTokenAddress,
+          oxQuoteResult.allowanceTargetquote,
+          oxQuoteResult.OxDelegateAddress,
+          oxQuoteResult.data,
+          oxQuoteResult.allowanceBalance,
+          oxQuoteResult.buyAmount,
+          oxQuoteResult.reciversAddress,
+          User
+
+          )
+
+          const oxReciept = OxPayResult.events[OxPayResult.events.length-1]
+       console.log("oxPayResult Reciept events: ", oxReciept)
+          console.log("0x pay results: ",OxPayResult )
+      }
+        };
+    const [quote, setQuote] = React.useState("select tokens to get Quote");
+    const [tokenName, setTokenName] = React.useState();
+    const [sendersToken, setSendersToken] = React.useState();
     // default to USDT unless set to stable by vendor
-    const [reciversToken, setReciversToken] = React.useState("0xdAC17F958D2ee523a2206206994597C13D831ec7"); 
-    const [amountToBeSent, setamountToBeSent] = React.useState(0);
+    const [reciversToken, setReciversToken] = React.useState(""); 
+    const [amountToBeSent, setamountToBeSent] = React.useState(1);
 
     useEffect(()=>{
         const fetchPrice = async () => {
             // this function comes from the utililty folder
-        let quotePrice = await oxPriceFetcher(sendersToken,reciversToken,amountToBeSent)
+        let quotePrice = await oxPriceFetcher(
+            sendersToken,
+            reciversToken,
+            amountToBeSent)
           setQuote(quotePrice)
         }
         fetchPrice()
@@ -40,6 +92,7 @@ export default function PayAnonymous({walletAddress,vendorsToken}) {
         <PayVendor
          walletAddress = {VendorsWalletAddress}
          vendorsToken ={VendorsCurrencyToken}
+         User={account}
          />
       )
     }
@@ -51,7 +104,7 @@ export default function PayAnonymous({walletAddress,vendorsToken}) {
                                 Ammount
                             </label>
                             <input className="shadow appearance-none border border-blue-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                            id="amount" name='amount' type="number" placeholder="100"
+                            id="amount" name='amount' value={amountToBeSent} placeholder="100"
                             onChange={(e)=>{
                                 let userInputAmount = e.target.value;
                                 setamountToBeSent(userInputAmount);
@@ -62,8 +115,8 @@ export default function PayAnonymous({walletAddress,vendorsToken}) {
                             <label className="block text-gray-700 text-sm font-bold mb-2" >
                                 Wallet Address
                             </label>
-                            <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="reciver" name='reciver' type="text" placeholder="0x**************"/>
-                            <h4 className="text-red-500 text-xs italic">Please Add a wallet Address</h4>
+                            <input className="shadow appearance-none border border-blue-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="reciver" name='reciver' type="text" placeholder="0x**************"/>
+                            {/* <h4 className="text-red-500 text-xs italic">Please Add a wallet Address</h4> */}
                         </div>
                         <div className="mb-4 bg-white">
                             <label className="block text-gray-700 text-sm font-bold mb-2" >
@@ -73,15 +126,21 @@ export default function PayAnonymous({walletAddress,vendorsToken}) {
                             id="reciversChoiceToken" name='reciversChoiceToken' value={reciversToken} type="text" placeholder="0x**************"
                             onChange={(e)=>{
                                 const selectedReciversToken = e.target.value;
+                                // if (selectedReciversToken == null) {
+                                //     setQuote("Please input a valid token")
+                                // }else{
                                 if (selectedReciversToken == sendersToken) {
                                     setQuote("Tokens match, this will be a direct transfer!")
+                                    // setReciversToken(selectedReciversToken);
+
                                     // do something else on pay
                                 } else {
                                 setReciversToken(selectedReciversToken);
                                 }
+                            // }
                             }}
                             />
-                            <h4 className="text-blue-500 text-xs italic">USDT is default</h4>
+                            <h4 className="text-blue-500 text-xs italic">{tokenName}</h4>
                         </div>
 
                         <div className="  flex flex-col items-center justify-center py-2">
@@ -101,15 +160,19 @@ export default function PayAnonymous({walletAddress,vendorsToken}) {
                                                 className="appearance-none w-full  border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                                 id="token" name='token' onChange={(e)=>{
                                                     const selectedSendersToken = e.target.value;
+                                                    const selectedSendersTokenSymbol = e.target.symbol;
                                                     if (selectedSendersToken == reciversToken) {
+                                                        setTokenName(selectedSendersToken)
                                                         setQuote("Tokens match, this will be a direct transfer!")
+
                                                         // do something else on transfer
                                                     } else {
                                                     setSendersToken(selectedSendersToken);
+                                                    setTokenName(selectedSendersToken);
                                                     }
                                                 }}>
                                                     {tokenAdresses.map(({ address,symbol}) => (
-                                                    <option key={address} value={address}>{symbol}</option>
+                                                    <option key={symbol} value={address}>{symbol}</option>
                                                 ))}
                                             </select>
                                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">

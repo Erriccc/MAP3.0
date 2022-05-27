@@ -53,10 +53,13 @@ export default function AppHome () {
   return (
          account &&
          <div className="text-[#64748b] p-2 m-2 text-3xl font-semibold">
-           yoo, Account: {account} Is Logged In
+           <h4>
+           Hi, Account: {account} Is Logged In<br></br> This page is currently under development
+           </h4>
+           
 
            {/*  Place Holder for real user card Profile */}
-                  <CreditCard
+                  {/* <CreditCard
                   brand="mastercard"
                   expiresAt={{
                     month: '1',
@@ -65,9 +68,9 @@ export default function AppHome () {
                   fingerprint="ar-master"
                   id="marty-mc-fly-cc-id"
                   lastDigits="1177"
-                  name="Marty McFly"
+                  name="john Doe"
                   onRemove={function noRefCheck(){}}
-        />
+        /> */}
          </div>
   );
 };

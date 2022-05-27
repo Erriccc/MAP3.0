@@ -5,12 +5,12 @@
         "city": "New York",
         "description": "fade trims lineup tapper dreads",
         "imgUrl":
-          "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",
+          "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/42788e49474248dba75fdfd47114024a/BFV43575_PartyRiceAroundAfrica-FB-V2.jpg",
         "lat": "40.716862",
         "long": "-73.999005",
         "walletAddress":"0xa9110224Df672c266569931F4e03f009651149E6",
         "distance": "3",
-        "vendorsToken":"0xdAC17F958D2ee523a2206206994597C13D831ec7"
+        "vendorsToken":"0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
 
       
     },
@@ -20,27 +20,65 @@
         "city": "Chicago",
         "description": "cofee latte expresso iced cofee",
         "imgUrl":
-          "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",
+          "https://cdn.pixabay.com/photo/2017/07/31/11/22/man-2557408_1280.jpg",
         "lat": "40.716862",
         "long": "-60.999005",
-        "walletAddress":"0ya9110224Df672c266569931F4e03f009651149E6",
+        "walletAddress":"0xBb2cB98982Ed6547aA7E39707807253a999796b7",
         "distance": "4",
-        "vendorsToken":"0xdAC17F958D2ee523a2206206994597C13D831ec7"
+        "vendorsToken":"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
 
-      
     },
     {
-      
         "name": "Resturant on Georgia Avenue",
         "city": "DC",
         "description": "fries wings burgers burrito fast food",
         "imgUrl":
-          "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",
+          "https://cdn.pixabay.com/photo/2015/09/21/14/24/supermarket-949913__340.jpg",
         "lat": "40.716862",
         "long": "-70.999005",
-        "walletAddress":"0za9110224Df672c266569931F4e03f009651149E6",
+        "walletAddress":"0xaC47e91215fb80462139756f43438402998E4A3a",
         "distance": "5",
-        "vendorsToken":"0xdAC17F958D2ee523a2206206994597C13D831ec7"
+        "vendorsToken":"0xE41d2489571d322189246DaFA5ebDe1F4699F498"
+    },
+    {
+      "name": "Bakery in NYC",
+      "city": "NYC",
+      "description": "fries wings burgers burrito fast food",
+      "imgUrl":
+        "https://cdn.pixabay.com/photo/2016/11/29/05/07/breads-1867459__480.jpg",
+      "lat": "40.716862",
+      "long": "-70.999005",
+      "walletAddress":"0x12Bcb546bC60fF39F1Adfc7cE4605d5Bd6a6A876",
+      "distance": "5",
+      "vendorsToken":"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    
+  },
+  {
       
-    }
+    "name": "Resturant on Georgia Avenue",
+    "city": "DC",
+    "description": "fries wings burgers burrito fast food",
+    "imgUrl":
+      "https://cdn.pixabay.com/photo/2015/09/21/14/24/supermarket-949913__340.jpg",
+    "lat": "40.716862",
+    "long": "-70.999005",
+    "walletAddress":"0xeF31027350Be2c7439C1b0BE022d49421488b72C",
+    "distance": "5",
+    "vendorsToken":"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+  
+},
+{
+      
+  "name": "Fresh Fruit Market at fullerton",
+  "city": "Chicago",
+  "description": "fries wings burgers burrito fast food",
+  "imgUrl":
+    "https://cdn.pixabay.com/photo/2019/03/12/09/18/tomatoes-4050245__480.jpg",
+  "lat": "40.716862",
+  "long": "-70.999005",
+  "walletAddress":"0xD7265213980F3DB50ACa57634De6e4125985f4A5",
+  "distance": "5",
+  "vendorsToken":"0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0"
+
+}
 ]

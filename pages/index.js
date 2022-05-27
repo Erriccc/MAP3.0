@@ -18,25 +18,28 @@ export default function Home() {
     )
   }
 
-  return (
+  router.push({
+    pathname: "/pay"
+  });
+  // return (
     
     // HOW TTO CONDITIONALY ADD CLASS OR STYLE
     // className={`${active && 'text-blue-100'}`}
 
 
-    <div className="">
-          <main className="">
-            <div>
-            Display Content about app and more information and instructionfa-spin
-            This Page should have its own nav, it is a one page app. 
-            <div>
-              Mini Navigation 
-            </div>
-            <div>Pay Anyone componnent</div>
-            <div>About Us</div>
-            <div>Maybe some blogs to describe app features</div>
-            </div>
-          </main>
-    </div>
-    )
+    // <div className="">
+    //       <main className="">
+    //         <div>
+    //         Display Content about app and more information and instructionfa-spin
+    //         This Page should have its own nav, it is a one page app. 
+    //         <div>
+    //           Mini Navigation 
+    //         </div>
+    //         <div>Pay Anyone componnent</div>
+    //         <div>About Us</div>
+    //         <div>Maybe some blogs to describe app features</div>
+    //         </div>
+    //       </main>
+    // </div>
+    // )
 }

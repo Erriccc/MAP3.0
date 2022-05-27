@@ -59,10 +59,13 @@ export default function PAY () {
              Who would you like to pay
             </div>
             <div>
+              {console.log("is this your user object or address?",account)}
               {/* 
               NOTE PASS VENDORS WALLET ADDRESS HERE AUTOMATICALY TO PAY VENDORS
               */}
-            <PayAnonymous/>
+            <PayAnonymous
+            User={account}
+             />
             </div>
          </>
             }
