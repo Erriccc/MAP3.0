@@ -1,11 +1,14 @@
 {
   "name": "uv3-v6-nxt",
+  "homepage": "http://Erriccc.github.io/MAP3.0",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "lint": "next lint"
   },
   "dependencies": {
@@ -22,6 +25,7 @@
     "dotenv": "^16.0.1",
     "ethereum-waffle": "^3.4.4",
     "ethers": "^5.6.7",
+    "gh-pages": "^4.0.0",
     "google-maps-react": "^2.0.6",
     "https-browserify": "^1.0.0",
     "next": "12.1.5",
