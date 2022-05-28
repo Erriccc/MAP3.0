@@ -11,7 +11,30 @@ import UV3 from '/images/UV3.svg';
 import { useRouter } from "next/dist/client/router";
 import { ConnectButton, Icon, Select, DatePicker, Input, Button } from "web3uikit";
 
+const d = new Date();
+let time = d.getTime();
+console.log(time)
+function getRandomNonce (_time){
+  let randomString1 = randomString(10);
+  let randomString2 = randomString(20);
+  let randomString13 = randomString(3);
+  let finalRandomString = Math.random()*10**3
+let stringifiedTime = _time.toString()
+  let salt = randomString1 + randomString2 + randomString13 +finalRandomString +stringifiedTime
+  return salt
 
+}
+
+// randomString(Math.random(time)*10**3)
+const randomString = function(length) {
+
+  var text = "fghjkl;po8765rfvbnmlp0987632qwsdfghu76tghjui876tgbnkjbvfrtyhjkl;';/'.,mjhgfvbnjhtred";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?><:}{|=-)(*#@!$%";
+  for(var i = 0; i < length; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
 
 export default function Appnav() { // Note we are imporing a prop from wherever this componnent is called
   const [searchInput, setSearchInput] = useState("");
@@ -60,7 +83,7 @@ export default function Appnav() { // Note we are imporing a prop from wherever 
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && search()}
-          placeholder={"Start your Search"}
+          placeholder={"Find Crypto friendly vendors"}
           className="
           flex-grow font-bold text-gray-600 pl-5 placeholder-gray-400 outline-none bg-transparent
           "
@@ -82,7 +105,7 @@ export default function Appnav() { // Note we are imporing a prop from wherever 
 
         {/* MAKE ABSOLUBTE SURE TO GENERATE DYNAMIC MESSAGE.  */}
         {/* SECURITY THREAT!!!!!!!!!!!!! */}
-        <ConnectButton signingMessage="Map3.o TEMPORARY authentication" /> 
+        <ConnectButton signingMessage={getRandomNonce(time)} /> 
       </div>
     </header> 
      

@@ -6,6 +6,7 @@ import { Button, Icon, useNotification } from "web3uikit";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import VendorsMap from "components/VendorsMap";
 import SearchVendorInfo from "components/SearchVendorInfo";
+import vendorsData from "constants/testdata.json"
 
 
 export default function Rentals () {
@@ -17,11 +18,11 @@ export default function Rentals () {
   const [highLight, setHighLight] = useState();
   const { Moralis, account } = useMoralis();
 
-  // REMEMBER NOT TO DELETE THIS IS HOW YOU SET VENDORS LIST STATE
+  // REMEMBER NOT TO DELETE, THIS IS HOW YOU SET VENDORS LIST STATE
   
   // const [vendorsList, setvendorsList] = useState(); 
   
-  // REMEMBER NOT TO DELETE THIS IS HOW YOU SET VENDORS LIST STATE
+  // REMEMBER NOT TO DELETE, THIS IS HOW YOU SET VENDORS LIST STATE
 
   const [coOrdinates, setCoOrdinates] = useState([]);
   const contractProcessor = useWeb3ExecuteFunction();
@@ -30,52 +31,6 @@ export default function Rentals () {
 
   console.log(map3Querry);
 
-  const vendorsList = [
-    {
-      // attributes: {
-        name: "Barber Shop on broadway",
-        city: "New York",
-        description: "fade trims lineup tapper dreads",
-        imgUrl:
-          "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",
-        lat: "40.716862",
-        long: "-73.999005",
-        walletAddress:"0xa9110224Df672c266569931F4e03f009651149E6",
-        distance: "3", // distance from  you
-        currency:"0xd9145CCE52D386f254917e481eB44e9943F39138", // display currency accepted It just joined the party
-
-      // },
-    },
-    {
-      // attributes: {
-        name: "cofee Shop on division",
-        city: "Chicago",
-        description: "cofee latte expresso iced cofee",
-        imgUrl:
-          "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",
-        lat: "40.716862",
-        long: "-60.999005",
-        walletAddress:"0ya9110224Df672c266569931F4e03f009651149E6",
-        distance: "4", // distance from  you
-        currency:"0x9bF88fAe8CF8BaB76041c1db6467E7b37b977dD7",
-
-      // },
-    },
-    {
-      // attributes: {
-        name: "Resturant on Georgia Avenue",
-        city: "DC",
-        description: "fries wings burgers burrito fast food",
-        imgUrl:
-          "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",
-        lat: "40.716862",
-        long: "-70.999005",
-        walletAddress:"0za9110224Df672c266569931F4e03f009651149E6",
-        distance: "5", // distance from  you
-        currency:"0x9bF88fAe8CF8BaB76041c1db6467E7b37b977dD7",
-      // },
-    },
-  ];
   const handleSuccess= () => {
     dispatch({
       type: "success",
@@ -131,60 +86,6 @@ export default function Rentals () {
   //   fetchvendorsList();
   // }, [map3Querry]); // Note we are running the use effect every time we recieve a new search filter
 
-
-  // This wwill be where we set our contract functions params and transactions like Pay
-  // const bookRental = async function (start, end, id, dayPrice) { // This is where we need our own contract functions, params and abi
-  //         for (
-  //           var arr = [], dt = new Date(start);
-  //           dt <= end;
-  //           dt.setDate(dt.getDate() + 1)
-  //         ) {
-  //           arr.push(new Date(dt).toISOString().slice(0, 10)); // yyyy-mm-dd
-  //         }
-
-  //         let options = {
-  //           contractAddress: "0xa9110224Df672c266569931F4e03f009651149E6",
-  //           functionName: "addDatesBooked",
-  //           abi: [
-  //             {
-  //               "inputs": [
-  //                 {
-  //                   "internalType": "uint256",
-  //                   "name": "id",
-  //                   "type": "uint256"
-  //                 },
-  //                 {
-  //                   "internalType": "string[]",
-  //                   "name": "newBookings",
-  //                   "type": "string[]"
-  //                 }
-  //               ],
-  //               "name": "addDatesBooked",
-  //               "outputs": [],
-  //               "stateMutability": "payable",
-  //               "type": "function"
-  //             }
-  //           ],
-  //           params: {
-  //             id: id,
-  //             newBookings: arr,
-  //           },
-  //           msgValue: Moralis.Units.ETH(dayPrice * arr.length),
-  //         }
-  //     console.log(arr);
-
-  //     await contractProcessor.fetch({
-  //       params: options,
-  //       onSuccess: () => {
-  //         handleSuccess();
-  //       },
-  //       onError: (error) => {
-  //         handleError(error.data.message)
-  //       }
-  //     });
-
-  // }
-
   return (
     <div className=" mx-auto relative al m-2">
 
@@ -197,9 +98,9 @@ export default function Rentals () {
           <span className="text-lg font-semibold my-auto">3.0</span>
           <h1 className="text-3xl font-semibold mx-1 px-1 mt-2 mb-6 text-[#64748b]">results for {map3Querry} </h1>
         </div>
-
-        {vendorsList.map(({ name,city, walletAddress,imgUrl,distance,description}) => (
-
+        <div className="xl:overflow-y-auto xl:max-h-screen xl:h-full">
+        {vendorsData.map((
+          { name,city, walletAddress,imgUrl,distance,description,vendorsToken}) => (
         <SearchVendorInfo
 
         key={walletAddress}
@@ -209,10 +110,13 @@ export default function Rentals () {
          description={description}
          distance={distance}
          walletAddress={walletAddress}
+         vendorsToken={vendorsToken}
+        //  vendorsTokenSymbol={vendorsTokenSymbol}
 
          />
               )
             )}
+            </div>
           <div/>
       </div>
       <section className=" hidden xl:px-5 xl:inline-flex xl:min-w-[600px]">

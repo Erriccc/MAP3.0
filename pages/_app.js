@@ -35,17 +35,9 @@ const MoralisAppId = process.env.NEXT_PUBLIC_MORALIS_API_ID;
 const MoralisAppUrl = process.env.NEXT_PUBLIC_MORALIS_APP_URL;
 
 
+
 export default function MyApp({ Component, pageProps }) {
-
-
-
-
-  // TESTING OUT .ENV  files
-  // console.log(process.env.MORALIS_API_ID)
-
-
   return(
-    
     <>
       <Head>
         <title>Map3.0 App</title>

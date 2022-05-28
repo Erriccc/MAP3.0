@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { useMoralis, useWeb3ExecuteFunction  } from 'react-moralis';
 import Apphero from 'components/Apphero';
-import Pay from 'components/pay';
+import PayAnonymous from 'components/PayAnonymous';
 import { useNotification, CreditCard } from "web3uikit";
 
 
@@ -56,12 +56,16 @@ export default function PAY () {
          {account &&
          <>
             <div className="text-[#64748b] p-2 m-2 text-3xl font-semibold">
-            Welcome back,<br></br> 
-            {/* Hi, account number: {account} */}
-             Who would you like to pay today
+             Who would you like to pay
             </div>
             <div>
-            <Pay/>
+              {console.log("is this your user object or address?",account)}
+              {/* 
+              NOTE PASS VENDORS WALLET ADDRESS HERE AUTOMATICALY TO PAY VENDORS
+              */}
+            <PayAnonymous
+            User={account}
+             />
             </div>
          </>
             }
