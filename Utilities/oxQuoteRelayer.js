@@ -18,6 +18,8 @@ const oxQuoteRelayer = async (event,User) => {
         sendersToken: sendersTokenOfChoice
       }
 
+      console.log("paymentdata: from oxQuoteRelayer", paymentData)
+
       const JSONdata = JSON.stringify(paymentData)
       // API endpoint where we send form data.
       const endpoint = 'api/paymentHandler' // "api/paymentHandler"

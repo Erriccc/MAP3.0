@@ -3,11 +3,6 @@
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "_rewardtoken",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
 				"name": "_feeColector",
 				"type": "address"
 			}
@@ -580,6 +575,25 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "contract IERC20",
+				"name": "_tokenToWithdraw",
+				"type": "address"
+			}
+		],
+		"name": "getContractProfitBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "getRewardsPoolBalance",
 		"outputs": [
@@ -673,25 +687,6 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_rewardtoken",
-				"type": "address"
-			}
-		],
-		"name": "setCoins",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "uint256",
 				"name": "_rate",
 				"type": "uint256"
@@ -725,6 +720,57 @@
 			}
 		],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_feeColector",
+				"type": "address"
+			}
+		],
+		"name": "setfeeColector",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_rate",
+				"type": "uint256"
+			}
+		],
+		"name": "settipRate",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "tipRate",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{

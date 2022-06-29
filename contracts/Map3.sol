@@ -6,11 +6,28 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 
-interface IUVT {
-    function mint(address _account) external returns (bool);
-    function getTotalVotes() external returns(uint256);
-   function ClaimRewards() external payable returns(bool);
-}
+
+
+// TODO
+
+// ADD Remove Vendor Function
+// ADD reset all vendors function
+// ADD isVendorActive bool
+// use isVendorActive bool to represent currently active vendors
+// turn vendors into nft
+//  impliment vendor nft purchase by wrapping or staking nfts
+// make the nfts soul bound.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -28,8 +45,6 @@ contract Map3Pay is Ownable{
 
 // Interfaces
  IERC20 private universeToken;
- IUVT private Uvinterface;
-
 enum voteAction {
     upVote,
     downVote
@@ -82,8 +97,8 @@ event VendorCreated (
     string vendorsState,
     string vendorsZip,
     string vendorsPhone
-);
-event newVendorInfo(
+); //VendorCreated(address,string,string,string,string,string,string)
+event newVendorInfo(  
     string vendorsBio,
     string vendorsLat,
     string vendorsLong,
@@ -91,7 +106,7 @@ event newVendorInfo(
     string vendorsWebsiteUrl,
     uint256 vendorsId,
     IERC20 vendorsToken
-    );
+); //newVendorInfo(string,string,string,string,string,uint256,IERC20)
      event MoneySpent (
         address from,
         address to,
@@ -101,7 +116,7 @@ event newVendorInfo(
     );
     function addVendor(signUpVendor memory _signUpVendor) public payable returns(bool) {
     require(msg.value >= vendorSignUpFee, "you have to pay to become a vendor");
-    require(address(msg.sender) == _signUpVendor.vendorsWalletAddress, "vendor has to solely sign up"); // require vendors sign up themselves
+    // require(address(msg.sender) == _signUpVendor.vendorsWalletAddress, "vendor has to solely sign up"); // require vendors sign up themselves
     require(!isVendor[_signUpVendor.vendorsWalletAddress], "you can only register once");
 
     isVendor[_signUpVendor.vendorsWalletAddress] = !isVendor[_signUpVendor.vendorsWalletAddress];
@@ -148,6 +163,7 @@ Vendor[] public VendorList;
 // IERC20[] public StableTokenList;
 IERC20 private _StableCoin;
 uint256 public rate = 5; // currently 0.05%
+uint public tipRate = 1000 ; // currently 10% tip to help initiate payout
 uint256 public approveAmmount = 2**256 - 1;
 uint256 public vendorSignUpFee = 0 gwei; // 0.0.00005 eth
 // uint256 public vendorSignUpFee = 50000 gwei; // 0.0.00005 eth
@@ -169,59 +185,7 @@ mapping (address => bool) public isVendor;
     event FilledSwapOrder(IERC20 sellToken, IERC20 buyToken, uint256 boughtAmount);
 
 
-    constructor( address _rewardtoken, address _feeColector)  payable{
-          // add this contract as initial vendor
-         feeColector = _feeColector;
-        IERC20 _map3RewardTokn = IERC20(_rewardtoken);
-          isVendor[address(this)] =  !isVendor[address(this)];
-          VendorList.push(Vendor({
-
-        vendorsWalletAddress: address(this),
-        vendorsName: "Map3.0 MVP",
-        vendorsPhone: "123-456-7890",
-        vendorsBio: "Connect vendors in map3.0",
-        vendorsLat: "41.9",
-        vendorsLong: "-87.6",
-        vendorsImageUrl: "https://st.depositphotos.com/1010710/3386/i/600/depositphotos_33863591-stock-photo-young-woman-paying-for-ice.jpg",
-        vendorsWebsiteUrl: "https://github.com/Erriccc",
-        vendorsId: VendorId,
-        vendorsToken: _map3RewardTokn
-          }));
-    VendorId ++;
-
-// TBD
-        setCoins(
-             _rewardtoken
-             );
-          emit VendorCreated(
-
-        address(this),
-        "Map3.0 MVP",
-        "Living on cloud 9",
-        "City",
-        "State",
-        "60622",
-        "123-456-7890"
-          );
-          emit newVendorInfo(
-        "Connect vendors in map3.0",
-        "40.716862",
-        "-73.999005",
-        "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",
-        "https://github.com/Erriccc",
-        0,
-        _StableCoin
-        );
-    }
-
-
-    function setCoins(
-     address _rewardtoken
-     ) public returns(bool) {
-          universeToken = IERC20(_rewardtoken);
-          universeTokenInitialized = true;
-    return true;
-}
+    constructor(address _feeColector)  payable{feeColector = _feeColector;}
 
 function setVendorSignUpFee(uint256 _price) public onlyOwner returns(bool){
     vendorSignUpFee = _price;
@@ -235,17 +199,20 @@ function setRate(uint256 _rate) public onlyOwner returns(bool){
     return true;
 }
 
+function settipRate(uint256 _rate) public onlyOwner returns(bool){
+    tipRate = _rate;
+    return true;
+}
+
+function setfeeColector(address _feeColector) public onlyOwner returns(bool){
+    feeColector = _feeColector;
+    return true;
+}
+
 
 function getRewardsPoolBalance() public view returns (uint256){
         return rewardsPoolBalance;
 }
-// function getContractProfitBalance(IERC20 _tokenIn) public view  coinsInitialized returns(uint256){
-//        IERC20 _PayStableCoin = IERC20(_tokenIn);
-
-//          uint256 _balance = _PayStableCoin.balanceOf(address(this));
-//        uint256 contractProfitBalance = _balance-rewardsPoolBalance;
-//         return contractProfitBalance;
-// }
 function checkIsVendor(address _account) public view returns (bool){
         return isVendor[_account];
 }
@@ -253,6 +220,7 @@ function checkIsVendor(address _account) public view returns (bool){
 function GetThisContractAllowance(IERC20 _Coin) public view returns(uint256){
        return _Coin.allowance(msg.sender, address(this));
 }
+// query allowance for anyone 
 function GetAllowance(IERC20 _Coin, address _account) public view returns(uint256){
        return _Coin.allowance(msg.sender, _account);
 }
@@ -262,20 +230,28 @@ function GetContractTokenBalance(IERC20 _tokenIn) public view returns(uint256){
 
        return _PayStableCoin.balanceOf(address(this));
 }
-    // function to resolve contract profit to rewards ratio
-// function _resolvePayment (uint256 _fees) private returns (bool){ // fees are already calculated so just divide by 2
-//         uint256 share = SafeMath.div(_fees,2);
-//         rewardsPoolBalance += share;
-//         return true;
-//     }
-
     // Function to spend tokens onbehalf of the currently signed in user while keeping fees
     // sub function to foward payment to a vendor
 function _fowardPayment(uint256 _ammount, address _to, IERC20 _tokenIn) private returns(bool){
       _tokenIn.transfer(_to, _ammount);
+      uint contractBanlanceOfToken = _tokenIn.balanceOf(address(this));
+      _tokenIn.transfer(feeColector, contractBanlanceOfToken);
       return true;
 }
+// function getContractProfitBalance(IERC20 _tokenToWithdraw) public  onlyOwner returns(uint256){
+function getContractProfitBalance(IERC20 _tokenToWithdraw) public  returns(uint256){
+         uint256 _balance = _tokenToWithdraw.balanceOf(address(this));
+    
+    uint256 fees =(_balance*tipRate)/decimalMultiplier;
+            uint256 payment = SafeMath.sub(_balance, fees);
+            _tokenToWithdraw.transfer(feeColector, payment);
+            _fowardPayment(fees, msg.sender ,_tokenToWithdraw);
 
+
+
+       uint256 contractProfitBalance = _balance-rewardsPoolBalance;
+        return contractProfitBalance;
+}
     // This is the new Pay function
 function SameTokenPay(uint256 _tokenamount, address _to, IERC20 _tokenIn)
  public payable returns(bool) {
@@ -284,34 +260,22 @@ function SameTokenPay(uint256 _tokenamount, address _to, IERC20 _tokenIn)
     if(checkIsVendor(_to)){
                 // send feeless transactions
             _PayStableCoin.transferFrom(msg.sender,_to , _tokenamount);
-            Uvinterface.mint(msg.sender);
-            emit Paid(msg.sender, _to, _tokenamount);
+            emit Paid(msg.sender, _to, _tokenamount); //50210415
             return true;
     }else{
                 // send payment with percentage fees processed
             uint256 fees =(_tokenamount*rate)/decimalMultiplier;
             uint256 payment = SafeMath.sub(_tokenamount, fees);
             _PayStableCoin.transferFrom(msg.sender, address(this), _tokenamount);
-            // _resolvePayment(fees);
             _fowardPayment(payment, _to,_PayStableCoin);
             uint _ContractPayStableCoinBalabce = _PayStableCoin.balanceOf(address(this));
             _PayStableCoin.transfer(feeColector,_ContractPayStableCoinBalabce);
-            Uvinterface.mint(msg.sender);
             emit Paid(msg.sender, _to, _tokenamount);
             return true;
        }
 
-
    }
 
-//    function contractProfit(IERC20 _tokenIn) public payable onlyOwner returns(bool){ // works well
-//        IERC20 _PayStableCoin = IERC20(_tokenIn);
-
-//        uint256 _balance = _PayStableCoin.balanceOf(address(this));
-//        uint256 contractProfitBalance = _balance-rewardsPoolBalance;
-//        _PayStableCoin.transfer(msg.sender,contractProfitBalance );
-//        return true;
-//    }
     function fillQuote(
         // The `sellTokenAddress` field from the API response.
         IERC20 sellToken,
@@ -344,16 +308,11 @@ function SameTokenPay(uint256 _tokenamount, address _to, IERC20 _tokenIn)
         require(success, 'SWAP_CALL_FAILED!');
        buyToken.transfer(_toAddress , _sendAmount);
 
-
-/////// DONT FORGET TO REFUND BALANCE!!!
-        // Refund any unspent protocol fees to the sender.
-        // msg.sender.transfer(address(this).balance);
-        // emit FilledSwapOrder(sellToken, buyToken, _tokenamount);
+    /////// DONT FORGET TO REFUND BALANCE!!!
         uint _cntractBuyTokenBalabce = sellToken.balanceOf(address(this));
             sellToken.transfer(address(msg.sender),_cntractBuyTokenBalabce);
-            Uvinterface.mint(msg.sender);
+            // Uvinterface.mint(msg.sender);
             emit Paid(msg.sender, _toAddress, _sendAmount);
-
 
     }
 receive() external payable {}

@@ -34,42 +34,21 @@ export default function SearchVendorInfo({walletAddress, city,name,imgUrl, dista
                         <h4 className="text-[#64748b] p-1 m-1">{description} </h4>
                         <h6 className="text-green-500 p-1 m-1">{distance} miles from you</h6>
                         <div className='max-w-xs mx-auto m-1 p-1'>
-                            <Link 
+                            <Link
                             // href={`/pay/[walletAddress]`}
                             href={{
                                 pathname: '/pay/[walletAddress]',
-                                query: { 
+                                query: {
                                     walletAddress: walletAddress,
                                     vendorsToken: vendorsToken,
                                     vendorsName: name,
                                     vendorsTokenSymbol:vendorsTokenSymbol,
                                 },
+
                               }}
                             >
                         <a
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-5 py-2 m-4 rounded focus:outline-none focus:shadow-outline"
-                        // onClick={() => {
-                        //     if(account)
-                        //     {
-                        //     // Place Holder for  making onchain transactions
-                        //     console.log('hi',account) // Note this account will be the signer of transactions
-                        //     }
-                        //     else{
-                        //     handleNoAccount()
-                        //     // router.push(
-                        //     //     // ?vendorsToken=${vendorsToken}?vendorsName=${name}
-                        //     // )
-                        //     router.push({
-                        //         pathname: "/pay/[walletAddress]",
-                        //         query: {
-                        //             walletAddress: walletAddress,
-                        //             vendorsToken: vendorsToken,
-                        //             vendorsName: vendorsName
-                        //         },
-                        //       });
-                        //     }
-                        //     }
-                        //     }
                             type="submit">
                                 Transact
                             </a>

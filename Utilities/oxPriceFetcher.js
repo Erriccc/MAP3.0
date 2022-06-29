@@ -1,12 +1,12 @@
-// const BigNumber = require('bignumber.js');
-// const { string } = require('hardhat/internal/core/params/argumentTypes');
 const fetch = require('node-fetch');
 const process = require('process');
 const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther ,WholeTOWeiDecimals,IERC20Abi} = require('./utils');
 
-const API_PRICE_URL = 'https://api.0x.org/swap/v1/price';
+const API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
+// const API_PRICE_URL = 'https://api.0x.org/swap/v1/price';
 const Ox_POLYGON_API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
-const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
+// const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
+const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
 
 
 const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent) => {
@@ -21,9 +21,9 @@ if (reciversToken == null || reciversToken.length != 42){
   return("ENS Addresses Are currently not allowed, input valid address")
 }
 
-if(amountToBeSent < 0 || isNaN(amountToBeSent)){
-  return("set a valid Number!")
-}
+// if(amountToBeSent < 0 || isNaN(amountToBeSent)){
+//   return("set a valid Number!")
+// }
 
 
 console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", await WholeTOWeiDecimals(reciversToken,amountToBeSent) )
@@ -44,6 +44,8 @@ console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", awa
 
   return(quote.price)
 }
+
+
 const oxQuoteFetcher = async (sendersToken,reciversToken,amountToBeSent) => {
 
 console.log("ammount to be sent from Quotefetcher : ",amountToBeSent, " - ", await WholeTOWeiDecimals(reciversToken,amountToBeSent) )

@@ -59,7 +59,7 @@ export default function PAY () {
              Who would you like to pay
             </div>
             <div>
-              {console.log("is this your user object or address?",account)}
+              {console.log("is this your user object or address?",account, "from index.js")}
               {/* 
               NOTE PASS VENDORS WALLET ADDRESS HERE AUTOMATICALY TO PAY VENDORS
               */}

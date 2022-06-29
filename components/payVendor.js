@@ -3,13 +3,16 @@ import PayAnonymous from  "components/PayAnonymous.js"
 import tokenAdresses from '../constants/tokens.json'
 import { useRouter } from "next/router";
 const BigNumber = require('bignumber.js');
+import { Button, Icon, useNotification } from "web3uikit";
+import ProgressBar from "@badrap/bar-of-progress";
+
 const fetch = require('node-fetch');
 const {oxKnownVendorQuoteRelayer} = require('../Utilities/oxKnownVendorQuoteRelayer')
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 const {oxPriceFetcher,oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
-const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
+// const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
 import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
-    WholeTOWeiDecimals,IERC20Abi,getTokenSymbol,slippage
+    WholeTOWeiDecimals,IERC20Abi,getTokenSymbol,slippage,Map3Abi,getSendersAllowanceBalance
  } from'../Utilities/utils';
 import{OxPay} from '../Utilities/OxPay';
 const {OxQuote} = require('../Utilities/OxQuoteAndUtils');
@@ -17,68 +20,182 @@ const {OxQuote} = require('../Utilities/OxQuoteAndUtils');
 import { ethers }from "ethers";
 
 
-
-
+const progress = new ProgressBar({
+    size: 3,
+    color: "#8ECAF7",
+    className: "z-50",
+    delay: 100,
+  });
 
 
 export default function PayVendor({walletAddress,vendorsToken,User,vendorsName,vendorsTokenSymbol}) {
+
+    const dispatch = useNotification();
+
+
+    const handleSuccess= (msg) => {
+        dispatch({
+          type: "success",
+          // message: `Nice! Your Transaction was succesful ${map3Querry.destination}!!`,
+        //   message: `Nice! Your Transaction was succesful!!`,
+          message: msg,
+          title: "👌🏿",
+          position: "topL",
+        });
+      };
+    
+      const handleError= (msg) => {
+        dispatch({
+          type: "error",
+          message: `${msg}`,
+          title: "failed",
+          position: "topL",
+        });
+      };
+    
+      const handleNoAccount= () => {
+        dispatch({
+          type: "error",
+          message: `You need to connect your wallet to book a rental`,
+          title: "Not Connected",
+          position: "topL",
+        });
+      };
+
+
+
 
     console.log('testing values from paVendor:',walletAddress,vendorsToken,User,vendorsName,vendorsTokenSymbol)
 
     const submitPayment = async (event) => {
 
         event.preventDefault();
-        if (event.target.token.value == vendorsToken) { // changed to vendorsToken from event.target.reciversChoiceToken.value
+    if (event.target.token.value == vendorsToken) { // changed to vendorsToken from event.target.reciversChoiceToken.value
             const vendorWalletAddress = walletAddress.toString()
             const vendorChoiceToken = vendorsToken.toString()
-            console.log('testing values from paVendor.submitPayment:',walletAddress,vendorsToken,vendorWalletAddress,vendorChoiceToken)
-            console.log('testing types of values from paVendor.submitPayment:',typeof walletAddress, typeof vendorsToken,typeof vendorWalletAddress,typeof vendorChoiceToken)
-
-
+            // console.log('testing values from paVendor.submitPayment:',walletAddress,vendorsToken,vendorWalletAddress,vendorChoiceToken)
+            // console.log('testing types of values from paVendor.submitPayment:',typeof walletAddress, typeof vendorsToken,typeof vendorWalletAddress,typeof vendorChoiceToken)
             console.log("initiating simple SameTokenTransfer")
            const tokenammount = await  WholeTOWeiDecimals(vendorsToken,event.target.amount.value)
            console.log("token amount vs converted token amount", event.target.amount.value,tokenammount)
-           const tx2 = await  approveSendersToken(event.target.token.value,Map3address,tokenammount)
-           await tx2.wait()
-           const tx3 = await  map3Pay(tokenammount,  walletAddress,  vendorsToken,User) // changed to walletAddress from event.target.reciver.value
-           const tx3Reciept =await tx3.wait()
-           const map3PayEvents = tx3Reciept.events[tx3Reciept.events.length-1]
-           console.log("sameTokenPay Reciept events: ", map3PayEvents)
-          } else {
-            const quotedAmmountToSell = await oxQuoteFetcher(
-                event.target.token.value,
-                vendorsToken,
-                event.target.amount.value
-                )
-            console.log("this is amont to sell", quotedAmmountToSell)
-        const aprovalAmount = (quotedAmmountToSell *slippage).toFixed(0).toString() // change multiplier to come from slippage
-        console.log("this is the approval amount: ", numberExponentToLarge(aprovalAmount))
+           const usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(event.target.token.value,User), 16).toString()
 
-           const tx2 = await  approveSendersToken(event.target.token.value,Map3address,numberExponentToLarge(aprovalAmount))
-           await tx2.wait()
-  const  oxQuoteResult = await OxQuote(
-    event.target.token.value,
-    vendorsToken,
-      event.target.amount.value,
-      walletAddress,
-      User,
-        )
-              const OxPayResult = await OxPay(
-              oxQuoteResult.sellTokenAddress,
-              oxQuoteResult.buyTokenAddress,
-              oxQuoteResult.allowanceTargetquote,
-              oxQuoteResult.OxDelegateAddress,
-              oxQuoteResult.data,
-              oxQuoteResult.allowanceBalance,
-              oxQuoteResult.buyAmount,
-              oxQuoteResult.reciversAddress,
-              User
-              )
-              const oxReciept = OxPayResult.events[OxPayResult.events.length-1]
-           console.log("oxPayResult Reciept events: ", oxReciept)
-              console.log("0x pay results: ",OxPayResult )
-          }
-            };
+           if(tokenammount >= usersMap3SpendingTokenAwlloanceBallance){
+            progress.start()
+
+                    try{
+                            const tx2 = await  approveSendersToken(event.target.token.value,Map3address,tokenammount)
+                            await tx2.wait()
+                        handleSuccess(`approval successful. please sign next transaction to transfer funds!`) 
+                    } catch (err){
+                        handleError(` approval failed ${err.message}`)
+                        progress.finish()
+                        return;
+                    }
+                    progress.finish()
+
+                    }
+                    else{
+                        // do something else
+                        console.log("we are all good...")
+                    }
+                    progress.start()
+
+                    try{
+                            const tx3 = await  map3Pay(tokenammount,  walletAddress,  vendorsToken,User) // changed to walletAddress from event.target.reciver.value
+                            const tx3Reciept =await tx3.wait()
+                            const map3PayEvents = tx3Reciept.events[tx3Reciept.events.length-1]
+                            console.log("sameTokenPay Reciept events: ", map3PayEvents)
+                            handleSuccess(`transfer succesfull Thank you!`)
+                    } catch(err){
+                        handleError(` transfer failed please try again. ${err.message}`)
+                        progress.finish()
+                    }
+                    progress.finish()
+
+    } else {
+
+
+                    const quotedAmmountToSell = await oxQuoteFetcher(
+                        event.target.token.value,
+                        vendorsToken,
+                        event.target.amount.value
+                    )
+                    console.log("this is amont to sell", quotedAmmountToSell)
+                    handleSuccess(`lets go !!`) 
+
+                    // NOTE DECLARED OUTSIDE THE TRY BLOCK
+                    const aprovalAmount = (quotedAmmountToSell *slippage).toFixed(0).toString() // change multiplier to come from slippage
+                    console.log("this is the approval amount: ", numberExponentToLarge(aprovalAmount))
+                    const usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(event.target.token.value,User), 16).toString() // Check for allowance balance
+
+
+                    if(aprovalAmount >= usersMap3SpendingTokenAwlloanceBallance){
+                        progress.start()
+
+                        try{
+
+                            const tx2 = await  approveSendersToken(event.target.token.value,Map3address,numberExponentToLarge(aprovalAmount))
+                            await tx2.wait()
+                            handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
+
+                        } catch(err){
+                                handleError(` approval failed ${err.message}`)
+                            progress.finish()
+
+                                return;
+                        }
+                        progress.finish()
+
+                    }else{
+                        console.log("we are all good...")
+                    }
+
+                    let  oxQuoteResult ; // NOTE DECLARED OUTSIDE THE TRY BLOCK
+                    progress.start()
+                    try {
+                    oxQuoteResult = await OxQuote(
+                        event.target.token.value,
+                        vendorsToken,
+                        event.target.amount.value,
+                        walletAddress,
+                        User,
+                    )
+                            // return oxQuoteResult
+                    }catch(err){
+                        handleError(` failed to get Quote ${err.message}`)
+                        progress.finish()
+                        return;
+                    }
+                    progress.finish()
+                    progress.start()
+
+                    try {
+                                console.log("got the oxQuoteResult in the next try block: ", oxQuoteResult)
+                                const OxPayResult = await OxPay(
+                                oxQuoteResult.sellTokenAddress,
+                                oxQuoteResult.buyTokenAddress,
+                                oxQuoteResult.allowanceTargetquote,
+                                oxQuoteResult.OxDelegateAddress,
+                                oxQuoteResult.data,
+                                oxQuoteResult.allowanceBalance,
+                                oxQuoteResult.buyAmount,
+                                oxQuoteResult.reciversAddress,
+                                User
+                                )
+                                const oxReciept = OxPayResult.events[OxPayResult.events.length-1]
+                            console.log("oxPayResult Reciept events: ", oxReciept)
+                                console.log("0x pay results: ",OxPayResult )
+                            handleSuccess(`transfer succesfull Thank you!`)
+
+                    }catch(err){
+
+                                handleError(` transfer failed please try again. ${err.message}`)
+                                progress.finish()
+                    }
+                    progress.finish()
+        }
+    };
 
     const [quote, setQuote] = React.useState(0);
     const [sendersToken, setSendersToken] = React.useState(0);
@@ -89,7 +206,7 @@ export default function PayVendor({walletAddress,vendorsToken,User,vendorsName,v
     // declaration should come from prop
     // const [reciversToken, setReciversToken] = React.useState("0xdAC17F958D2ee523a2206206994597C13D831ec7");
     const [reciversToken, setReciversToken] = React.useState(vendorsToken);
-    const [amountToBeSent, setamountToBeSent] = React.useState();
+    const [amountToBeSent, setamountToBeSent] = React.useState(1);
 oxKnownVendorQuoteRelayer
 
     useEffect(()=>{
@@ -117,7 +234,7 @@ oxKnownVendorQuoteRelayer
                     Amount
                 </label>
                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                id="amount" name='amount'  placeholder="100"
+                id="amount" name='amount' placeholder="100"
                 onChange={(e)=>{
                     let userInputAmount = e.target.value;
                     setamountToBeSent(userInputAmount);

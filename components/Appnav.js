@@ -69,7 +69,7 @@ export default function Appnav() { // Note we are imporing a prop from wherever 
         onClick={() => router.push("/")}
         className="relative flex items-center justify-center py-1 cursor-pointer"
       >
-        <h3 className="text-blue-500 font-medium">map<span className="text-gray-600 font-bold"> 3.0</span></h3>
+        <h3 className="text-blue-500 font-medium">map<span className="text-gray-600 font-bold">3.0</span></h3>
       </div>
 
       {/* Search */}

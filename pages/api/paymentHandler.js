@@ -4,7 +4,8 @@ const process = require('process');
 const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther,numberExponentToLarge } = require('../../Utilities/utils');
 const {OxQuote} = require('../../Utilities/OxQuoteAndUtils');
 
-const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
+// const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
+// const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
 export default async function form(req, res) {
     const body  = req.body
     const reqPaymentData = {
@@ -14,6 +15,7 @@ export default async function form(req, res) {
       reciversToken:body.reciversTokenOfChoice,
       sendersToken:body.sendersToken
     }
+    console.log("from payment handler reqPaymentData: ",reqPaymentData )
   const  responsePaymentData = await OxQuote(
     reqPaymentData.sendersToken,
     reqPaymentData.reciversToken,
@@ -27,6 +29,8 @@ export default async function form(req, res) {
     //   // Sends a HTTP bad request error code
     //   return res.status(400).json({ data: 'First or last name not found' })
     // }
+
+    console.log("from payment handler responsePaymentData: ",responsePaymentData )
 
     res.status(200).json(responsePaymentData)
   }

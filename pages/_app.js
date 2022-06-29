@@ -17,7 +17,7 @@ import Partners from 'components/Partners';
 
 // page progress bar
 const progress = new ProgressBar({
-  size: 4,
+  size: 3,
   color: "#8ECAF7",
   className: "z-50",
   delay: 100,

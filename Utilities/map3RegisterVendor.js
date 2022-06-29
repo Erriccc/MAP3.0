@@ -1,12 +1,12 @@
-const { testAccount,Map3address,vendorSignUpFee,createQueryString,getTokenDecimal,WeiToWholeDecimals,IERC20Abi,WholeTOWeiDecimals} = require('./utils');
-const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
+const { testAccount,Map3Abi,Map3address,vendorSignUpFee,createQueryString,getTokenDecimal,WeiToWholeDecimals,IERC20Abi,WholeTOWeiDecimals} = require('./utils');
+// const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
 const  ethers  = require("ethers");
 
 const map3RegisterVendor = async (newVendorRegistrationData ) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const newVendorSigner = provider.getSigner()
-        const Map3 = new ethers.Contract(Map3address,Map3Abi.abi,newVendorSigner)
-        const Map3ReadOnly = new ethers.Contract(Map3address,Map3Abi.abi,provider)
+        const Map3 = new ethers.Contract(Map3address,Map3Abi,newVendorSigner)
+        const Map3ReadOnly = new ethers.Contract(Map3address,Map3Abi,provider)
         // const sellContract = new ethers.Contract(sellTokenAddress,IERC20Abi,provider)
         // const buyContract = new ethers.Contract(buyTokenAddress,IERC20Abi, provider)
 

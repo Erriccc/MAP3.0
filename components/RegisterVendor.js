@@ -5,59 +5,124 @@ const fetch = require('node-fetch');
 const process = require('process');
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 const {oxPriceFetcher,oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
+import { Button, Icon, useNotification } from "web3uikit";
+import ProgressBar from "@badrap/bar-of-progress";
 const {oxQuoteRelayer} = require('../Utilities/oxQuoteRelayer')
-const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
-import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
-    WholeTOWeiDecimals,IERC20Abi } from'../Utilities/utils';
+// const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
+import {Map3Abi,map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
+    WholeTOWeiDecimals,IERC20Abi, getTokenSymbol } from'../Utilities/utils';
 import{map3RegisterVendor} from '../Utilities/map3RegisterVendor';
+import { useRouter } from "next/dist/client/router";
+
 import { ethers }from "ethers";
 const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther } = require('../Utilities/utils');
 
 // Note that the actual componnent starts with a small letter but react components need to start in caps
 
-const submitRegistration = async (event) => {
-    event.preventDefault();
-    console.log("adding vendor......")
-    const tokenOfChoice = event.target.token.value
+const progress = new ProgressBar({
+    size: 3,
+    color: "#8ECAF7",
+    className: "z-50",
+    delay: 100,
+  });
 
-      const newVendorRegistrationData = [
-        event.target.vendorsWallet.value,
-        event.target.vendorName.value,
-        event.target.vendorsStreetAddress.value,
-        event.target.Gridcity.value,
-        event.target.Gridstate.value,
-        event.target.Gridzip.value,
-        event.target.phone.value,
-        event.target.aboutVendor.value,
-        "41.9", // hardcoded for now
-        "-87.6", // hardcoded for now
-        event.target.imageUrl.value,
-        event.target.websiteUrl.value,
-        tokenOfChoice
-      ]
-   
-      map3RegisterVendor(newVendorRegistrationData);
 
-    //   const JSONdata = JSON.stringify(registrationData)
-    //   // API endpoint where we send form data.
-    //   const endpoint = 'api/registerVendor'
-    //   // Form the request for sending data to the server.
-    //   const options = {
-    //     // The method is POST because we are sending data.
-    //     method: 'POST',
-    //     // Tell the server we're sending JSON.
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     // Body of the request is the JSON data we created above.
-    //     body: JSONdata,
-    //   }
-    //   const response = await fetch(endpoint, options)
-    //   const result = await response.json()
-    //   console.log(result)
-  };
+export default function RegisterVendor() {
 
-export default function Pay() {
+  const router = useRouter()
+    const dispatch = useNotification();
+    
+    const handleSuccess= (msg) => {
+        dispatch({
+          type: "success",
+          message: msg,
+          title: "Done",
+          position: "topL",
+        });
+      };
+      const handleError= (msg) => {
+        dispatch({
+          type: "error",
+          message: `${msg}`,
+          title: "failed",
+          position: "topL",
+        });
+      };
+      const handleNoAccount= () => {
+        dispatch({
+          type: "error",
+          message: `You need to connect your wallet to book a rental`,
+          title: "Not Connected",
+          position: "topL",
+        });
+      };
+
+
+
+      const submitRegistration = async (event) => {
+    
+        event.preventDefault();
+        progress.start()
+    try{
+        console.log("adding vendor......")
+        const tokenOfChoice = event.target.token.value
+    
+          const newVendorRegistrationData = [
+            event.target.vendorsWallet.value,
+            event.target.vendorName.value,
+            event.target.vendorsStreetAddress.value,
+            event.target.Gridcity.value,
+            event.target.Gridstate.value,
+            event.target.Gridzip.value,
+            event.target.phone.value,
+            event.target.aboutVendor.value,
+            "41.9", // hardcoded for now
+            "-87.6", // hardcoded for now
+            event.target.imageUrl.value,
+            event.target.websiteUrl.value,
+            tokenOfChoice
+          ]
+       
+          await map3RegisterVendor(newVendorRegistrationData);
+          handleSuccess(`Welcome to Map3`)
+        router.push({
+            pathname: "/pay/[walletAddress]",
+            query: {
+                        walletAddress: event.target.vendorsWallet.value,
+                        vendorsToken: event.target.token.value,
+                        vendorsName: event.target.vendorName.value,
+                        vendorsTokenSymbol: await getTokenSymbol(event.target.token.value),
+                    }
+          });
+
+        } catch(err){
+            handleError(err.message)
+            progress.finish()
+
+            // router.push({
+            //     pathname: "/pay/[walletAddress]",
+            //     query: {
+            //                 walletAddress: event.target.vendorsWallet.value,
+            //                 vendorsToken: event.target.token.value,
+            //                 vendorsName: event.target.vendorName.value,
+            //                 vendorsTokenSymbol: await getTokenSymbol(event.target.token.value),
+            //             }
+            //   });
+        }
+        progress.finish()
+
+    
+      };
+    
+
+
+
+
+
+
+
+
+const [wordCount, setwordCount] = React.useState(0);
 
     // This will be defaulted to usdt if the vendor does not specify
     const [newVendorsToken, setNewVendorsToken] = React.useState("0xdAC17F958D2ee523a2206206994597C13D831ec7"); 
@@ -69,7 +134,7 @@ export default function Pay() {
                                 Business Name
                             </label>
                             <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                            id="vendorName" name='vendorName' type="text" placeholder="Company (Ex. Takorea)"
+                            required id="vendorName" name='vendorName' type="text" placeholder="Company (Ex. Takorea)"
                             />
                         </div>
                         <div className="mb-4 ">
@@ -93,15 +158,15 @@ export default function Pay() {
                                 Phone Nmuber
                             </label>
                             <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                            id="phone" name='phone' type="number" placeholder="Phone number (Ex. 123-456-7890)"
+                            required id="phone" name='phone' type="number" placeholder="Phone number (Ex. 123-456-7890)"
                             />
                         </div>
                         <div className="mb-4 bg-white">
                             <label className="block text-gray-700 text-sm font-bold mb-2" >
                                 Business Wallet Address
                             </label>
-                            <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="vendorsWallet" name='vendorsWallet' type="text" placeholder="0x**************"/>
-                            <h4 className="text-red-500 text-xs italic">Please Add a wallet Address</h4>
+                            <input className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="vendorsWallet" name='vendorsWallet' type="text" required placeholder="0x**************"/>
+                            {/* <h4 className="text-red-500 text-xs italic">Please Add a wallet Address</h4> */}
                         </div>
                         <div className="flex flex-wrap -mx-3 mb-5">
                             <div className="w-full px-3 mb-6 md:mb-0">
@@ -133,7 +198,18 @@ export default function Pay() {
                         </div>
 
                         <label  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Bio</label>
-                        <textarea id="aboutVendor" name='aboutVendor' rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Make it about You!...">
+
+                        <h4 className={`  text-green-500 text-xs italic  ${(280 - wordCount) < 50 ?  (280 - wordCount) < 25 ? "text-red-500" : "text-yellow-500" : ""}`}>{wordCount} (max 280)</h4>
+                       {/* < p className={`${window.location.pathname === '/' ? 'border-red-200' : ''}`}></p> */}
+                        <textarea id="aboutVendor" name='aboutVendor' maxLength="280" rows="4"
+                        className={`block p-2.5 w-full text-sm  bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500  first-letter:
+                        ${(280 - wordCount) < 50 ?  (280 - wordCount) < 25 ? "text-red-500" : "text-yellow-500" :""}
+                        ` }
+                        onChange={(e)=>{
+                            let userInputAmountLength = e.target.value.length;
+                            setwordCount(userInputAmountLength);
+                        }}
+                        placeholder="Make it about You!...">
                         </textarea>
 
                         <div className="  flex flex-row items-center justify-between py-2">

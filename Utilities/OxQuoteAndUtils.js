@@ -2,22 +2,32 @@ const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
 const process = require('process');
 const { ethers } = require("ethers");
-const { Map3address,testAccount,numberExponentToLarge,createQueryString,getTokenDecimal,WeiToWholeDecimals,IERC20Abi,WholeTOWeiDecimals} = require('./utils');
+const { Map3address,Map3Abi,testAccount,numberExponentToLarge,createQueryString,getTokenDecimal,WeiToWholeDecimals,IERC20Abi,WholeTOWeiDecimals,API_QUOTE_URL} = require('./utils');
 
-const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
+// const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
 // const testAccount ="0xC1FbB4C2F4CE9eF87d42A0ea49683E0Cfb003f2F"
 
 // const StableCoinAbi = require( '../artifacts/contracts/StableCoin.sol/StableCoin.json')
 // const UniverseTokenAbi = require( '../artifacts/contracts/UniverseToken.sol/UniverseToken.json')
 
 
-const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
-const Ox_POLYGON_API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/price';
-const provider = new ethers.providers.JsonRpcProvider()
+// const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
+// const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
+// const Ox_POLYGON_API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/price';
+// const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_JSON_RPC_URL_POLYGON)
+const provider = new ethers.providers.JsonRpcProvider("https://speedy-nodes-nyc.moralis.io/bea44a5a8b016f917ad01015/polygon/mainnet") 
+// const provider = new ethers.providers.JsonRpcProvider()
+
+// const provider = new ethers.providers.Web3Provider(window.ethereum)
 
 const OxQuote = async (sendersToken,reciversToken,amountToBeSent,reciversAddress,sendersAddress) => {
+
+  console.log("from OXQuote in oxpay and utils: ",sendersToken,reciversToken,amountToBeSent,reciversAddress,sendersAddress )
   const sendersTokenContract = new ethers.Contract(sendersToken,IERC20Abi,provider)
-  const Map3 = new ethers.Contract(Map3address,Map3Abi.abi,provider)
+  console.log(" passsed the senderstoken contract instantiation test")
+
+  const Map3 = new ethers.Contract(Map3address,Map3Abi,provider)
+  console.log(" passsed the map3 contract instantiation test")
 
   let buyAmountWei = await WholeTOWeiDecimals(reciversToken ,amountToBeSent);
 let feeOnVendor;
@@ -78,7 +88,9 @@ buyAmountWei = newBuyAmount.toString();
                   data: quote.data, // swapCallData
                   allowanceBalance: allowanceBalance,// _tokenamount
                   buyAmount: quote.buyAmount, // _sendAmount
-                  reciversAddress: reciversAddress,// _toAddress
+                  reciversAddress: reciversAddress// _toAddress
+                  // gasPrice: quote.gasPrice,
+                  // gas: quote.gas
           // quote.gasPrice,
 }
     // }

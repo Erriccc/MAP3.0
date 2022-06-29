@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 const {oxKnownVendorQuoteRelayer} = require('../Utilities/oxKnownVendorQuoteRelayer')
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 const {oxPriceFetcher,oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
-const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
+// const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
 import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
     WholeTOWeiDecimals,IERC20Abi,getTokenSymbol
  } from'../Utilities/utils';
@@ -20,14 +20,6 @@ import { ethers }from "ethers";
 
 
 export default function PayVendor({walletAddress,vendorsToken,User,vendorsName,vendorsTokenSymbol}) {
-
-    
-    // const submitPayment = async (event,User) => { //sendersToken,reciversToken,amountToBeSent,reciversAddress,sendersAddress
-    //     // Implimentation of this function was moved to oxPaymentRelayer
-    //       const oxQuoteResult = await oxQuoteRelayer(event,User)
-    //       console.log("this is how we get info back from the server and then send to metamask for signature",
-    //       oxQuoteResult )
-    //     };
 
     console.log('testing values from paVendor:',walletAddress,vendorsToken,User,vendorsName,vendorsTokenSymbol)
 
@@ -77,11 +69,6 @@ export default function PayVendor({walletAddress,vendorsToken,User,vendorsName,v
     const [quote, setQuote] = React.useState(0);
     const [sendersToken, setSendersToken] = React.useState(0);
 
-    // default to USDT unless set to stable by vendor
-    // here we can access the Vendors Preferedtoken token for recieving paymentss
-    // we have to move this out of use state, and declare/access it at the top
-    // declaration should come from prop
-    // const [reciversToken, setReciversToken] = React.useState("0xdAC17F958D2ee523a2206206994597C13D831ec7");
     const [reciversToken, setReciversToken] = React.useState(vendorsToken);
     const [amountToBeSent, setamountToBeSent] = React.useState(0);
 oxKnownVendorQuoteRelayer
