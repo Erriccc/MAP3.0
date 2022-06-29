@@ -19,11 +19,17 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 module.exports = {
   solidity: "0.8.7",
   networks: {
-    hardhat: {
-      forking: {
-        url: "https://mainnet.infura.io/v3/2c1ded31ea7a436ca9a3ffe3059bb6c2",
-        // url: "https://speedy-nodes-nyc.moralis.io/e37dd8712a6d9a4c171a4a2f/eth/mainnet", // real mainnet
-      }
+    // hardhat: {
+    //   forking: {
+    //     // url: process.env.NEXT_PUBLIC_JSON_RPC_URL_MAINET,
+    //     url: "https://mainnet.infura.io/v3/2c1ded31ea7a436ca9a3ffe3059bb6c2",
+    //   }
+    // }
+    // },
+    matic: {
+      url: "https://speedy-nodes-nyc.moralis.io/bea44a5a8b016f917ad01015/polygon/mainnet",
+      gas: 2100000,
+      gasPrice: 80000000000
     }
   }
 };

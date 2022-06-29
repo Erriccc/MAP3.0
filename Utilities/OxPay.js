@@ -1,5 +1,4 @@
-const { testAccount,Map3address,createQueryString,getTokenDecimal,WeiToWholeDecimals,IERC20Abi,WholeTOWeiDecimals} = require('./utils');
-const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
+const { testAccount,Map3address,Map3Abi,createQueryString,getTokenDecimal,WeiToWholeDecimals,IERC20Abi,WholeTOWeiDecimals} = require('./utils');
 const  ethers  = require("ethers");
 
 const OxPay = async (
@@ -16,7 +15,8 @@ const OxPay = async (
     ) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const oxPaySigner = provider.getSigner()
-        const Map3 = new ethers.Contract(Map3address,Map3Abi.abi,oxPaySigner)
+        const Map3 = new ethers.Contract(Map3address,Map3Abi,oxPaySigner)
+        // const Map3 = new ethers.Contract(Map3address,Map3Abi.abi,oxPaySigner)
         const sellContract = new ethers.Contract(sellTokenAddress,IERC20Abi,provider)
         const buyContract = new ethers.Contract(buyTokenAddress,IERC20Abi, provider)
  const Map3Swap = await Map3.fillQuote(
@@ -46,9 +46,9 @@ const OxPay = async (
 
       console.log('left over Map3.0 allowance for target spennder:',ethers.utils.formatEther(contactAllowanceBalance))
       console.log("signer Final Sell and Buy Balance, are: ",ethers.utils.formatEther(signerFinalSellBal),ethers.utils.formatEther(signerBuyBal))
-      console.log("Recivers Final Sell and Buy Balance, are: ",ethers.utils.formatEther(reciverFinalSellBal),ethers.utils.formatEther(reciverBuyBal))
       console.log("Map3 Final Sell and Buy Balance, are: ",ethers.utils.formatEther(map3FinalSellBal),ethers.utils.formatEther(map3BuyBal))
       console.log("fee collector Final Sell and Weth Buy, are: ",ethers.utils.formatEther(feeCollectorFinalSellBal),ethers.utils.formatEther(feeCollectorBuyBal))
+      console.log("Recivers Final Sell and Buy Balance, are: ",ethers.utils.formatEther(reciverFinalSellBal),ethers.utils.formatEther(reciverBuyBal))
 // return([map3BuyBal,map3FinalSellBal,feeCollectorBuyBal,feeCollectorFinalSellBal,signerBuyBal,signerFinalSellBal])
 return(receipt)
 

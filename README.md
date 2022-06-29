@@ -79,6 +79,22 @@ Use ERC20 fully compliant tokens to increase transaction through·put
 Tokens with fee or tax atached on sale will likely fail to swap from 0x..
 
 
+## project  details
+current map3 address= "0xD38B508e98B092FA7baBefc30652F1AfFA8c857C"
+##
+Map3 ABI cann be found under Utilities directory
+##
+const IERC20Abi = 
+[
+    "function balanceOf(address owner) view returns (uint256)",
+    "function decimals() view returns (uint8)",
+    "function symbol() view returns (string)",
+    "function approve(address spender, uint256 amount) external returns (bool)",
+    "function allowance(address owner, address spender) external view returns (uint256)",
+    "function transfer(address to, uint amount) returns (bool)",
+    "event Transfer(address indexed from, address indexed to, uint amount)"
+  ] 
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -3,8 +3,11 @@ import Link from "next/link";
 import { useMoralis, useWeb3ExecuteFunction  } from 'react-moralis';
 import Apphero from 'components/Apphero';
 import PayVendor from 'components/PayVendor';
+import VendorQrCode from 'components/VendorQrCode';
+
 import { useNotification, CreditCard } from "web3uikit";
 import { useRouter } from "next/router";
+import {Map3WebsiteUrl} from "../../Utilities/utils"
 
 
 
@@ -18,7 +21,9 @@ export default function PAY () {
   let router = useRouter();
 
   const {walletAddress,vendorsName, vendorsToken,vendorsTokenSymbol} = router.query
-  // user is autenticated
+  // console.log("router : ", router)
+  // console.log("router.query : ", router.query)
+  // // user is autenticated
   const {isAuthenticated} = useMoralis()
   if (!isAuthenticated) {
     return (
@@ -52,26 +57,6 @@ export default function PAY () {
 //     });
 //   };
 
-
-
-// const  getVendorsTokenSymbol = async () => {
-//   const vendtoTokenSymbol = await getTokenSymbol(vendorsToken)
-//   setVendorsTokenSymbol(vendtoTokenSymbol)
-//   // return vendtoTokenSymbol
-
-// }
-// getVendorsTokenSymbol()
-
-// (async () => {
-//   //     const vendtoTokenSymbol = await getTokenSymbol(vendorsToken)
-//   //     setVendorsTokenSymbol(vendtoTokenSymbol)
-//   //     return vendtoTokenSymbol
-//   const vendorsTokenSymbol = await getVendorsTokenSymbol()
-//   setVendorsTokenSymbol(vendorsTokenSymbol)
-
-//     })();
-
-
   return (
     <div className="max-w-md relative al my-2 flex flex-col mx-auto justify-center">
 
@@ -81,22 +66,32 @@ export default function PAY () {
 
             <h4 className="text-blue-500 text-lg italic">
 
-            {vendorsName} Map3.0 profile
-              
+            {vendorsName} Map3Pay profile
               </h4>
             </div>
             <div>
-              {console.log("is this your user object or address?",account)}
+              {console.log("is this your user object or address?",account, "from [walletAddress].js")}
+
               {/* 
               NOTE PASS VENDORS WALLET ADDRESS HERE AUTOMATICALY TO PAY VENDORS
+              
+              NOTE by checking for vendorsTokenSymbol we are making sure we have all our parameters before rendering 
+              the payVendor and VendorQrcode componnents
               */}
-            <PayVendor
+
+            {vendorsTokenSymbol && <>
+              <PayVendor
             User={account}
             walletAddress={walletAddress}
             vendorsToken={vendorsToken}
             vendorsName={vendorsName}
             vendorsTokenSymbol={vendorsTokenSymbol}
              />
+              <VendorQrCode url={`${Map3WebsiteUrl}${router.asPath}`} />
+			      </>}
+
+
+
             </div>
          </>
             }

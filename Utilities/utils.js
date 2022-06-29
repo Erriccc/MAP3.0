@@ -8,10 +8,19 @@ const Web3 = require('web3');
 // const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
 const Map3Abi = require( './map3ABI.json')
 const uniVoteAbi = require( './univotetoken.json')
+const Map3WebsiteUrl = "https://www.map3.com"
 
 
 const  { ethers }=require( "ethers"); // from hardhat throws error "Can't resolve 'console'"
-const  Map3address="0x12Bcb546bC60fF39F1Adfc7cE4605d5Bd6a6A876";
+// const  Map3Polygon3="0x8f7594BB3D4863304b7fb08Fb1BEFb9206d572EC";
+// const  Map3Polygon4="0xb403aBD7aD3e45F052eb801059b08048798fb508";
+const  Map3Polygon5="0xD38B508e98B092FA7baBefc30652F1AfFA8c857C";
+const  Map3address=Map3Polygon5;
+// const  Map3address="0x9BcC604D4381C5b0Ad12Ff3Bf32bEdE063416BC7";
+// const  Map3addresspolygon1="0xdF50c8F37782b21F7209D16A031a2F6EE1cD56E0";
+// const  Map3addressPoly2="0x7f350F151f850d7780097D577a99E2DB8eDDB643";
+
+
 const testAccount ="0xC1FbB4C2F4CE9eF87d42A0ea49683E0Cfb003f2F";
 // const UVTToken = "0xC1bEc29556C0Bd4438aC052578d801dcF97b7ab8" // polygon mainnet
 // const MAp3PayPolygon = "0xdF50c8F37782b21F7209D16A031a2F6EE1cD56E0" // polygon mainnet
@@ -31,9 +40,14 @@ const IERC20Abi = [
     // Events
     "event Transfer(address indexed from, address indexed to, uint amount)"
   ]
-const provider = new ethers.providers.JsonRpcProvider()
+// const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_JSON_RPC_URL_POLYGON)
+// const provider = new ethers.providers.Web3Provider(window.ethereum)
+const provider = new ethers.providers.JsonRpcProvider("https://speedy-nodes-nyc.moralis.io/bea44a5a8b016f917ad01015/polygon/mainnet")
+// const provider = new ethers.providers.JsonRpcProvider()
 
-const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
+
+// const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';//https://polygon.api.0x.org/swap/v1/price
+const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
 const { MNEMONIC, RPC_URL } = process.env;
 
 function createQueryString(params) {
@@ -126,6 +140,15 @@ function numberExponentToLarge(numIn) {
     const convertedToTokenDecimals = ethers.utils.parseUnits(tempNum,tokenDecimals).toString();
     return convertedToTokenDecimals;
   }
+
+  const getSendersAllowanceBalance = async (ownersTokenAddress,owner) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const allowanceContract = new ethers.Contract(ownersTokenAddress,IERC20Abi,provider)
+    const tx1 = await allowanceContract.allowance(owner,Map3address)
+    return tx1
+}
+
+
   const WeiToWholeDecimals = async (_tokenAddress, _num) => {
 
     /////////Note if Error or bug
@@ -204,5 +227,13 @@ module.exports = {
     map3Pay,
     vendorSignUpFee,
     getTokenSymbol,
-    slippage
+    slippage,
+    API_QUOTE_URL,
+    provider,
+    Map3Abi,
+    getSendersAllowanceBalance,
+    Map3WebsiteUrl
 };
+
+
+//tx hash 0xb8f6de1f679c80396acbe38527fa52a0c5f1fe98f022d093ae77f3ee052a14f9
