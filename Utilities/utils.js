@@ -147,6 +147,14 @@ function numberExponentToLarge(numIn) {
     const tx1 = await allowanceContract.allowance(owner,Map3address)
     return tx1
 }
+const getUserErc20Balance = async (tokenAddress,owner) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,provider)
+    const tx0 = await tokenContract.balanceOf(owner)
+    const tx1 = ethers.utils.formatUnits(
+        tx0, await getTokenDecimal(tokenAddress,owner ))
+    return tx1
+}
 
 
   const WeiToWholeDecimals = async (_tokenAddress, _num) => {
@@ -232,6 +240,7 @@ module.exports = {
     provider,
     Map3Abi,
     getSendersAllowanceBalance,
+    getUserErc20Balance,
     Map3WebsiteUrl
 };
 
