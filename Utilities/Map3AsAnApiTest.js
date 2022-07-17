@@ -181,136 +181,21 @@ const getUserErc20Balance = async (tokenAddress,owner) => {
     return tx1
 }
 
-
-
-const listenForMap3Events = async () => {
-
-     const Map3 = new ethers.Contract(Map3address,Map3Abi,provider)
-
-    // Receive an event when ANY transfer occurs
-    console.log("listening for map3 events.......")
-    Map3.on("Paid", (sender, to, amount, event) => {
-    console.log("map3 emitted .......")
-
-        console.log(`Paid event emited: ${ sender } sent ${ ethers.utils.formatEther(amount) } to ${ to}`);
-        console.log("event object: ", event)
-        // The event object contains the verbatim log data, the
-        // EventFragment and functions to fetch the block,
-        // transaction and receipt and event functions
-    });
-    
-    Map3.on("FilledSwapOrder", (sellToken, buyToken, boughtAmount, event) => {
-        console.log(` FilledSwapOrder event emited: map3 converted  ${ ethers.utils.formatEther(boughtAmount) } of sell token: ${ sellToken }  to buy token: ${ buyToken}`);
-        // The event object contains the verbatim log data, the
-        // EventFragment and functions to fetch the block,
-        // transaction and receipt and event functions
-    });
-    
-    }
-
-
-
-
-
-
 const map3Pay = async (_tokenamount,  _to,  _tokenIn,User) => {
     const provider = new ethers.providers.Web3Provider(window.ethereum)
      const PaySigner = provider.getSigner()
     //  const Map3 = new ethers.Contract(Map3address,Map3Abi.abi,PaySigner) // local dev
-
-    //  const Map3 = new ethers.Contract(Map3address,Map3Abi,PaySigner)
+     const Map3 = new ethers.Contract(Map3address,Map3Abi,PaySigner)
      const tokenContract = new ethers.Contract(_tokenIn,IERC20Abi, provider)
-
-    //  const tx1 = await Map3.SameTokenPay(_tokenamount,_to,_tokenIn)
-    //  await tx1.wait()
-
-    
-    console.log("trying out new function1......")
-    const returnOfFunctionBytesEncoder = await functionBytesEncoder(Map3Abi,"SameTokenPay", [_tokenamount,_to,_tokenIn])
-    console.log("returnOfFunctionBytesEncoder: ", returnOfFunctionBytesEncoder)
-    console.log("completed new function1......")
-    
-     const abiCoder = ethers.utils.defaultAbiCoder
-     console.log("abiCoder.encode SOLO: ",abiCoder.encode([ "bytes" ], [ returnOfFunctionBytesEncoder ]))
-
-
-
-
-
-     
-    //  ethers.utils.hexConcat([
-    //           returnOfFunctionBytesEncoder, 
-    //           ethers.utils.defaultAbiCoder.encode(['address', 'address'], ['0xAddr1', '0xAddr2'])
-    //         ])
-
-     console.log("abiCoder.encode JOINED: ",
-     ethers.utils.hexConcat([
-        returnOfFunctionBytesEncoder, 
-        ethers.utils.defaultAbiCoder.encode(['string', 'string'], ['0xAddr1', '0xAddr2'])
-      ])
-     )
-
-     console.log("abiCoder.encode MULTI-JOINED: ",
-     ethers.utils.hexConcat([
-        ethers.utils.defaultAbiCoder.encode(['string'], ['returnOfFunctionBytesEncoder']), 
-        ethers.utils.defaultAbiCoder.encode(['string', 'string'], ['0xAddr1', '0xAddr2']),
-        returnOfFunctionBytesEncoder
-      ])
-     )
-
-    //  console.log("abiCoder.encode MANUALLY JOINED: ",abiCoder.encode([ "bytes" ], [ returnOfFunctionBytesEncoder ]))
-
-
-    console.log("trying out new function2......")
-    const returnOfFunctionBytesEncoderAndImplementor = await functionBytesEncoderAndImplementor(PaySigner,Map3address, returnOfFunctionBytesEncoder)
-    // const returnOfFunctionBytesEncoderAndImplementorReciept = await returnOfFunctionBytesEncoderAndImplementor.wait()
-    await returnOfFunctionBytesEncoderAndImplementor.wait()
-    console.log("returnOfFunctionBytesEncoderAndImplementor: ", returnOfFunctionBytesEncoderAndImplementor)
-    console.log("completed new function2......")
-
-
+     const tx1 = await Map3.SameTokenPay(_tokenamount,_to,_tokenIn)
+     await tx1.wait()
      const sendersBal = await tokenContract.balanceOf(User)
      const reciversBal = await tokenContract.balanceOf(_to)
      console.log("senders Final Balance, is: ",ethers.utils.formatEther(sendersBal))
      console.log("Recivers Final Balance, is: ",ethers.utils.formatEther(reciversBal))
      console.log("payment successful!")
-    //  return tx1
-     return returnOfFunctionBytesEncoderAndImplementor
+     return tx1
  }
-
-
-// USABLE ENCODER!
-// test1 READ parameters Map3address, Map3Abi, "checkIsVendor" [Map3address]
-// test2 WRITE parameters: Map3Abi,"SameTokenPay", [_tokenamount,_to,_tokenIn]
-
-const functionBytesEncoderAndImplementor = async (signer, contractAddress, encodedData) => {
-            let returnData = await signer.sendTransaction({
-                to: contractAddress,
-                data: encodedData
-              })
-              await returnData.wait()
-        console.log("functionBytesEncoderAndImplementor returnData: ", returnData)
-
-        return returnData
-
-}
-const readFunctionBytesEncoderAndImplementor = async (signer, contractAddress, encodedData) => {
-    let returnData = await signer.call({
-        to: contractAddress,
-        data: encodedData
-      })
-console.log("readFunctionBytesEncoderAndImplementor returnData: ", returnData)
-
-return returnData
-
-}
-const functionBytesEncoder = async (contractAbi, functionName, functionParameters) => {
-    let iface = new ethers.utils.Interface(contractAbi);
-    let encodedData = iface.encodeFunctionData(functionName, functionParameters)
-    console.log("functionBytesEncoder encodedData: ", encodedData)
-    return encodedData
-
-}
 
 
 //  const __POSTS = [ 
@@ -329,25 +214,6 @@ const functionBytesEncoder = async (contractAbi, functionName, functionParameter
 // // On failure it will contain undefined  
 // console.log(__FOUND);
 
-//  abiCoder = ethers.utils.defaultAbiCoder
-// abiCoder.encode([ "bytes" ], [ "0x095ea7b3000000000000000000000000d38b508e98b092fa7babefc30652f1affa8c857c0000000000000000000000000000000000000000000000000de0b6b3a7640000" ]);
-
-
-
-// const returnData = await provider.call({
-//     to: '0xAddress',
-//     data: ethers.utils.hexConcat([
-//       '0x9f4f2a33', 
-//       ethers.utils.defaultAbiCoder.encode(['address', 'address'], ['0xAddr1', '0xAddr2'])
-//     ])
-//   })
-
-
-// let ABI = [
-//     "function transfer(address to, uint amount)"
-// ];
-//  let iface = new ethers.utils.Interface(ABI);
-//  iface.encodeFunctionData("transfer", [ "0x1234567890123456789012345678901234567890", parseEther("1.0") ])
 
 
 
@@ -376,8 +242,7 @@ module.exports = {
     Map3Abi,
     getSendersAllowanceBalance,
     getUserErc20Balance,
-    Map3WebsiteUrl,
-    listenForMap3Events
+    Map3WebsiteUrl
 };
 
 //enableSlippageProtection

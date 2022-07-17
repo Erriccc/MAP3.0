@@ -27,7 +27,7 @@ module.exports = {
     // }
     // },
     matic: {
-      url: "https://speedy-nodes-nyc.moralis.io/bea44a5a8b016f917ad01015/polygon/mainnet",
+      url: "https://polygon-rpc.com",
       gas: 2100000,
       gasPrice: 80000000000
     }

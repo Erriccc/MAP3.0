@@ -9,7 +9,7 @@ import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 const {oxPriceFetcher,oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
 // const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
 import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
-    WholeTOWeiDecimals,IERC20Abi,getTokenSymbol
+    WholeTOWeiDecimals,IERC20Abi,getTokenSymbol, slippage
  } from'../Utilities/utils';
 import{OxPay} from '../Utilities/OxPay';
 import { ethers }from "ethers";
@@ -43,7 +43,7 @@ export default function PayVendor({walletAddress,vendorsToken,User,vendorsName,v
                 event.target.amount.value
                 )
             console.log("this is amont to sell", quotedAmmountToSell)
-        const aprovalAmount = (quotedAmmountToSell *1.04).toFixed(0).toString() // change multiplier to come from slippage
+        const aprovalAmount = (quotedAmmountToSell *slippage).toFixed(0).toString() // change multiplier to come from slippage
         console.log("this is the approval amount: ", numberExponentToLarge(aprovalAmount))
 
            const tx2 = await  approveSendersToken(event.target.token.value,Map3address,numberExponentToLarge(aprovalAmount))

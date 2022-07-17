@@ -15,7 +15,7 @@ const oxQuoteRelayer = async (event,User) => {
         reciver: reciver,
         sender: sender,
         reciversTokenOfChoice :reciversChoiceToken,
-        sendersToken: sendersTokenOfChoice
+        sendersToken: sendersTokenOfChoice //
       }
 
       console.log("paymentdata: from oxQuoteRelayer", paymentData)

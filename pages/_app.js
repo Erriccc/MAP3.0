@@ -31,8 +31,11 @@ Router.events.on("routeChangeError", progress.finish);
 
 // Note that these keys are currently exposed to the browser and could be accessed by hackers
 // take out the next public to keep it in the node envitonment
-const MoralisAppId = process.env.NEXT_PUBLIC_MORALIS_API_ID;
-const MoralisAppUrl = process.env.NEXT_PUBLIC_MORALIS_APP_URL;
+const MoralisAppId = "h8ifmoTkY0X7KYU7AQsyIefDFah4JKqWDxCGEpTZ";
+const MoralisAppUrl = "https://8lyygoh4vp0d.usemoralis.com:2053/server";
+
+// const MoralisAppId = process.env.NEXT_PUBLIC_MORALIS_API_ID;
+// const MoralisAppUrl = process.env.NEXT_PUBLIC_MORALIS_APP_URL;
 
 
 

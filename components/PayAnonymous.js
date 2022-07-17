@@ -11,6 +11,7 @@ const {oxQuoteRelayer} = require('../Utilities/oxQuoteRelayer')
 // const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
 import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
     WholeTOWeiDecimals,IERC20Abi,slippage,Map3Abi,getSendersAllowanceBalance, getUserErc20Balance
+    // ,listenForMap3Events
  } from'../Utilities/utils';
 import{OxPay} from '../Utilities/OxPay';
 import { ethers }from "ethers";
@@ -59,7 +60,7 @@ export default function PayAnonymous({walletAddress,vendorsToken,User}) {
     const submitPayment = async (event) => {
 
     event.preventDefault();
-
+    // listenForMap3Events();
 
         if (event.target.token.value == event.target.reciversChoiceToken.value) {
                     console.log("initiating simple SameTokenTransfer")
@@ -100,8 +101,9 @@ export default function PayAnonymous({walletAddress,vendorsToken,User}) {
                     try{
 
                         const tx3 = await  map3Pay(tokenammount,  event.target.reciver.value,  event.target.reciversChoiceToken.value,User)
-                        const tx3Reciept =await tx3.wait()
-                        const map3PayEvents = tx3Reciept.events[tx3Reciept.events.length-1]
+                        const tx3Reciept = await tx3.wait()
+                        console.log("tx3Reciept: ", tx3Reciept)
+                        const map3PayEvents = tx3Reciept.logs[tx3Reciept.logs.length-1]
                         console.log("sameTokenPay Reciept events: ", map3PayEvents)
                         handleSuccess(`transfer succesfull Thank you!`)
 
@@ -170,6 +172,9 @@ export default function PayAnonymous({walletAddress,vendorsToken,User}) {
             }
 
     };
+
+
+
     const [quote, setQuote] = React.useState("select tokens to get Quote");
     const [sendersTokenBalance, setSendersTokenBalance] = React.useState("0.00");
     const [reciversTokenBalance, setRciversTokenBalance] = React.useState("0.00");
@@ -178,6 +183,10 @@ export default function PayAnonymous({walletAddress,vendorsToken,User}) {
     const [reciversToken, setReciversToken] = React.useState("0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"); 
     const [amountToBeSent, setamountToBeSent] = React.useState(1);
 
+
+
+
+    /// USER EXPIRIENCE TOOLS
     useEffect(()=>{
         const fetchPrice = async () => {
             // this function comes from the utililty folder
@@ -331,7 +340,7 @@ export default function PayAnonymous({walletAddress,vendorsToken,User}) {
                             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-5 py-2 m-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                                 PAY
                             </button>
-                                <div className="  p-2 m-3 flex  flex-col justify-center ">
+                                <div className=" mb-3 flex  flex-col justify-center ">
                                     <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                                         Choose Token
                                     </label>

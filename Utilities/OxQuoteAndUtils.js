@@ -2,7 +2,7 @@ const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
 const process = require('process');
 const { ethers } = require("ethers");
-const { Map3address,Map3Abi,testAccount,numberExponentToLarge,createQueryString,getTokenDecimal,WeiToWholeDecimals,IERC20Abi,WholeTOWeiDecimals,API_QUOTE_URL} = require('./utils');
+const { Map3address,Map3Abi,testAccount,numberExponentToLarge,createQueryString,getTokenDecimal,WeiToWholeDecimals,IERC20Abi,WholeTOWeiDecimals,API_QUOTE_URL, provider} = require('./utils');
 
 // const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
 // const testAccount ="0xC1FbB4C2F4CE9eF87d42A0ea49683E0Cfb003f2F"
@@ -15,7 +15,7 @@ const { Map3address,Map3Abi,testAccount,numberExponentToLarge,createQueryString,
 // const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
 // const Ox_POLYGON_API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/price';
 // const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_JSON_RPC_URL_POLYGON)
-const provider = new ethers.providers.JsonRpcProvider("https://speedy-nodes-nyc.moralis.io/bea44a5a8b016f917ad01015/polygon/mainnet") 
+// const provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com") 
 // const provider = new ethers.providers.JsonRpcProvider()
 
 // const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -30,6 +30,7 @@ const OxQuote = async (sendersToken,reciversToken,amountToBeSent,reciversAddress
   console.log(" passsed the map3 contract instantiation test")
 
   let buyAmountWei = await WholeTOWeiDecimals(reciversToken ,amountToBeSent);
+  console.log("recived this from the WholeToWeiDecimal call: ", buyAmountWei)
 let feeOnVendor;
 const isReciverVendor = await Map3.isVendor(reciversAddress)
 // await isReciverVendor.wait()
@@ -39,7 +40,7 @@ if(isReciverVendor ){feeOnVendor = 0} else{
   feeOnVendor =0.05
 /////////////////////////////////////
 // DO SOME MATH TO CALCULATE THE NEW AMOUNT TO SEND TO VENDOR SO THAT USER DOES NOT PAY THE FEES
-////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
 let tempBuyAmount = Number(buyAmountWei)
 const feeCut =  tempBuyAmount * feeOnVendor;
 console.log("feeCut:", feeCut);
