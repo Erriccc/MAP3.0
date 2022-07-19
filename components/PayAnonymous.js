@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import PayVendor from 'components/PayVendor';
 import tokenAdresses from '../constants/tokens.json'
-const BigNumber = require('bignumber.js');
-import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
-const fetch = require('node-fetch');
-import { Button, Icon, useNotification } from "web3uikit";
+import { useNotification } from "web3uikit";
 import ProgressBar from "@badrap/bar-of-progress";
-const {oxPriceFetcher,oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
-const {oxQuoteRelayer} = require('../Utilities/oxQuoteRelayer')
-// const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
-import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
-    WholeTOWeiDecimals,IERC20Abi,slippage,Map3Abi,getSendersAllowanceBalance, getUserErc20Balance
-    // ,listenForMap3Events
- } from'../Utilities/utils';
-import{OxPay} from '../Utilities/OxPay';
-import { ethers }from "ethers";
+const {oxPriceFetcher} = require('../Utilities/oxPriceFetcher');
+import {getUserErc20Balance } from'../Utilities/utils';
+import{oxSwapEventHandler, sameTokenEventHandler} from '../Utilities/payEventHandler';
 
 const progress = new ProgressBar({
     size: 3,
@@ -24,150 +14,22 @@ const progress = new ProgressBar({
   });
 
 
-export default function PayAnonymous({walletAddress,vendorsToken,User}) {
+export default function PayAnonymous({User}) {
 
     const dispatch = useNotification();
-    
-    const handleSuccess= (msg) => {
-        dispatch({
-          type: "success",
-          message: msg,
-          title: "Done",
-          position: "topL",
-        });
-      };
-      const handleError= (msg) => {
-        dispatch({
-          type: "error",
-          message: `${msg}`,
-          title: "failed",
-          position: "topL",
-        });
-      };
-      const handleNoAccount= () => {
-        dispatch({
-          type: "error",
-          message: `You need to connect your wallet to book a rental`,
-          title: "Not Connected",
-          position: "topL",
-        });
-      };
-
-
-
 
 // add input for expected slippage amount to complete swap!
     const submitPayment = async (event) => {
 
     event.preventDefault();
     // listenForMap3Events();
-
         if (event.target.token.value == event.target.reciversChoiceToken.value) {
-                    console.log("initiating simple SameTokenTransfer")
 
-                    const tokenammount = await  WholeTOWeiDecimals(event.target.reciversChoiceToken.value,event.target.amount.value)
-                    console.log("token amount vs converted token amount", event.target.amount.value,tokenammount)
-
-                    let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(event.target.token.value,User), 16).toString()
-                    console.log("usersMap3SpendingTokenAwlloanceBallance: ", usersMap3SpendingTokenAwlloanceBallance)
-                    // CHECK FOR CURRENT  USER ALLOWNCE BALANCE
-                    if(tokenammount >= usersMap3SpendingTokenAwlloanceBallance){
-
-
-
-
-                        console.log("please approve more tokens")
-                        progress.start()
-                        try{
-                            const tx2 = await  approveSendersToken(event.target.token.value,Map3address,tokenammount)
-                            await tx2.wait()
-                            //    handleSuccess(`approval succsesful.. please sign the next transaction to send funds${msg}`)
-                            handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
-
-                        } catch(err){
-                            handleError(` approval failed ${err.message}`)
-                            progress.finish()
-
-                            return;
-                        }
-                        progress.finish()
-
-                        // break;
-                    } else{
-                        // do something....
-                        console.log("we are all good, you have enough tokens approved")
-                    }
-                    progress.start()
-                    try{
-
-                        const tx3 = await  map3Pay(tokenammount,  event.target.reciver.value,  event.target.reciversChoiceToken.value,User)
-                        const tx3Reciept = await tx3.wait()
-                        console.log("tx3Reciept: ", tx3Reciept)
-                        const map3PayEvents = tx3Reciept.logs[tx3Reciept.logs.length-1]
-                        console.log("sameTokenPay Reciept events: ", map3PayEvents)
-                        handleSuccess(`transfer succesfull Thank you!`)
-
-                    } catch (err) {
-                        handleError(` transfer failed please try again. ${err.message}`)
-                        progress.finish()
-
-
-                    }
-                    progress.finish()
-
+                await sameTokenEventHandler(event, User, dispatch);
 
         } else {
 
-
-                    // situation where Tokens do not match
-                    const quotedAmmountToSell = await oxQuoteFetcher(
-                            event.target.token.value,
-                            event.target.reciversChoiceToken.value,
-                            event.target.amount.value
-                            )
-                    console.log("this is amont to sell", quotedAmmountToSell)
-                    const aprovalAmount = (quotedAmmountToSell *slippage).toFixed(0).toString() // change multiplier to come from slippage
-                    console.log("this is the approval amount: ", numberExponentToLarge(aprovalAmount))
-
-                    let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(event.target.token.value,User), 16).toString() // Check for allowance balance
-                    console.log("usersMap3SpendingTokenAwlloanceBallance: ", usersMap3SpendingTokenAwlloanceBallance)
-
-                        progress.start()
-                            try{
-                                const tx2 = await  approveSendersToken(event.target.token.value,Map3address,numberExponentToLarge(aprovalAmount))
-                                await tx2.wait()
-                                handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
-                            } catch (err){
-                                handleError(err.message)
-                                progress.finish()
-
-                                return;
-                                }
-                                progress.finish()
-
-                    const oxQuoteResult = await oxQuoteRelayer(event,User)
-                    progress.start()
-                    try{
-                        const OxPayResult = await OxPay(
-                        oxQuoteResult.sellTokenAddress,
-                        oxQuoteResult.buyTokenAddress,
-                        oxQuoteResult.allowanceTargetquote,
-                        oxQuoteResult.OxDelegateAddress,
-                        oxQuoteResult.data,
-                        oxQuoteResult.allowanceBalance,
-                        oxQuoteResult.buyAmount,
-                        oxQuoteResult.reciversAddress,
-                        User
-                        )
-                        const oxReciept = OxPayResult.events[OxPayResult.events.length-1]
-                        console.log("oxPayResult Reciept events: ", oxReciept)
-                        console.log("0x pay results: ",OxPayResult )
-                        handleSuccess(`transfer succesfull Thank you!`)
-                    } catch (err){
-                        handleError(err.message)                        
-                        }
-                        progress.finish()
-
+                await oxSwapEventHandler(event, User, dispatch);
 
             }
 
@@ -182,8 +44,6 @@ export default function PayAnonymous({walletAddress,vendorsToken,User}) {
     const [sendersToken, setSendersToken] = React.useState("0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619");
     const [reciversToken, setReciversToken] = React.useState("0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"); 
     const [amountToBeSent, setamountToBeSent] = React.useState(1);
-
-
 
 
     /// USER EXPIRIENCE TOOLS
@@ -206,18 +66,6 @@ export default function PayAnonymous({walletAddress,vendorsToken,User}) {
         loadUsersBalances()
       }, [sendersToken, reciversToken]);
 
-
-    if (walletAddress && vendorsToken) {
-      let VendorsWalletAddress = {walletAddress}
-      let VendorsCurrencyToken = {vendorsToken}
-      return (
-        <PayVendor
-         walletAddress = {VendorsWalletAddress}
-         vendorsToken ={VendorsCurrencyToken}
-         User={account}
-         />
-      )
-    }
   return (
 
 
@@ -301,22 +149,6 @@ export default function PayAnonymous({walletAddress,vendorsToken,User}) {
                                                 <h4 className="text-blue-500 text-xs italic">{tokenName}</h4> 
 
                                                     }
-// // return new ERC20 Balance for the new selected token
-// const usersBalanceIs = async () => {
-//     //   console.log("await getUserErc20Balance(address,User): senders tokens:  ", await getUserErc20Balance(address,User))
-//     // return UserBalance = 
-//   console.log("tokens changed!")
-
-//   return await getUserErc20Balance(selectedReciversToken,User)
-  
-
-// //   console.log("UserBalance: ", UserBalance)
-//   }
-//   console.log("usersBalanceIs: ", usersBalanceIs())
-
-// //   setRciversTokenBalance( usersBalanceIs)
-
-
                                                 }}>
                                                     {tokenAdresses.map(({ address,symbol}) => (
                                                     <option key={symbol} value={address}>{symbol}</option>
@@ -362,7 +194,6 @@ export default function PayAnonymous({walletAddress,vendorsToken,User}) {
 
 // Set the quote to a spiner while new quote is loading
 
-
                                                     setQuote(
                                                         <svg role="status" className="inline w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-green-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
@@ -392,7 +223,6 @@ export default function PayAnonymous({walletAddress,vendorsToken,User}) {
                                             </div>
                                         </div>
                                     </div>
-
 
                                 </div>
                         </div>

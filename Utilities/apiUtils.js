@@ -11,11 +11,11 @@ const Map3Abi = require( './map3TestAbi.json')
 const uniVoteAbi = require( './univotetoken.json')
 const Map3WebsiteUrl = "https://www.map3.com"
 
-const PaymentHandlerEndpoint = '/api/oxQuoteHandler' 
-const map3SameTokenTransferEndpoint = '/api/map3pay/map3sametokentransfer' 
-const map3SwapAndTransferEndpoint = '/api/map3pay/map3swapandtransfer' 
-const map3SignUpEndpoint = '/api/map3signup' 
-const map3ApproveEndpoint = '/api/map3pay/map3approve' 
+const PaymentHandlerEndpoint = 'api/oxQuoteHandler' // "api/oxQuoteHandler"
+const map3SameTokenTransferEndpoint = 'api/map3pay/map3sametokentransfer' // "api/paymentHandler"
+const map3SwapAndTransferEndpoint = 'api/map3pay/map3swapandtransfer' // "api/paymentHandler"
+const map3SignUpEndpoint = 'api/map3signup' // "api/paymentHandler"
+const map3ApproveEndpoint = 'api/map3pay/map3approve' 
 
 const  { ethers }=require( "ethers"); // from hardhat throws error "Can't resolve 'console'"
 // const  Map3Polygon3="0x8f7594BB3D4863304b7fb08Fb1BEFb9206d572EC";
@@ -32,7 +32,7 @@ const testAccount ="0xC1FbB4C2F4CE9eF87d42A0ea49683E0Cfb003f2F";
 // const UVTToken = "0xC1bEc29556C0Bd4438aC052578d801dcF97b7ab8" // polygon mainnet
 // const MAp3PayPolygon = "0xdF50c8F37782b21F7209D16A031a2F6EE1cD56E0" // polygon mainnet
 const vendorSignUpFee = 0;
-const slippage = 1.1;
+const slippage = 1.2;
 
 
 const IERC20Abi = [
@@ -150,12 +150,13 @@ function numberExponentToLarge(numIn) {
   }
 
   const getSendersAllowanceBalance = async (ownersTokenAddress,owner) => {
+    // const provider = new ethers.providers.Web3Provider(window.ethereum)
     const allowanceContract = new ethers.Contract(ownersTokenAddress,IERC20Abi,provider)
     const tx1 = await allowanceContract.allowance(owner,Map3address)
     return tx1
 }
 const getUserErc20Balance = async (tokenAddress,owner) => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    // const provider = new ethers.providers.Web3Provider(window.ethereum)
     const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,provider)
     const tx0 = await tokenContract.balanceOf(owner)
     const tx1 = ethers.utils.formatUnits(
@@ -178,127 +179,75 @@ const getUserErc20Balance = async (tokenAddress,owner) => {
     return convertedToTokenDecimals;
   }
 
-  const approveSendersToken = async (spenderTokenAddress,spenderAddress,approveAmount) => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-    const aprovalSigner = provider.getSigner()
-    const aprovalContract = new ethers.Contract(spenderTokenAddress,IERC20Abi,aprovalSigner)
-    const tx1 = await aprovalContract.approve(spenderAddress,approveAmount)
-    await tx1.wait()
-    return tx1
+  const approveSendersTokenData = (spenderAddress,approveAmount) => {
+    const approveAnyTokenData =  [spenderAddress,approveAmount]
+    console.log("constructing approveTokenData from oxPay api.....")
+    const approveTokenData =    functionBytesEncoder(IERC20Abi,"approve",approveAnyTokenData)
+  console.log("typeOf approveTokenData: ", typeof approveTokenData)
+    console.log("completed approveTokenData from oxPay : ", approveTokenData)
+    return(approveTokenData)
 }
 
 
 
-const listenForMap3Events = async () => {
 
-     const Map3 = new ethers.Contract(Map3address,Map3Abi,provider)
-
-    // Receive an event when ANY transfer occurs
-    console.log("listening for map3 events.......")
-    Map3.on("Paid", (sender, to, amount, event) => {
-    console.log("map3 emitted .......")
-
-        console.log(`Paid event emited: ${ sender } sent ${ ethers.utils.formatEther(amount) } to ${ to}`);
-        console.log("event object: ", event)
-        // The event object contains the verbatim log data, the
-        // EventFragment and functions to fetch the block,
-        // transaction and receipt and event functions
-    });
+  // WRITE FUNCTION FOR FRONT END!!
+  const approveSendersTokenExecutor = async (spenderTokenAddress,approveTokenData) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const aprovalSigner = provider.getSigner()
     
-    Map3.on("FilledSwapOrder", (sellToken, buyToken, boughtAmount, event) => {
-        console.log(` FilledSwapOrder event emited: map3 converted  ${ ethers.utils.formatEther(boughtAmount) } of sell token: ${ sellToken }  to buy token: ${ buyToken}`);
-        // The event object contains the verbatim log data, the
-        // EventFragment and functions to fetch the block,
-        // transaction and receipt and event functions
-    });
-    
-    }
+    console.log("executing approveSendersTokenExecutor......")
+    const approvedTokenTx = await functionBytesEncoderAndImplementor(aprovalSigner,spenderTokenAddress, approveTokenData)
+    await approvedTokenTx.wait()
+    console.log("approvedTokenTx: ", approvedTokenTx)
+    console.log("completed approval...!!")
+    console.log("approval successful!")
+    return approvedTokenTx
+}
+
+
+    const map3PayData = (_tokenamount,  _to,  _tokenIn) => {
+          const SameTokenPayData =  [_tokenamount,_to,_tokenIn]
+          console.log("constructing Map3SameTokenPayData from oxPay api.....")
+          const Map3SameTokenPayData =    functionBytesEncoder(Map3Abi,"SameTokenPay",SameTokenPayData)
+        console.log("typeOf Map3SwapData: ", typeof Map3SameTokenPayData)
+          console.log("completed Map3SameTokenPayData from oxPay : ", Map3SameTokenPayData)
+          return(Map3SameTokenPayData)
+      }
 
 
 
 
+// WRITE FUNCTION for FRONT END !!!!!
+const map3PayExecutor = async (returnOfFunctionBytesEncoder) => {
 
-
-const map3Pay = async (_tokenamount,  _to,  _tokenIn,User) => {
     const provider = new ethers.providers.Web3Provider(window.ethereum)
      const PaySigner = provider.getSigner()
-    //  const Map3 = new ethers.Contract(Map3address,Map3Abi.abi,PaySigner) // local dev
-
-    //  const Map3 = new ethers.Contract(Map3address,Map3Abi,PaySigner)
-     const tokenContract = new ethers.Contract(_tokenIn,IERC20Abi, provider)
-
-    //  const tx1 = await Map3.SameTokenPay(_tokenamount,_to,_tokenIn)
-    //  await tx1.wait()
-
-    
-    console.log("trying out new function1......")
-    const returnOfFunctionBytesEncoder = await functionBytesEncoder(Map3Abi,"SameTokenPay", [_tokenamount,_to,_tokenIn])
-    console.log("returnOfFunctionBytesEncoder: ", returnOfFunctionBytesEncoder)
-    console.log("typeOf returnOfFunctionBytesEncoder: ", typeof returnOfFunctionBytesEncoder)
-    console.log("completed new function1......")
-    
-     const abiCoder = ethers.utils.defaultAbiCoder
-     console.log("abiCoder.encode SOLO: ",abiCoder.encode([ "bytes" ], [ returnOfFunctionBytesEncoder ]))
-
-
-     console.log("abiCoder.encode JOINED: ",
-     ethers.utils.hexConcat([
-        returnOfFunctionBytesEncoder, 
-        ethers.utils.defaultAbiCoder.encode(['string', 'string'], ['0xAddr1', '0xAddr2'])
-      ])
-     )
-
-     console.log("abiCoder.encode MULTI-JOINED: ",
-     ethers.utils.hexConcat([
-        ethers.utils.defaultAbiCoder.encode(['string'], ['returnOfFunctionBytesEncoder']), 
-        ethers.utils.defaultAbiCoder.encode(['string', 'string'], ['0xAddr1', '0xAddr2']),
-        returnOfFunctionBytesEncoder
-      ])
-     )
-
-    //  console.log("abiCoder.encode MANUALLY JOINED: ",abiCoder.encode([ "bytes" ], [ returnOfFunctionBytesEncoder ]))
-
-
-    console.log("trying out new function2......")
     const returnOfFunctionBytesEncoderAndImplementor = await functionBytesEncoderAndImplementor(PaySigner,Map3address, returnOfFunctionBytesEncoder)
     // const returnOfFunctionBytesEncoderAndImplementorReciept = await returnOfFunctionBytesEncoderAndImplementor.wait()
     await returnOfFunctionBytesEncoderAndImplementor.wait()
     console.log("returnOfFunctionBytesEncoderAndImplementor: ", returnOfFunctionBytesEncoderAndImplementor)
-    console.log("completed new function2......")
+    console.log("completed map3Pay...!!")
 
-
-     const sendersBal = await tokenContract.balanceOf(User)
-     const reciversBal = await tokenContract.balanceOf(_to)
-     console.log("senders Final Balance, is: ",ethers.utils.formatEther(sendersBal))
-     console.log("Recivers Final Balance, is: ",ethers.utils.formatEther(reciversBal))
      console.log("payment successful!")
-    //  return tx1
      return returnOfFunctionBytesEncoderAndImplementor
  }
 
- const OxPay = async (
-    sellTokenAddress,
+
+
+ const OxPayTxData = (
+      sellTokenAddress,
       buyTokenAddress,
       allowanceTargetquote,
       OxDelegateAddress,
       allowanceBalance,
       buyAmount,
       reciversAddress,
-      User,
       data
-
-
     ) => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        const oxPaySigner = provider.getSigner()
-        const Map3 = new ethers.Contract(Map3address,Map3Abi,oxPaySigner)
-        // const Map3 = new ethers.Contract(Map3address,Map3Abi.abi,oxPaySigner)
-        const sellContract = new ethers.Contract(sellTokenAddress,IERC20Abi,provider)
-        const buyContract = new ethers.Contract(buyTokenAddress,IERC20Abi, provider)
-
-        console.log("concatinating Map3SwapData from oxPay ....")
+       
         const fillSwapData =  [
-          sellTokenAddress, // sellToken
+              sellTokenAddress, // sellToken
               buyTokenAddress, // buyToken
               allowanceTargetquote,// spender
               OxDelegateAddress,// swapTarget
@@ -307,53 +256,38 @@ const map3Pay = async (_tokenamount,  _to,  _tokenIn,User) => {
               reciversAddress,// _toAddress
               data // swapCallData
         ]
+        console.log("constructing Map3SwapData from oxPay api.....")
         const Map3SwapData =    functionBytesEncoder(Map3Abi,"fillQuote",fillSwapData)
-        
       console.log("typeOf Map3SwapData: ", typeof Map3SwapData)
-        console.log("Map3SwapData from oxPay : ", Map3SwapData)
-
-        console.log("trying out new function2......")
-        const returnOfFunctionBytesEncoderAndImplementor = await functionBytesEncoderAndImplementor(oxPaySigner,Map3address, Map3SwapData)
-        const receipt= await returnOfFunctionBytesEncoderAndImplementor.wait()
-        console.log("completed new function2......")
-
-
-//  const Map3Swap = await Map3.fillQuote(
-//     sellTokenAddress, // sellToken
-//     buyTokenAddress, // buyToken
-//     allowanceTargetquote,// spender
-//     OxDelegateAddress,// swapTarget
-//     allowanceBalance,// _tokenamount
-//     buyAmount, // _sendAmount
-//     reciversAddress,// _toAddress
-//     data // swapCallData
-//       )
-//       const receipt = await Map3Swap.wait()
-
-      const map3BuyBal = await buyContract.balanceOf(Map3address)
-      const map3FinalSellBal = await sellContract.balanceOf(Map3address)
-      const feeCollectorBuyBal = await buyContract.balanceOf(testAccount)
-      const feeCollectorFinalSellBal = await sellContract.balanceOf(testAccount)
-      const signerBuyBal = await buyContract.balanceOf(User)
-      const signerFinalSellBal = await sellContract.balanceOf(User)
-      const reciverBuyBal = await buyContract.balanceOf(reciversAddress)
-      const reciverFinalSellBal = await sellContract.balanceOf(reciversAddress)
-      const contactAllowanceBalance = await sellContract.allowance(Map3address,allowanceTargetquote)
-
-      console.log('left over Map3.0 allowance for target spennder:',ethers.utils.formatEther(contactAllowanceBalance))
-      console.log("signer Final Sell and Buy Balance, are: ",ethers.utils.formatEther(signerFinalSellBal),ethers.utils.formatEther(signerBuyBal))
-      console.log("Map3 Final Sell and Buy Balance, are: ",ethers.utils.formatEther(map3FinalSellBal),ethers.utils.formatEther(map3BuyBal))
-      console.log("fee collector Final Sell and Weth Buy, are: ",ethers.utils.formatEther(feeCollectorFinalSellBal),ethers.utils.formatEther(feeCollectorBuyBal))
-      console.log("Recivers Final Sell and Buy Balance, are: ",ethers.utils.formatEther(reciverFinalSellBal),ethers.utils.formatEther(reciverBuyBal))
-return(receipt)
+        console.log("completed Map3SwapData from oxPay : ", Map3SwapData)
+        return(Map3SwapData)
 
     }
+
+
+// WRITE FUNCTION for FRONT END !!!!!
+    const OxPayExecutor = async (Map3SwapData ) => {
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const oxPaySigner = provider.getSigner()
+       
+        console.log("executing 0xPay......")
+        const returnOfFunctionBytesEncoderAndImplementor = await functionBytesEncoderAndImplementor(oxPaySigner,Map3address, Map3SwapData)
+        const receipt= await returnOfFunctionBytesEncoderAndImplementor.wait()
+        console.log("completed 0xPay...!!")
+        console.log("payment successful!")
+        return(receipt)
+
+    }
+
 
 // USABLE ENCODER!
 // test1 READ parameters Map3address, Map3Abi, "checkIsVendor" [Map3address]
 // test2 WRITE parameters: Map3Abi,"SameTokenPay", [_tokenamount,_to,_tokenIn]
 
 const functionBytesEncoderAndImplementor = async (signer, contractAddress, encodedData) => {
+    console.log("functionBytesEncoderAndImplementor running... ")
+
             let returnData = await signer.sendTransaction({
                 to: contractAddress,
                 data: encodedData
@@ -387,6 +321,129 @@ const getFunctionSignatureHash =  (contractAbi, functionName) => {
     return encodedData;
 
 }
+
+const listenForMap3Events = async () => {
+
+    const Map3 = new ethers.Contract(Map3address,Map3Abi,provider)
+
+   // Receive an event when ANY transfer occurs
+   console.log("listening for map3 events.......")
+   Map3.on("Paid", (sender, to, amount, event) => {
+   console.log("map3 emitted .......")
+
+       console.log(`Paid event emited: ${ sender } sent ${ ethers.utils.formatEther(amount) } to ${ to}`);
+       console.log("event object: ", event)
+       // The event object contains the verbatim log data, the
+       // EventFragment and functions to fetch the block,
+       // transaction and receipt and event functions
+   });
+   
+   Map3.on("FilledSwapOrder", (sellToken, buyToken, boughtAmount, event) => {
+       console.log(` FilledSwapOrder event emited: map3 converted  ${ ethers.utils.formatEther(boughtAmount) } of sell token: ${ sellToken }  to buy token: ${ buyToken}`);
+       // The event object contains the verbatim log data, the
+       // EventFragment and functions to fetch the block,
+       // transaction and receipt and event functions
+   });
+   
+   }
+
+
+
+
+   const OxQuote = async (sendersToken,reciversToken,amountToBeSent,reciversAddress,sendersAddress) => {
+
+    console.log("from OXQuote in oxpay and utils: ",sendersToken,reciversToken,amountToBeSent,reciversAddress,sendersAddress )
+    const sendersTokenContract = new ethers.Contract(sendersToken,IERC20Abi,provider)
+    console.log(" passsed the senderstoken contract instantiation test")
+  
+    const Map3 = new ethers.Contract(Map3address,Map3Abi,provider)
+    console.log(" passsed the map3 contract instantiation test")
+  
+    let buyAmountWei = await WholeTOWeiDecimals(reciversToken ,amountToBeSent);
+    console.log("recived this from the WholeToWeiDecimal call: ", buyAmountWei)
+  let feeOnVendor;
+  const isReciverVendor = await Map3.isVendor(reciversAddress)
+  // await isReciverVendor.wait()
+  if(isReciverVendor ){feeOnVendor = 0} else{feeOnVendor =0.05
+
+  /////////////////////////////////////
+  // DO SOME MATH TO CALCULATE THE NEW AMOUNT TO SEND TO VENDOR SO THAT USER DOES NOT PAY THE FEES
+  ///////////////////////////////////////////////////////
+  let tempBuyAmount = Number(buyAmountWei)
+  const feeCut =  tempBuyAmount * feeOnVendor;
+  console.log("feeCut:", feeCut);
+  
+  const newBuyAmount = tempBuyAmount-feeCut;
+  console.log("newBuyAmount:", newBuyAmount);
+  
+  console.log("newBuyAmount",newBuyAmount, typeof newBuyAmount)
+  console.log("newBuyAmount.toString()",newBuyAmount.toString() , typeof newBuyAmount.toString())
+  
+  buyAmountWei = newBuyAmount.toString();
+  
+  }
+      const qs = createQueryString({
+      sellToken: sendersToken,
+      buyToken: reciversToken,
+      buyAmount: buyAmountWei,
+      takerAddress: Map3address,
+      skipValidation: true,
+      intentOnFilling:true,
+      feeRecipient: testAccount,
+      buyTokenPercentageFee: feeOnVendor// check if vendor IsVendor for fees
+      });
+      const quoteUrl = `${API_QUOTE_URL}?${qs}`;
+      console.log(`Fetching quote ${quoteUrl}...`);
+      const response = await fetch(quoteUrl);
+      const quote = await response.json();
+      console.log(`Received a quote with price ${quote.price}`);
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Note ask User to approve  aprovalAmount before clicking Pay
+  ////////////////////////////////////////////////////////////////////
+      const AprovalTarget = quote.allowanceTarget
+      const OxDelegateAddress = quote.to
+      const allowanceBalance = await sendersTokenContract.allowance(sendersAddress,Map3address)
+  
+     console.log('just aproved spender:',ethers.utils.formatEther(allowanceBalance))
+    //  console.log('just aproved spender:',await WeiToWholeDecimals(quote.sellTokenAddress,allowanceBalance))
+      // const PayReadyResponse = {
+        ///////////////////////////Destructure this array//////////////////////////
+        const fillQuoteParameters={
+                    sellTokenAddress:sendersToken, // buyToken
+                    buyTokenAddress: reciversToken, // sellToken
+                    allowanceTargetquote: AprovalTarget,// spender
+                    OxDelegateAddress: OxDelegateAddress,// swapTarget
+                    data: quote.data, // swapCallData
+                    allowanceBalance: allowanceBalance,// _tokenamount
+                    buyAmount: quote.buyAmount, // _sendAmount
+                    reciversAddress: reciversAddress// _toAddress
+                    // gasPrice: quote.gasPrice,
+                    // gas: quote.gas
+            // quote.gasPrice,
+  }
+      // }
+  
+  
+    return(fillQuoteParameters)
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //SAMPLE CODE!
 
 
@@ -397,8 +454,6 @@ const getFunctionSignatureHash =  (contractAbi, functionName) => {
         // ])
         // console.log("typeOf Map3SwapData: ", typeof Map3SwapData)
         // console.log("Map3SwapData from oxPay : ", Map3SwapData)
-
-
 
 //  const __POSTS = [ 
 // 	{ id: 1, title: 'Apple', description: 'Description of post 1' }, 
@@ -452,8 +507,6 @@ module.exports = {
     WholeTOWeiDecimals,
     IERC20Abi,
     Map3address,
-    approveSendersToken,
-    map3Pay,
     vendorSignUpFee,
     getTokenSymbol,
     slippage,
@@ -469,12 +522,18 @@ module.exports = {
     functionBytesEncoderAndImplementor,
     getFunctionSignatureHash,
     PaymentHandlerEndpoint,
-    PaymentHandlerEndpoint,
     map3SameTokenTransferEndpoint,
     map3SwapAndTransferEndpoint,
     map3SwapAndTransferEndpoint,
+    OxPayExecutor,
+    OxPayTxData,
+    map3PayExecutor,
+    map3PayData,
+    approveSendersTokenExecutor,
+    approveSendersTokenData,
     map3ApproveEndpoint,
-    map3SignUpEndpoint
+    OxQuote
+
 
 };
 

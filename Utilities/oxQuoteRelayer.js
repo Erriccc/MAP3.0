@@ -1,5 +1,8 @@
+// Relays 0x Quote parameters to the Payment Handeler Server and sends the results back to the front end
+
+
 const fetch = require('node-fetch');
-// const {OxQuote} = require('../Utilities/OxQuoteAndUtils');
+const {PaymentHandlerEndpoint} = require('/Utilities/utils');
 const { ethers } = require("ethers");
 
 const oxQuoteRelayer = async (event,User) => {
@@ -9,7 +12,7 @@ const oxQuoteRelayer = async (event,User) => {
     const sendingAmout = event.target.amount.value
     const reciver = event.target.reciver.value
     const sender = User
-    
+
      const paymentData = {
         amount: sendingAmout,
         reciver: reciver,
@@ -22,7 +25,8 @@ const oxQuoteRelayer = async (event,User) => {
 
       const JSONdata = JSON.stringify(paymentData)
       // API endpoint where we send form data.
-      const endpoint = 'api/paymentHandler' // "api/paymentHandler"
+      // const endpoint = 'api/paymentHandler' // "api/paymentHandler"
+      const endpoint = PaymentHandlerEndpoint // "api/paymentHandler"
       // Form the request for sending data to the server.
       const options = {
         // The method is POST because we are sending data.

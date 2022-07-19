@@ -2,7 +2,11 @@
 const fetch = require('node-fetch');
 const process = require('process');
 const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther,numberExponentToLarge } = require('../../Utilities/utils');
-const {OxQuote} = require('../../Utilities/OxQuoteAndUtils');
+const { OxQuote } = require('../../Utilities/apiUtils');
+
+
+// RENAME TO oxQuoteHandler
+
 
 // const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
 // const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
@@ -16,6 +20,17 @@ export default async function form(req, res) {
       sendersToken:body.sendersToken
     }
     console.log("from payment handler reqPaymentData: ",reqPaymentData )
+
+    // Guard clause checks for first and last name,
+    // and returns early if they are not found
+    if (!body.amount || !body.reciver || !body.sender) {
+     console.log("incomplete required parameters: ",body )
+      // Sends a HTTP bad request error code
+      return res.status(400).json({ data: 'please pass in all required parameters' })
+      
+    }
+
+    // note this is being implimented on the server side so it is not exposed
   const  responsePaymentData = await OxQuote(
     reqPaymentData.sendersToken,
     reqPaymentData.reciversToken,
@@ -23,12 +38,6 @@ export default async function form(req, res) {
     reqPaymentData.reciver,
     reqPaymentData.sender
     )
-    // Guard clause checks for first and last name,
-    // and returns early if they are not found
-    // if (!body.first || !body.last) {
-    //   // Sends a HTTP bad request error code
-    //   return res.status(400).json({ data: 'First or last name not found' })
-    // }
 
     console.log("from payment handler responsePaymentData: ",responsePaymentData )
 

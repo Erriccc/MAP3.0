@@ -1,13 +1,6 @@
 const fetch = require('node-fetch');
 const process = require('process');
-const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther ,WholeTOWeiDecimals,IERC20Abi} = require('./utils');
-
-const API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
-// const API_PRICE_URL = 'https://api.0x.org/swap/v1/price';
-const Ox_POLYGON_API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
-// const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
-const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
-
+const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther ,WholeTOWeiDecimals,IERC20Abi, API_PRICE_URL, API_QUOTE_URL} = require('./utils');
 
 const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent) => {
 
@@ -27,7 +20,6 @@ if (reciversToken == null || reciversToken.length != 42){
 
 
 console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", await WholeTOWeiDecimals(reciversToken,amountToBeSent) )
-// console.log("ammount to sellfrom pricefetcher : ",amountToBeSent, " - ", await WholeTOWeiDecimals(reciversToken,amountToBeSent) )
 
     const qs = createQueryString({
         // Directly Swap and Send Any Token for USDT online
