@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import tokenAdresses from '../constants/tokens.json'
+import tokenAdresses from '../constants/sendersTokens.json'
+import reciversTokenAdresses from '../constants/reciversTokens.json'
 import { useNotification } from "web3uikit";
 import ProgressBar from "@badrap/bar-of-progress";
 const {oxPriceFetcher} = require('../Utilities/oxPriceFetcher');
-import {getUserErc20Balance } from'../Utilities/utils';
+import {getUserErc20Balance,EthAddress,WethAddress} from'../Utilities/utils';
 import{oxSwapEventHandler, sameTokenEventHandler} from '../Utilities/payEventHandler';
 
 const progress = new ProgressBar({
@@ -150,8 +151,9 @@ export default function PayAnonymous({User}) {
 
                                                     }
                                                 }}>
-                                                    {tokenAdresses.map(({ address,symbol}) => (
-                                                    <option key={symbol} value={address}>{symbol}</option>
+                                                    {reciversTokenAdresses.map(({ address,symbol}) => (
+                                                            <option key={symbol} value={address}>{symbol}</option>
+
                                                 ))}
                                             </select>
                                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">

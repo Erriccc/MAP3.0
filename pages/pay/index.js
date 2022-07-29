@@ -16,7 +16,8 @@ export default function PAY () {
 
   // user is autenticated
   const {isAuthenticated} = useMoralis()
-  if (!isAuthenticated) {
+  // if (!isAuthenticated) {
+    if (!account) {
     return (
       <Apphero/>
     )

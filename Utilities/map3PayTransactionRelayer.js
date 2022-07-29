@@ -3,7 +3,7 @@ import {map3SameTokenTransferEndpoint} from'../Utilities/utils';
 import {map3PayExecutor} from '../Utilities/apiUtils'
 
 
-const map3PayTransactionRelayer = async (event,tokenammount ) => {
+const map3PayTransactionRelayer = async (event,tokenammount, txValue ) => {
 
      const map3SameTokenTransferData = {
         amount: tokenammount,
@@ -35,7 +35,7 @@ const map3PayTransactionRelayer = async (event,tokenammount ) => {
 
         console.log("txdata..... from m3paytransactionrelayer: ", txdata)
 
-        const tx2 = await  map3PayExecutor(txdata) // New Implementation of backend transact    ions
+        const tx2 = await  map3PayExecutor(txdata, txValue) // New Implementation of backend transact    ions
         return (tx2)
 
 }

@@ -3,7 +3,7 @@ import { map3SwapAndTransferEndpoint} from'../Utilities/utils';
 import {OxPayExecutor} from '../Utilities/apiUtils'
 
 
-const map3OxPayTransactionRelayer = async (oxQuoteResult ) => {
+const map3OxPayTransactionRelayer = async (oxQuoteResult, txValue ) => {
 
      const map3OxPayTransferData = {
 
@@ -44,7 +44,7 @@ const map3OxPayTransactionRelayer = async (oxQuoteResult ) => {
 
 
 
-        const tx2 = await  OxPayExecutor(txdata) // New Implementation of backend transact    ions
+        const tx2 = await  OxPayExecutor(txdata, txValue) // New Implementation of backend transact    ions
         return (tx2)
 
 }

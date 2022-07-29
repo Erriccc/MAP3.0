@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PayAnonymous from  "components/PayAnonymous.js"
-import tokenAdresses from '../constants/tokens.json'
+import tokenAdresses from '../constants/sendersTokens.json'
 import { useRouter } from "next/router";
 const BigNumber = require('bignumber.js');
 import { Button, Icon, useNotification } from "web3uikit";

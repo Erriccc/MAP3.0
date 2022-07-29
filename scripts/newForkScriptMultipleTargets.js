@@ -25,19 +25,6 @@ const {
 
 const DAIAddress = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
 const WETHddress= "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
-// const IERC20Abi = [
-//   // Read-Only Functions
-//   "function balanceOf(address owner) view returns (uint256)",
-//   "function decimals() view returns (uint8)",
-//   "function symbol() view returns (string)",
-//   "function approve(address spender, uint256 amount) external returns (bool)",
-//   "function allowance(address owner, address spender) external view returns (uint256)",
-//   // Authenticated Functions
-//   "function transfer(address to, uint amount) returns (bool)",
-//   // Events
-//   "event Transfer(address indexed from, address indexed to, uint amount)"
-// ];
-
 
 async function main() {
   let TargetAccount = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";

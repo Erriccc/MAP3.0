@@ -24,7 +24,7 @@ const {
     listenForMap3Events,
     functionBytesEncoder,
     readFunctionBytesEncoderAndImplementor,
-    functionBytesEncoderAndImplementor,
+    bytesEncodedBytesImplementor,
     getFunctionSignatureHash,
     PaymentHandlerEndpoint,
     map3SameTokenTransferEndpoint,

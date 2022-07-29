@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import tokenAdresses from '../constants/tokens.json'
+import tokenAdresses from '../constants/sendersTokens.json'
 const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
 const process = require('process');

@@ -5,9 +5,10 @@ const fetch = require('node-fetch');
 const {PaymentHandlerEndpoint} = require('/Utilities/utils');
 const { ethers } = require("ethers");
 
-const oxQuoteRelayer = async (event,User) => {
+const oxQuoteRelayer = async (event,sendersTokenAddress,User) => {
     event.preventDefault();
-    const sendersTokenOfChoice = event.target.token.value
+    // const sendersTokenOfChoice = event.target.token.value
+    const sendersTokenOfChoice = sendersTokenAddress
     const reciversChoiceToken = event.target.reciversChoiceToken.value
     const sendingAmout = event.target.amount.value
     const reciver = event.target.reciver.value

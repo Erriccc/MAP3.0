@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const process = require('process');
-const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther ,WholeTOWeiDecimals,IERC20Abi, API_PRICE_URL, API_QUOTE_URL} = require('./utils');
+const { createQueryString,WholeTOWeiDecimals,API_PRICE_URL, API_QUOTE_URL} = require('./utils');
 
 const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent) => {
 
@@ -49,7 +49,7 @@ console.log("ammount to be sent from Quotefetcher : ",amountToBeSent, " - ", awa
       buyAmount: await WholeTOWeiDecimals(reciversToken,amountToBeSent),
   });
   const quoteUrl = `${API_QUOTE_URL}?${qs}`;
-  console.log(quoteUrl)
+  console.log("Quotefetcher url for price..", quoteUrl)
   // const quoteUrl = `${Ox_POLYGON_API_PRICE_URL}?${qs}`;
   const response = await fetch(quoteUrl);
   const quote = await response.json();

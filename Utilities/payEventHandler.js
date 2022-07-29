@@ -1,11 +1,12 @@
 const {oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
 const {oxQuoteRelayer} = require('../Utilities/oxQuoteRelayer')
-import {numberExponentToLarge,WholeTOWeiDecimals,slippage,getSendersAllowanceBalance,
+import {numberExponentToLarge,WholeTOWeiDecimals,slippage,getSendersAllowanceBalance,EthAddress,WethAddress,
  } from'../Utilities/utils';
  import{approveTransactionRelayer} from "../Utilities/approveTransactionRelayer"
  import{map3PayTransactionRelayer} from "../Utilities/map3PayTransactionRelayer"
  import{map3OxPayTransactionRelayer} from "../Utilities/map3OxPayTransactionRelayer"
 
+ import { ethers }from "ethers";
 
 const sameTokenEventHandler = async (event, User, dispatch ) => {
 
@@ -37,12 +38,34 @@ const sameTokenEventHandler = async (event, User, dispatch ) => {
 
 
     
-console.log('payevent recieved')
+        console.log('payevent recieved')
         console.log("initiating simple SameTokenTransfer")
-        const tokenammount = await  WholeTOWeiDecimals(event.target.reciversChoiceToken.value,event.target.amount.value)
+        // const tokenammount = await  WholeTOWeiDecimals(event.target.reciversChoiceToken.value,event.target.amount.value)
+        let tokenammount;
+        let sendersTokenAddress = event.target.token.value;
+
+        if ( sendersTokenAddress == EthAddress){
+          sendersTokenAddress = WethAddress;
+        tokenammount = await  WholeTOWeiDecimals(sendersTokenAddress,event.target.amount.value)
+        console.log("tokenAmount is in eth")
+        }else{
+        tokenammount = await  WholeTOWeiDecimals(sendersTokenAddress,event.target.amount.value)
+        console.log("tokenAmount is in ERC20")
+
+        }
         console.log("token amount vs converted token amount", event.target.amount.value,tokenammount)
-        let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(event.target.token.value,User), 10).toString()
+        // let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(event.target.token.value,User), 10).toString()
+        let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(sendersTokenAddress,User), 10).toString()
         console.log("usersMap3SpendingTokenAwlloanceBallance: ", usersMap3SpendingTokenAwlloanceBallance)
+
+        // let sendersTokenAddress = event.target.token.value;
+      // CHECK TO AVOID QUOTE ERROR IN THE CASE OF ETH TRANSACTION
+      if ( event.target.token.value == EthAddress){
+        // sendersTokenAddress = WethAddress;
+        usersMap3SpendingTokenAwlloanceBallance = tokenammount;
+
+      }
+
         // CHECK FOR CURRENT  USER ALLOWNCE BALANCE
         if(tokenammount - usersMap3SpendingTokenAwlloanceBallance > 1){
             console.log("please approve more tokens")
@@ -67,7 +90,16 @@ console.log('payevent recieved')
             console.log("we are all good, you have enough tokens approved...", tokenammount-usersMap3SpendingTokenAwlloanceBallance)
         }
         try{
-            await map3PayTransactionRelayer(event,tokenammount)
+
+          if ( event.target.token.value == EthAddress){
+            await map3PayTransactionRelayer(event,tokenammount,tokenammount );
+
+    
+          }else{
+            await map3PayTransactionRelayer(event,tokenammount,0)
+
+          }
+    
             handleSuccess(`transfer succesfull Thank you!`)
 
         } catch (err) {
@@ -83,6 +115,9 @@ console.log('payevent recieved')
 
 
 }
+
+
+
 
 
 
@@ -114,9 +149,17 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
           position: "topL",
         });
       };
+      // new inputed code
+      let sendersTokenAddress = event.target.token.value;
+      // CHECK TO AVOID QUOTE ERROR IN THE CASE OF ETH TRANSACTION
+      if ( sendersTokenAddress == EthAddress){
+        sendersTokenAddress = WethAddress;
+      }
+
 
         const quotedAmmountToSell = await oxQuoteFetcher(
-        event.target.token.value,
+        // event.target.token.value,
+        sendersTokenAddress,
         event.target.reciversChoiceToken.value,
         event.target.amount.value
         )
@@ -124,8 +167,15 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
             const aprovalAmount = (quotedAmmountToSell *slippage).toFixed(0).toString() // change multiplier to come from slippage
             console.log("this is the approval amount: ", numberExponentToLarge(aprovalAmount))
 
-            let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(event.target.token.value,User), 10).toString() // Check for allowance balance
+            // let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(event.target.token.value,User), 10).toString() // Check for allowance balance?
+            let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(sendersTokenAddress,User), 10).toString() // Check for allowance balance
             console.log("usersMap3SpendingTokenAwlloanceBallance: ", usersMap3SpendingTokenAwlloanceBallance)
+
+            // CHECK TO AVOID ALLOWANCE IN THE CASE OF ETH TRANSACTION
+            if ( event.target.token.value == EthAddress){
+              usersMap3SpendingTokenAwlloanceBallance = aprovalAmount;
+              console.log("equating approval amount to token ammount so we skip one transaction")
+            }
 
       if(aprovalAmount - usersMap3SpendingTokenAwlloanceBallance > 1){
         console.log("please approve more tokens...")
@@ -154,18 +204,26 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
         console.log("we are all good, you have enough tokens approved...", aprovalAmount-usersMap3SpendingTokenAwlloanceBallance)
     }
 
-        const oxQuoteResult = await oxQuoteRelayer(event,User)
+
+        const oxQuoteResult = await oxQuoteRelayer(event,sendersTokenAddress,User)
         try{
 
-            await map3OxPayTransactionRelayer(oxQuoteResult)
+          if ( event.target.token.value == EthAddress){
+            await map3OxPayTransactionRelayer(oxQuoteResult,aprovalAmount)// tx value = buyamount
+              
+          }else{
+            await map3OxPayTransactionRelayer(oxQuoteResult,0)// tx value = 0
+
+
+          }
 
             handleSuccess(`transfer succesfull Thank you!`)
         } catch(err){
             if (err.reason){
-             handleError(` approval failed ${err.reason}`)
+             handleError(` transfer failed ${err.reason}`)
             return;
             }else{
-                handleError(` approval failed ${err.message}`)
+                handleError(` transfer failed ${err.message}`)
             return;
             }
         }
@@ -208,7 +266,7 @@ module.exports = {sameTokenEventHandler, oxSwapEventHandler}
 // import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
 //     WholeTOWeiDecimals,IERC20Abi,slippage,Map3Abi,getSendersAllowanceBalance, getUserErc20Balance,functionBytesEncoder,
 //     readFunctionBytesEncoderAndImplementor,
-//     functionBytesEncoderAndImplementor,
+//     bytesEncodedBytesImplementor,
 //     getFunctionSignatureHash
 //     // ,listenForMap3Events
 //  } from'../Utilities/utils';

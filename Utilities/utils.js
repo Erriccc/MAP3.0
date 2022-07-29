@@ -5,11 +5,21 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 const BigNumber = require('bignumber.js');
 const process = require('process');
 const Web3 = require('web3');
-// const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
-// const Map3Abi = require( './map3ABI.json')
-const Map3Abi = require( './map3TestAbi.json')
+const Map3AbiPlaceHolder = require( '../artifacts/contracts/Map3Pay.sol/Map3Pay.json')
+// const Map3Abi = Map3AbiPlaceHolder.abi;
+const Map3Abi = require( './map3PayABI.json')
+const Map3VendorsABi = require( './map3VendorPlansABI.json')
 const uniVoteAbi = require( './univotetoken.json')
 const Map3WebsiteUrl = "https://www.map3.com"
+
+
+
+const API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
+// const API_PRICE_URL = 'https://api.0x.org/swap/v1/price';
+const Ox_POLYGON_API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
+// const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
+const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
+
 
 const PaymentHandlerEndpoint = '/api/oxQuoteHandler' 
 const map3SameTokenTransferEndpoint = '/api/map3pay/map3sametokentransfer' 
@@ -18,21 +28,30 @@ const map3SignUpEndpoint = '/api/map3signup'
 const map3ApproveEndpoint = '/api/map3pay/map3approve' 
 
 const  { ethers }=require( "ethers"); // from hardhat throws error "Can't resolve 'console'"
-// const  Map3Polygon3="0x8f7594BB3D4863304b7fb08Fb1BEFb9206d572EC";
 // const  Map3Polygon4="0xb403aBD7aD3e45F052eb801059b08048798fb508";
 const  Map3Polygon5="0xD38B508e98B092FA7baBefc30652F1AfFA8c857C";
 const  Map3PolygonTEST6="0x4e5Ae028918EB31FD5Ba99DcBCf608763272B4e3"
-const  Map3address=Map3PolygonTEST6;
-// const  Map3address="0x9BcC604D4381C5b0Ad12Ff3Bf32bEdE063416BC7";
-// const  Map3addresspolygon1="0xdF50c8F37782b21F7209D16A031a2F6EE1cD56E0";
-// const  Map3addressPoly2="0x7f350F151f850d7780097D577a99E2DB8eDDB643";
+// const  Map3PolygonTEST7="0xcB6De4466d85be717E84a1B36c10132E6cA550c8" // with plans and sending eth transactions
+const  Map3PolygonTEST7="0xa1784087D227e9891FEd0ED04f2f2Ad5361573Ad" // with plans and sending eth transactions
 
 
-const testAccount ="0xC1FbB4C2F4CE9eF87d42A0ea49683E0Cfb003f2F";
-// const UVTToken = "0xC1bEc29556C0Bd4438aC052578d801dcF97b7ab8" // polygon mainnet
-// const MAp3PayPolygon = "0xdF50c8F37782b21F7209D16A031a2F6EE1cD56E0" // polygon mainnet
+const  Map3VendorPlansPolgonTest1="0xfdD4e6BFC94a402bC40161067fC29860518159Ca" // with plans and sending eth transactions
+const  Map3VendorPlansPolgonTest2="0x3095d04AdC87dF6C50A9de0A5106602DB6fc902e" // with plans and sending eth transactions
+
+const  Map3address=Map3PolygonTEST7;
+const  Map3VendorAddress=Map3VendorPlansPolgonTest2;
+
+const EthAddress = "0x0000000000000000000000000000000000000000";
+const _wethAddresses = {
+    mainnet: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    polygon: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+    
+}
+const WethAddress = _wethAddresses. polygon;
+
+const testAccount ="0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f";
 const vendorSignUpFee = 0;
-const slippage = 1.1;
+const slippage = 1.15;
 
 
 const IERC20Abi = [
@@ -52,9 +71,6 @@ const IERC20Abi = [
 const provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com")
 // const provider = new ethers.providers.JsonRpcProvider()
 
-
-// const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';//https://polygon.api.0x.org/swap/v1/price
-const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
 const { MNEMONIC, RPC_URL } = process.env;
 
 function createQueryString(params) {
@@ -226,10 +242,6 @@ const map3Pay = async (_tokenamount,  _to,  _tokenIn,User) => {
 
     //  const Map3 = new ethers.Contract(Map3address,Map3Abi,PaySigner)
      const tokenContract = new ethers.Contract(_tokenIn,IERC20Abi, provider)
-
-    //  const tx1 = await Map3.SameTokenPay(_tokenamount,_to,_tokenIn)
-    //  await tx1.wait()
-
     
     console.log("trying out new function1......")
     const returnOfFunctionBytesEncoder = await functionBytesEncoder(Map3Abi,"SameTokenPay", [_tokenamount,_to,_tokenIn])
@@ -256,11 +268,8 @@ const map3Pay = async (_tokenamount,  _to,  _tokenIn,User) => {
       ])
      )
 
-    //  console.log("abiCoder.encode MANUALLY JOINED: ",abiCoder.encode([ "bytes" ], [ returnOfFunctionBytesEncoder ]))
-
-
     console.log("trying out new function2......")
-    const returnOfFunctionBytesEncoderAndImplementor = await functionBytesEncoderAndImplementor(PaySigner,Map3address, returnOfFunctionBytesEncoder)
+    const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(PaySigner,Map3address, returnOfFunctionBytesEncoder)
     // const returnOfFunctionBytesEncoderAndImplementorReciept = await returnOfFunctionBytesEncoderAndImplementor.wait()
     await returnOfFunctionBytesEncoderAndImplementor.wait()
     console.log("returnOfFunctionBytesEncoderAndImplementor: ", returnOfFunctionBytesEncoderAndImplementor)
@@ -313,22 +322,9 @@ const map3Pay = async (_tokenamount,  _to,  _tokenIn,User) => {
         console.log("Map3SwapData from oxPay : ", Map3SwapData)
 
         console.log("trying out new function2......")
-        const returnOfFunctionBytesEncoderAndImplementor = await functionBytesEncoderAndImplementor(oxPaySigner,Map3address, Map3SwapData)
+        const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(oxPaySigner,Map3address, Map3SwapData)
         const receipt= await returnOfFunctionBytesEncoderAndImplementor.wait()
         console.log("completed new function2......")
-
-
-//  const Map3Swap = await Map3.fillQuote(
-//     sellTokenAddress, // sellToken
-//     buyTokenAddress, // buyToken
-//     allowanceTargetquote,// spender
-//     OxDelegateAddress,// swapTarget
-//     allowanceBalance,// _tokenamount
-//     buyAmount, // _sendAmount
-//     reciversAddress,// _toAddress
-//     data // swapCallData
-//       )
-//       const receipt = await Map3Swap.wait()
 
       const map3BuyBal = await buyContract.balanceOf(Map3address)
       const map3FinalSellBal = await sellContract.balanceOf(Map3address)
@@ -353,13 +349,13 @@ return(receipt)
 // test1 READ parameters Map3address, Map3Abi, "checkIsVendor" [Map3address]
 // test2 WRITE parameters: Map3Abi,"SameTokenPay", [_tokenamount,_to,_tokenIn]
 
-const functionBytesEncoderAndImplementor = async (signer, contractAddress, encodedData) => {
+const bytesEncodedBytesImplementor = async (signer, contractAddress, encodedData) => {
             let returnData = await signer.sendTransaction({
                 to: contractAddress,
                 data: encodedData
               })
               await returnData.wait()
-        console.log("functionBytesEncoderAndImplementor returnData: ", returnData)
+        console.log("bytesEncodedBytesImplementor returnData: ", returnData)
 
         return returnData
 
@@ -458,6 +454,8 @@ module.exports = {
     getTokenSymbol,
     slippage,
     API_QUOTE_URL,
+    Ox_POLYGON_API_PRICE_URL,
+    API_PRICE_URL,
     provider,
     Map3Abi,
     getSendersAllowanceBalance,
@@ -466,7 +464,7 @@ module.exports = {
     listenForMap3Events,
     functionBytesEncoder,
     readFunctionBytesEncoderAndImplementor,
-    functionBytesEncoderAndImplementor,
+    bytesEncodedBytesImplementor,
     getFunctionSignatureHash,
     PaymentHandlerEndpoint,
     PaymentHandlerEndpoint,
@@ -474,7 +472,9 @@ module.exports = {
     map3SwapAndTransferEndpoint,
     map3SwapAndTransferEndpoint,
     map3ApproveEndpoint,
-    map3SignUpEndpoint
+    map3SignUpEndpoint,
+    EthAddress,
+    WethAddress,
 
 };
 

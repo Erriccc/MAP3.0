@@ -9,17 +9,18 @@ import { ConnectButton, Icon, Select, Input, Button } from "web3uikit";
 export default function Home() {
 
   const router = useRouter()
+  const { Moralis, account } = useMoralis();
 
   // UNCOMMENT to AUTHENTICATE!!!!
   const {isAuthenticated} = useMoralis()
-  if (!isAuthenticated) {
+  if (!account) {
     return (
       <Apphero/>
     )
   }
 
   router.push({
-    pathname: "/pay"
+    pathname: "/appvendors?map3Querry=*"
   });
   // return (
     

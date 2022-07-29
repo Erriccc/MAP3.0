@@ -5,7 +5,7 @@
 import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
   WholeTOWeiDecimals,IERC20Abi,slippage,Map3Abi,getSendersAllowanceBalance, getUserErc20Balance,functionBytesEncoder,
   readFunctionBytesEncoderAndImplementor,
-  functionBytesEncoderAndImplementor,
+  bytesEncodedBytesImplementor,
   getFunctionSignatureHash
 } from'./utils';
 const  ethers  = require("ethers");
@@ -47,7 +47,7 @@ const OxPay = async (
         console.log("Map3SwapData from oxPay : ", Map3SwapData)
 
         console.log("trying out new function2......")
-        const returnOfFunctionBytesEncoderAndImplementor = await functionBytesEncoderAndImplementor(oxPaySigner,Map3address, Map3SwapData)
+        const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(oxPaySigner,Map3address, Map3SwapData)
         const receipt= await returnOfFunctionBytesEncoderAndImplementor.wait()
         console.log("completed new function2......")
 

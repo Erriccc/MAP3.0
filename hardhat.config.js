@@ -24,12 +24,23 @@ module.exports = {
     //     // url: process.env.NEXT_PUBLIC_JSON_RPC_URL_MAINET,
     //     url: "https://mainnet.infura.io/v3/2c1ded31ea7a436ca9a3ffe3059bb6c2",
     //   }
-    // }
+    // },
+    //   hardhat: {
+    //   forking: {
+    //     // url: process.env.NEXT_PUBLIC_JSON_RPC_URL_MAINET,
+    //     url: "https://polygon-rpc.com",
+    //     gas: 210000000000,
+    //       gasPrice: 80000000000000
+    //   }
+    // },
     // },
     matic: {
       url: "https://polygon-rpc.com",
-      gas: 2100000,
-      gasPrice: 80000000000
+      gas: 21000000000,
+      gasPrice: 80000000000000
     }
   }
 };
+
+// npx hardhat run --network localhost scripts/contracts-deploy-script.js
+// npx hardhat node

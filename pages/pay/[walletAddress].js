@@ -25,7 +25,8 @@ export default function PAY () {
   // console.log("router.query : ", router.query)
   // // user is autenticated
   const {isAuthenticated} = useMoralis()
-  if (!isAuthenticated) {
+  // if (!isAuthenticated) {
+    if (!account) {
     return (
       <Apphero/>
     )

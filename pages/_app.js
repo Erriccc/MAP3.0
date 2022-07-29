@@ -49,8 +49,9 @@ export default function MyApp({ Component, pageProps }) {
       </Head>
 
     <MoralisProvider
-      appId= {MoralisAppId}
-      serverUrl={MoralisAppUrl}
+      // appId= {MoralisAppId}
+      // serverUrl={MoralisAppUrl}
+      initializeOnMount={false}
     >
         <NotificationProvider>
           <Appnav />

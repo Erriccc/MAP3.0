@@ -62,19 +62,19 @@ async function main() {
 
   // await stableCoinInstance.deployed();
 
-  const UnivereseToken = await hre.ethers.getContractFactory("UniVotingToken");
-  const univereseTokenInstance = await UnivereseToken.deploy();
+  const Map3Pay = await hre.ethers.getContractFactory("Map3Pay");
+  const Map3PayInstance = await Map3Pay.deploy("0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f","0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270");
 
-  await univereseTokenInstance.deployed();
+  await Map3PayInstance.deployed();
 
-  const Map3 = await hre.ethers.getContractFactory("Map3Pay");
-  const map3Instance = await Map3.deploy(univereseTokenInstance.address,"0xC1FbB4C2F4CE9eF87d42A0ea49683E0Cfb003f2F");
+  const VendorPlans = await hre.ethers.getContractFactory("VendorPlans");
+  const VendorPlansInstance = await VendorPlans.deploy(Map3PayInstance.address);
 
-  await map3Instance.deployed();
+  await VendorPlansInstance.deployed();
   // console.log("Greeter deployed to:", greeter.address);
   // console.log("stableCoinInstance deployed to:", stableCoinInstance.address);
-  console.log("univereseTokenInstance deployed to:", univereseTokenInstance.address);
-  console.log("map3Instance deployed to:", map3Instance.address);
+  console.log("Map3PayInstance deployed to:", Map3PayInstance.address);
+  console.log("VendorPlansInstance deployed to:", VendorPlansInstance.address);
 
 }
 
