@@ -10,7 +10,7 @@
         "long": "-73.999005",
         "walletAddress":"0xBb2cB98982Ed6547aA7E39707807253a999796b7",
         "distance": "3",
-        "vendorsToken":"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
+        "vendorsToken":"0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"
 
       
     },
@@ -25,7 +25,7 @@
         "long": "-60.999005",
         "walletAddress":"0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f",
         "distance": "4",
-        "vendorsToken":"0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"
+        "vendorsToken":"0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"
 
     },
     {
@@ -36,7 +36,7 @@
           "https://cdn.pixabay.com/photo/2015/09/21/14/24/supermarket-949913__340.jpg",
         "lat": "40.716862",
         "long": "-70.999005",
-        "walletAddress":"0xaC47e91215fb80462139756f43438402998E4A1a",
+        "walletAddress":"0xC1FbB4C2F4CE9eF87d42A0ea49683E0Cfb003f2F",
         "distance": "5",
         "vendorsToken":"0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"
     },
@@ -48,23 +48,23 @@
         "https://cdn.pixabay.com/photo/2016/11/29/05/07/breads-1867459__480.jpg",
       "lat": "40.716862",
       "long": "-70.999005",
-      "walletAddress":"0x12Bcb546bC60fF39F1Adfc7cE4605d5Bd6a6A276",
+      "walletAddress":"0x7B20363fECAD5F391Cc8838BF1D893dAC98B24Fd",
       "distance": "5",
-      "vendorsToken":"0xdAb529f40E671A1D4bF91361c21bf9f0C9712ab7"
+      "vendorsToken":"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
     
   },
   {
       
-    "name": "Resturant on Georgia Avenue",
+    "name": "Second Resturant on Georgia Avenue",
     "city": "DC",
     "description": "fries wings burgers burrito fast food",
     "imgUrl":
       "https://cdn.pixabay.com/photo/2015/09/21/14/24/supermarket-949913__340.jpg",
     "lat": "40.716862",
     "long": "-70.999005",
-    "walletAddress":"0xeF31027350Be2c7439C1b0BE022d49421488b74C",
+    "walletAddress":"0x93183e906CBc2DeE2e8bBA74b85935169521e1A1",
     "distance": "5",
-    "vendorsToken":"0xdAb529f40E671A1D4bF91361c21bf9f0C9712ab7"
+    "vendorsToken":"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
   
 },
 {

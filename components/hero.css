@@ -1,5 +1,5 @@
 
-:root {
+/* :root {
     --max-width: 1170px;
      --radius: 0.25rem;
      --clr-black: #222;
@@ -69,7 +69,7 @@ p {
   h4 {
     line-height: 1;
   }
-}
+} */
 .hero {
     position: relative;
     min-height: 100vh;

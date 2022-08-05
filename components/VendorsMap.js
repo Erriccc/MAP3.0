@@ -22,12 +22,14 @@ function VendorsMap({ locations, google, setHighLight }) {
   return (
     <>
     {center && (
+      // NOTE DO NOT CHANGE THIS LINE OR MAP UI WILL CHANGE 
+      <div className="flex justify-center" style={{width: '70%', height: '70vh'}}> 
         <Map
           google={google}
           
           containerStyle={{
-            width: "50vw",
-            height: "70vh",
+            width: "60vw",
+            height: "65vh",
           }}
           center={center}
           initialCenter={locations[0]}
@@ -42,6 +44,7 @@ function VendorsMap({ locations, google, setHighLight }) {
 
           
         </Map>
+        </div>
       )}
       {/* <div>Map</div> */}
 

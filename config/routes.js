@@ -1,0 +1,23 @@
+const routes = {
+    home: '/',
+    pay:'/pay',
+    registerVendor:'/registerVendor',
+    profile: '/profile',
+    swap: '/swap',
+    liquidity: '/liquidity',
+    liquidityPosition: '/liquidity-position',
+    farms: '/farms',
+    farmsTwo: '/farms-2',
+    createNft: '/create-nft',
+    nftDetails: '/nft-details',
+    search: '/search',
+    appvendors:'/appvendors?map3Querry=*',
+    notification: '/notification',
+    vote: '/vote',
+    proposals: '/proposals',
+    createProposal: '/proposals/create',
+    charts: '/charts',
+    portfolio: '/profile?view=portfolio',
+    history: '/profile?view=history',
+};
+export default routes;

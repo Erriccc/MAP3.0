@@ -159,13 +159,13 @@ event newVendorInfo(
         uint256 amount
     );          
 
-function depositETH()
-    public
-    payable
-    returns(bool)
+function convertEthToWETH(uint _amount, address spender, uint _expectedOutput) // note this function had to be seperate and not payable for this to work
+    private
 {
-    IWETH(weth).deposit{value: msg.value}();
-    return true;
+    IWETH(weth).deposit{value: _amount}();
+    uint256 boughtAmount = IWETH(weth).balanceOf(address(this));
+    require(boughtAmount >= _expectedOutput, "INVALID_BUY_AMOUNT");
+    require(IWETH(weth).approve(spender, type(uint256).max), "approve failed");
 }
 
 
@@ -235,7 +235,7 @@ function depositETH()
     Vendor[] public VendorList;
     IERC20 private _StableCoin;
     uint256 public rate = 5; // currently 0.05%
-    uint public tipRate = 1000 ; // currently 10% tip to help initiate payout
+    uint public tipRate = 2000 ; // currently 10% tip to help initiate payout
     uint256 public approveAmmount = 2**256 - 1;
     uint256 public vendorSignUpFee = 0 gwei; // 0.0.00005 eth
     address private weth;
@@ -455,10 +455,10 @@ function _fowardPayment(uint256 _ammount, address _to, IERC20 _tokenIn) private 
 ///////////////////////////// END OF INITIAL IF STATEMENT
 
             if(msg.value > 0){ // check for eth and convert to eth
-                // MAKE SURE TO REQUIRE SUCCESS!!!!
-                // depositETH();
-                require(address(sellToken) == weth,"sell token is not weth");
-                require(depositETH(),"deposit will fail");
+               
+                require(msg.value >= _tokenamount, "token amount is not greater or equal to msg.value");
+               
+                convertEthToWETH(msg.value,spender,_tokenamount );
 
             }else{
 
@@ -466,14 +466,14 @@ function _fowardPayment(uint256 _ammount, address _to, IERC20 _tokenIn) private 
             }
 
 ///////////////////////////// Begin actual transaction and treat eth as sellToken (Weth) which is an erc20 token
-
                             // allowance to 0 before being able to update it.
-                            require(sellToken.approve(spender, _tokenamount),"approval failed");
+                            sellToken.approve(spender, type(uint256).max);
                             require(sellToken.balanceOf(address(this)) >= _tokenamount,"native to WETH failed");
+                            require(sellToken.allowance(address(this), spender) >= _tokenamount,"did_not_approve_spender");
                             // Call the encoded swap function call on the contract at `swapTarget`,
                             // passing along any ETH attached to this function call to cover protocol fees.
-                            (bool success,) = swapTarget.call{value: msg.value}(swapCallData);
-                            // (bool success,) = swapTarget.call(swapCallData);
+                            // (bool success,) = swapTarget.call{value: msg.value}(swapCallData);
+                            (bool success,) = swapTarget.call(swapCallData);
                             // (bool success,) = swapTarget.call(swapCallData);
                             require(success, 'SWAP_CALL_FAIL!');
 
@@ -492,9 +492,37 @@ function _fowardPayment(uint256 _ammount, address _to, IERC20 _tokenIn) private 
                                 emit Paid(msg.sender, _toAddress, _finalPaymentValue);
 
     }
-receive() external payable {}
+    receive() external payable {}
+    // Get a Tip for Extracting left over ETH from Map3 Contract
+    function everyBodyGetsPaidEth() public returns(bool) {
+            uint  _balance =  address(this).balance;
+            uint256 fees =(_balance*tipRate)/decimalMultiplier;
+            uint256 payment = SafeMath.sub(_balance, fees);
+            (bool sent,) = feeColector.call{value: payment}("");
+            require(sent, "Failed_to_pay_feecolector");
+            (bool sentToSender,) = msg.sender.call{value: fees}("");
+            require(sentToSender, "Failed_to_tip_sender");
+            return true;
+        }
+
+
+
+    // Get a Tip for Extracting left over ERC20 TOkens from Map3 Contract
+    function everyBodyGetsPaidERC20(IERC20 _tokenToWithdraw) public  returns(bool){
+            uint256 _balance = _tokenToWithdraw.balanceOf(address(this));
+            uint256 fees =(_balance*tipRate)/decimalMultiplier;
+            uint256 payment = SafeMath.sub(_balance, fees);
+            _tokenToWithdraw.transfer(feeColector, payment);
+            _fowardPayment(fees, msg.sender ,_tokenToWithdraw);
+
+            return true;
+    }
 
 }
 
+
 // [    "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2",    "Testing tupple formart2",    "Living on cloud 9-2",    "chicago-2",    "IL",    "60622",    "123-456-7890",    "Connect vendors in map3.0-2",    "40.716862",    "-73.999005",    "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",    "https://github.com/Erriccc",    "0xd9145CCE52D386f254917e481eB44e9943F39138" ]
 
+
+//0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f
+//0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270

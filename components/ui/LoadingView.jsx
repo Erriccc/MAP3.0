@@ -1,0 +1,75 @@
+import { useState, useRef } from 'react';
+import dynamic from 'next/dynamic';
+import { motion, AnimatePresence } from 'framer-motion';
+import cn from 'classnames';
+import { ChevronDown } from '/components/icons/chevron-down';
+import { useClickAway } from 'lib/hooks/use-click-away';
+import { useLockBodyScroll } from 'lib/hooks/use-lock-body-scroll';
+import { coinList } from 'data/static/coin-list'; //
+
+// dynamic import
+// const CoinSelectView = dynamic(() => import('/components/ui/coin-select-view'));
+const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
+export default function LoadingView({ label, getCoinValue, defaultCoinIndex = 0, exchangeRate, className, ...rest }) {
+    let [value, setValue] = useState('');
+    let [selectedCoin, setSelectedCoin] = useState(coinList[defaultCoinIndex]);
+    let [visibleCoinList, setVisibleCoinList] = useState(true);
+    const modalContainerRef = useRef(null);
+    useClickAway(modalContainerRef, () => {
+        setVisibleCoinList(false);
+    });
+    useLockBodyScroll(visibleCoinList);
+    const handleOnChange = (event) => {
+        if (event.target.value.match(decimalPattern)) {
+            setValue(event.target.value);
+            let param = { coin: selectedCoin.code, value: event.target.value };
+            getCoinValue && getCoinValue(param);
+        }
+    };
+    function handleSelectedCoin(coin) {
+        setSelectedCoin(coin);
+        setVisibleCoinList(false);
+    }
+    return (<>
+      {/* <div className={cn('group flex min-h-[70px] rounded-lg border border-gray-200 transition-colors duration-200 hover:border-gray-900 dark:border-gray-700 dark:hover:border-gray-600', className)}>
+        <div className="min-w-[80px] border-r border-gray-200 p-3 transition-colors duration-200 group-hover:border-gray-900 dark:border-gray-700 dark:group-hover:border-gray-600">
+          <span className="mb-1.5 block text-xs uppercase text-gray-600 dark:text-gray-400">
+            {label}
+          </span>
+          <button onClick={() => setVisibleCoinList(true)} className="flex items-center font-medium outline-none dark:text-gray-100">
+            {selectedCoin?.icon}{' '}
+            <span className="ltr:ml-2 rtl:mr-2">{selectedCoin?.code} </span>
+            <ChevronDown className="ltr:ml-1.5 rtl:mr-1.5"/>
+          </button>
+        </div>
+        <div className="flex flex-1 flex-col text-right">
+          <input type="text" value={value} placeholder="0.0" inputMode="decimal" onChange={handleOnChange} className="w-full rounded-tr-lg rounded-br-lg border-0 pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark" {...rest}/>
+          <span className="font-xs px-3 text-gray-400">
+            = ${exchangeRate ? exchangeRate : '0.00'}
+          </span>
+        </div>
+      </div> */}
+
+      <AnimatePresence>
+       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden bg-gray-700 bg-opacity-60 p-4 text-center backdrop-blur xs:p-5">
+            {/* This element is to trick the browser into centering the modal contents. */}
+            <span className="inline-block h-full align-middle" aria-hidden="true">
+              &#8203;
+            </span>
+            <motion.div initial={{ scale: 1.05 }} animate={{ scale: 1 }} exit={{ scale: 1.05 }} transition={{ duration: 0.3 }} ref={modalContainerRef} className="inline-block text-left align-middle">
+              {/* <CoinSelectView onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}/> */}
+              <div className=" flex font-bold text-sm text-center text-blue-500 hover:text-blue-800 p-4 mx-2" >
+                                                        <svg role="status" className="inline w-12 h-12 mr-2 text-gray-200 animate-spin dark:text-white fill-gray-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                                        </svg>
+                                <h5 className='text-gray-300 m-4'> PROCESSING...
+                                </h5>
+                            </div>
+            </motion.div>
+          </motion.div>
+          
+      </AnimatePresence>
+    </>);
+}
+LoadingView.displayName = 'LoadingView';

@@ -10,7 +10,12 @@ const Map3AbiPlaceHolder = require( '../artifacts/contracts/Map3Pay.sol/Map3Pay.
 const Map3Abi = require( './map3PayABI.json')
 const Map3VendorsABi = require( './map3VendorPlansABI.json')
 const uniVoteAbi = require( './univotetoken.json')
-const Map3WebsiteUrl = "https://www.map3.com"
+// const Map3WebsiteUrl = "https://www.map3.com"
+const Map3WebsiteUrl = "http://10.0.0.232:3001"
+const PolygonCoinList = require('../constants/coinListPolygon')
+const ReciversCoinList = PolygonCoinList.reciversCoinList;
+const SendersCoinList = PolygonCoinList.sendersCoinList;
+
 
 
 
@@ -33,12 +38,13 @@ const  Map3Polygon5="0xD38B508e98B092FA7baBefc30652F1AfFA8c857C";
 const  Map3PolygonTEST6="0x4e5Ae028918EB31FD5Ba99DcBCf608763272B4e3"
 // const  Map3PolygonTEST7="0xcB6De4466d85be717E84a1B36c10132E6cA550c8" // with plans and sending eth transactions
 const  Map3PolygonTEST7="0xa1784087D227e9891FEd0ED04f2f2Ad5361573Ad" // with plans and sending eth transactions
+const  Map3PolygonTEST8="0x0158345e52522C57ce34773c89D0214c2d10edd1" // with plans and sending eth transactions, fixed bug
 
 
 const  Map3VendorPlansPolgonTest1="0xfdD4e6BFC94a402bC40161067fC29860518159Ca" // with plans and sending eth transactions
 const  Map3VendorPlansPolgonTest2="0x3095d04AdC87dF6C50A9de0A5106602DB6fc902e" // with plans and sending eth transactions
 
-const  Map3address=Map3PolygonTEST7;
+const  Map3address=Map3PolygonTEST8;
 const  Map3VendorAddress=Map3VendorPlansPolgonTest2;
 
 const EthAddress = "0x0000000000000000000000000000000000000000";
@@ -69,7 +75,24 @@ const IERC20Abi = [
 // const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_JSON_RPC_URL_POLYGON)
 // const provider = new ethers.providers.Web3Provider(window.ethereum)
 const provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com")
-// const provider = new ethers.providers.JsonRpcProvider()
+
+const getCurrentWalletAddress = async () => {
+    const _provider = new ethers.providers.Web3Provider(window.ethereum)
+
+    const signer = _provider.getSigner();
+    let web3Address;
+    if (signer) {
+        console.log("signer:", signer)
+         web3Address = await signer.getAddress();
+        console.log("web3Address: ", web3Address)
+        return web3Address
+        // setAddress(web3Address);
+        // getBalance(provider, web3Address);
+    }
+return web3Address
+}
+
+
 
 const { MNEMONIC, RPC_URL } = process.env;
 
@@ -149,10 +172,14 @@ function numberExponentToLarge(numIn) {
     return tokenDecimals;
   }
   const  getTokenSymbol = async (_tokenAddress) =>{
+    if (_tokenAddress == EthAddress){
+    return "ETH/MTC";
+    }else{
     const myContract = new ethers.Contract(_tokenAddress,IERC20Abi,provider)
     const tokenSymbol = await myContract.symbol()
     console.log("tokenDecimals from function getTokenSymbol in utils:", tokenSymbol)
     return tokenSymbol;
+    }
   }
   const WholeTOWeiDecimals = async (_tokenAddress, _num) => {
     let tempNum =_num
@@ -168,16 +195,45 @@ function numberExponentToLarge(numIn) {
   const getSendersAllowanceBalance = async (ownersTokenAddress,owner) => {
     const allowanceContract = new ethers.Contract(ownersTokenAddress,IERC20Abi,provider)
     const tx1 = await allowanceContract.allowance(owner,Map3address)
-    return tx1
+    return tx1 // returns big number
+}
+const getSendersAllowanceBalanceInWei = async (ownersTokenAddress,owner) => {
+    const allowanceContract = new ethers.Contract(ownersTokenAddress,IERC20Abi,provider)
+    const tx0 = await allowanceContract.allowance(owner,Map3address)
+    const tx1 = Number(tx0._hex)
+    return tx1 // returns long number
 }
 const getUserErc20Balance = async (tokenAddress,owner) => {
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,provider)
     const tx0 = await tokenContract.balanceOf(owner)
     const tx1 = ethers.utils.formatUnits(
-        tx0, await getTokenDecimal(tokenAddress,owner ))
+        tx0, await getTokenDecimal(tokenAddress))
     return tx1
 }
+const getUserErc20BalanceInWei = async (tokenAddress,owner) => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,provider)
+    const tx0 = await tokenContract.balanceOf(owner)
+    // Number(tx0)
+    const tx1 = Number(tx0._hex)
+    return tx1
+}
+const getUserNativeBalance = async (owner) => {
+    let balance = await provider.getBalance(owner);
+    const tx1 = ethers.utils.formatUnits( balance, 18);
+    console.log("eth balance requested...", tx1)
+    return tx1
+}
+const getUserNativeBalanceInWei = async (owner) => {
+    let balance = await provider.getBalance(owner);
+    // Number(balance)
+    const tx1 = Number(balance._hex)
+    console.log("getUserNativeBalanceInWei requested...", tx1)
+    return tx1
+  }
+  
+
 
 
   const WeiToWholeDecimals = async (_tokenAddress, _num) => {
@@ -459,7 +515,9 @@ module.exports = {
     provider,
     Map3Abi,
     getSendersAllowanceBalance,
+    getSendersAllowanceBalanceInWei,
     getUserErc20Balance,
+    getUserNativeBalance,
     Map3WebsiteUrl,
     listenForMap3Events,
     functionBytesEncoder,
@@ -467,14 +525,18 @@ module.exports = {
     bytesEncodedBytesImplementor,
     getFunctionSignatureHash,
     PaymentHandlerEndpoint,
-    PaymentHandlerEndpoint,
     map3SameTokenTransferEndpoint,
-    map3SwapAndTransferEndpoint,
     map3SwapAndTransferEndpoint,
     map3ApproveEndpoint,
     map3SignUpEndpoint,
     EthAddress,
     WethAddress,
+    getCurrentWalletAddress,
+    ReciversCoinList,
+    SendersCoinList,
+    PolygonCoinList,
+    getUserErc20BalanceInWei,
+    getUserNativeBalanceInWei,
 
 };
 

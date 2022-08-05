@@ -7,6 +7,10 @@ import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import VendorsMap from "components/VendorsMap";
 import SearchVendorInfo from "components/SearchVendorInfo";
 import vendorsData from "constants/testdata.json"
+import DashboardLayout from 'layouts/_dashboard';
+import { NextSeo } from 'next-seo';
+import VendorSlider from '/components/ui/vendorCard';
+import { coinSlideData } from 'data/static/coin-slide-data';
 
 
 export default function Rentals () {
@@ -87,19 +91,14 @@ export default function Rentals () {
   // }, [map3Querry]); // Note we are running the use effect every time we recieve a new search filter
 
   return (
-    <div className=" mx-auto relative al m-2">
+    <>
+    <NextSeo title="Map of Vendors" description="Map3 - find vendors that accept crypto near you"/>
+    <DashboardLayout>
+    {/* <div className=" mx-auto relative al m-2"> */}
 
-      {map3Querry &&
-            // display search results
-      <div className="rentalsContent flex justify-center">
-        <div className="rentalsContentL px-5 ">
-        <div className="flex">
-          <h1 className="text-3xl font-semibold mt-2 mb-6 text-blue-500">Map</h1>
-          <span className="text-lg font-semibold my-auto">3.0</span>
-          <h1 className="text-3xl font-semibold mx-1 px-1 mt-2 mb-6 text-[#64748b]">results for {map3Querry} </h1>
-        </div>
-        <div className="xl:overflow-y-auto xl:max-h-screen xl:h-full">
-        {vendorsData.map((
+        
+        {/* <div className="xl:overflow-y-auto xl:max-h-screen xl:h-full">  */}
+        {/* {vendorsData.map((
           { name,city, walletAddress,imgUrl,distance,description,vendorsToken}) => (
         <SearchVendorInfo
 
@@ -115,17 +114,35 @@ export default function Rentals () {
 
          />
               )
-            )}
-            </div>
+            )} */}
+            {/* </div>
           <div/>
-      </div>
-      <section className=" hidden xl:px-5 xl:inline-flex xl:min-w-[600px]">
-          {/* Note this is where the map3Querrys variable comes from */}
-          <VendorsMap locations={coOrdinates} setHighLight={setHighLight} /> 
-        </section>
-      </div>
+      </div> */}
+               
+      {map3Querry &&
+
+            //  // display search results
+                  <div className="flex flex-col	">
+                     <div className="flex">
+                      <h1 className="text-3xl font-semibold mt-2 mb-6 text-blue-500">Map</h1>
+                      <span className="text-lg font-semibold my-auto">3.0</span>
+                      <h1 className="text-3xl font-semibold mx-1 px-1 mt-2 mb-6 text-[#64748b]">results for {map3Querry} </h1>
+                    </div>
+                
+                  <div className="mb-8 w-full sm:mb-0 sm:w-4/5 sm:ltr:pr-6 sm:rtl:pl-6 ">
+                    {/* <VendorSlider coins={coinSlideData}/> */}
+                    <VendorSlider vendorsData={vendorsData}/>
+                  </div>
+                  {/*  NOTE DO NOT CHANGE THIS LINE OR MAP UI WILL CHANGE  */}
+                  <div className="flex justify-center sm:w-4/5 sm:ltr:pr-6 sm:rtl:pl-6  rounded-lg  bg-white p-6 shadow-card dark:bg-light-dark sm:p-8 ">
+                    {/* Note this is where the map3Querrys variable comes from */}
+                    <VendorsMap locations={coOrdinates} setHighLight={setHighLight} /> 
+                  </div>
+                </div>
           }
-     </div>
+     {/* </div> */}
+     </DashboardLayout>
+     </>
   );
 };
 

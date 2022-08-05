@@ -1,8 +1,9 @@
 const fetch = require('node-fetch');
 const process = require('process');
-const { createQueryString,WholeTOWeiDecimals,API_PRICE_URL, API_QUOTE_URL} = require('./utils');
+const { createQueryString,WholeTOWeiDecimals,API_PRICE_URL, API_QUOTE_URL,EthAddress} = require('./utils');
 
-const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent) => {
+const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent, handleError) => {
+  
 
 if (sendersToken == null || sendersToken.length != 42){
   // sendersToken = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
@@ -38,7 +39,8 @@ console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", awa
 }
 
 
-const oxQuoteFetcher = async (sendersToken,reciversToken,amountToBeSent) => {
+const oxQuoteFetcher = async (sendersToken,reciversToken,amountToBeSent, handleError) => {
+  
 
 console.log("ammount to be sent from Quotefetcher : ",amountToBeSent, " - ", await WholeTOWeiDecimals(reciversToken,amountToBeSent) )
 

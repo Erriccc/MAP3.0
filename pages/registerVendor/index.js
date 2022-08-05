@@ -6,6 +6,8 @@ import { useMoralis, useWeb3ExecuteFunction  } from 'react-moralis';
 import Apphero from 'components/Apphero';
 import RegisterVendor from 'components/RegisterVendor';
 import { useNotification, CreditCard } from "web3uikit";
+import DashboardLayout from 'layouts/_dashboard';
+import { NextSeo } from 'next-seo';
 
 
 
@@ -18,11 +20,11 @@ export default function PAY () {
 
   // user is autenticated
   const {isAuthenticated} = useMoralis()
-  if (!account) {
-    return (
-      <Apphero/>
-    )
-  }
+  // if (!account) {
+  //   return (
+  //     <Apphero/>
+  //   )
+  // }
 //   const handleSuccess= () => {
 //     dispatch({
 //       type: "success",
@@ -53,6 +55,9 @@ export default function PAY () {
 
 
   return (
+    <>
+    <NextSeo title="sign up" description="Map3 - sign up new vendor profiles"/>
+    <DashboardLayout>
     <div className="max-w-md relative al my-2 flex flex-col mx-auto justify-center">
 
          {account &&
@@ -69,6 +74,7 @@ export default function PAY () {
          </>
             }
          </div>
-
+      </DashboardLayout>
+      </>
   );
 };

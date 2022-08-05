@@ -1,10 +1,11 @@
 import React from 'react';
 // import ReactDOM from 'react-dom';
 import Head from "next/head";
-import "tailwindcss/tailwind.css";
-import "pages/profile/profile.css"
-import "pages/appvendors/vendors.css"
+// import "tailwindcss/tailwind.css";
+// import "pages/profile/profile.css"
+// import "pages/appvendors/vendors.css"
 import "components/hero.css"
+
 import Router from "next/router";
 import ProgressBar from "@badrap/bar-of-progress";
 import { MoralisProvider } from "react-moralis";
@@ -12,6 +13,20 @@ import {NotificationProvider} from "web3uikit";
 import Appfooter from 'components/Appfooter'
 import Appnav from 'components/Appnav'
 import Partners from 'components/Partners';
+
+//cryptic
+import 'swiper/css';
+import 'assets/css/scrollbar.css';
+import 'assets/css/globals.css';
+import 'assets/css/range-slider.css';
+import { QueryClient } from 'react-query';
+import { ThemeProvider } from 'next-themes';
+import ModalsContainer from '/components/modal-views/container';
+import DrawersContainer from '/components/drawer-views/container';
+import SettingsButton from '/components/settings/settings-button';
+import PageDrawer from '/components/settings/page-drawer';
+import SettingsDrawer from '/components/settings/settings-drawer';
+import { WalletProvider } from 'lib/hooks/use-connect';
 
 
 
@@ -44,7 +59,8 @@ export default function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <title>Map3.0 App</title>
-        <meta name="description" content="Map3.o built with next" />
+        <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1"/>
+        <meta name="description" content="Map3.0" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -54,10 +70,21 @@ export default function MyApp({ Component, pageProps }) {
       initializeOnMount={false}
     >
         <NotificationProvider>
-          <Appnav />
+        <WalletProvider>
+        <ThemeProvider attribute="class" enableSystem={false} defaultTheme="light">
+          {/* <Appnav /> */}
+
           <Component {...pageProps} />
-          <Partners/>
-          <Appfooter/>
+          {/* <SettingsButton /> */}
+                    {/* <PageDrawer /> */}
+                    <SettingsDrawer />
+                    <ModalsContainer />
+                    <DrawersContainer />
+          {/* <Partners/> */}
+          {/* <Appfooter/> */}
+          </ThemeProvider>
+        </WalletProvider>
+
         </NotificationProvider>
       </MoralisProvider>
      </>

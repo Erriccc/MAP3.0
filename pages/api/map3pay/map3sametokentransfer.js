@@ -1,42 +1,4 @@
-
-const {
-    testAccount,
-    etherToWei,
-    weiToEther,
-    createWeb3,
-    createQueryString,
-    waitForTxSuccess,
-    createProvider,
-    getTokenDecimal,
-    numberExponentToLarge,
-    WeiToWholeDecimals,
-    WholeTOWeiDecimals,
-    IERC20Abi,
-    Map3address,
-    vendorSignUpFee,
-    getTokenSymbol,
-    slippage,
-    API_QUOTE_URL,
-    provider,
-    Map3Abi,
-    getSendersAllowanceBalance,
-    getUserErc20Balance,
-    Map3WebsiteUrl,
-    listenForMap3Events,
-    functionBytesEncoder,
-    readFunctionBytesEncoderAndImplementor,
-    bytesEncodedBytesImplementor,
-    getFunctionSignatureHash,
-    PaymentHandlerEndpoint,
-    map3SameTokenTransferEndpoint,
-    map3SwapAndTransferEndpoint,
-    OxPayExecutor,
-    OxPayTxData,
-    map3PayExecutor,
-    map3PayData,
-    approveSendersTokenExecutor,
-    approveSendersTokenData}= require('../../../Utilities/apiUtils');
-
+  const apiUtils = require('../../../Utilities/apiUtils');
 
 // export default function handler(req, res) {
 //     res.status(200).json({ name: 'John Doe' })
@@ -49,13 +11,13 @@ export default function form(req, res) {
     if (!body.amount || !body.addressTo || !body.tokenIn) {
         console.log("incomplete required parameters: ",body )
          // Sends a HTTP bad request error code
-         return res.status(400).json({ data: 'please pass in all required parameters' })
+         return res.status(100).json({ data: 'please pass in all required parameters' })
        }
     console.log("running server function from map3SameTokePay... " )
 
   
     
-  const  tempResponsePaymentData = map3PayData(body.amount, body.addressTo, body.tokenIn)
+  const  tempResponsePaymentData = apiUtils.map3PayData(body.amount, body.addressTo, body.tokenIn)
 
   const responsePaymentData = {
     txdata:tempResponsePaymentData

@@ -10,7 +10,9 @@ const Map3AbiPlaceHolder = require( '../artifacts/contracts/Map3Pay.sol/Map3Pay.
 const Map3Abi = require( './map3PayABI.json')
 const Map3VendorsABi = require( './map3VendorPlansABI.json')
 const uniVoteAbi = require( './univotetoken.json')
-const Map3WebsiteUrl = "https://www.map3.com"
+// const Map3WebsiteUrl = "https://www.map3.com"
+const Map3WebsiteUrl = "http://10.0.0.232:3001"
+
 
 const PaymentHandlerEndpoint = 'api/oxQuoteHandler' // "api/oxQuoteHandler"
 const map3SameTokenTransferEndpoint = 'api/map3pay/map3sametokentransfer' // "api/paymentHandler"
@@ -23,12 +25,13 @@ const  { ethers }=require( "ethers"); // from hardhat throws error "Can't resolv
 // const  Map3PolygonTEST6="0x4e5Ae028918EB31FD5Ba99DcBCf608763272B4e3"
 // const  Map3PolygonTEST7="0x1c0a74133BF980860cdf592d71d7dc7784e8D7f8" // with plans and sending eth transactions
 const  Map3PolygonTEST7="0xa1784087D227e9891FEd0ED04f2f2Ad5361573Ad" // with plans and sending eth transactions
+const  Map3PolygonTEST8="0x0158345e52522C57ce34773c89D0214c2d10edd1" // with plans and sending eth transactions, fixed bug
 
 
 const  Map3VendorPlansPolgonTest1="0xfdD4e6BFC94a402bC40161067fC29860518159Ca" // with plans and sending eth transactions
 const  Map3VendorPlansPolgonTest2="0x3095d04AdC87dF6C50A9de0A5106602DB6fc902e" // with plans and sending eth transactions
 
-const  Map3address=Map3PolygonTEST7;
+const  Map3address=Map3PolygonTEST8;
 const  Map3VendorAddress=Map3VendorPlansPolgonTest2;
 
 
@@ -165,6 +168,12 @@ function numberExponentToLarge(numIn) {
     const tx1 = await allowanceContract.allowance(owner,Map3address)
     return tx1
 }
+const getSendersAllowanceBalanceInWei = async (ownersTokenAddress,owner) => {
+  const allowanceContract = new ethers.Contract(ownersTokenAddress,IERC20Abi,provider)
+  const tx0 = await allowanceContract.allowance(owner,Map3address)
+  const tx1 = Number(tx0._hex)
+  return tx1 // returns long number
+}
 const getUserErc20Balance = async (tokenAddress,owner) => {
     // const provider = new ethers.providers.Web3Provider(window.ethereum)
     const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,provider)
@@ -172,6 +181,28 @@ const getUserErc20Balance = async (tokenAddress,owner) => {
     const tx1 = ethers.utils.formatUnits(
         tx0, await getTokenDecimal(tokenAddress,owner ))
     return tx1
+}
+const getUserErc20BalanceInWei = async (tokenAddress,owner) => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,provider)
+  const tx0 = await tokenContract.balanceOf(owner)
+  // Number(tx0)
+  const tx1 = Number(tx0._hex)
+  return tx1
+}
+
+const getUserNativeBalance = async (owner) => {
+  let balance = await provider.getBalance(owner);
+  const tx1 = ethers.utils.formatUnits( balance, 18);
+  console.log("eth balamce requested...", tx1)
+  return tx1
+}
+const getUserNativeBalanceInWei = async (owner) => {
+  let balance = await provider.getBalance(owner);
+  // Number(balance)
+  const tx1 = Number(balance._hex)
+  console.log("eth balamce requested...", tx1)
+  return tx1
 }
 
 
@@ -544,7 +575,9 @@ module.exports = {
     provider,
     Map3Abi,
     getSendersAllowanceBalance,
+    getSendersAllowanceBalanceInWei,
     getUserErc20Balance,
+    getUserNativeBalance,
     Map3WebsiteUrl,
     listenForMap3Events,
     functionBytesEncoder,
@@ -565,6 +598,8 @@ module.exports = {
     OxQuote,
     EthAddress,
     WethAddress,
+    getUserErc20BalanceInWei,
+    getUserNativeBalanceInWei,
 
 
 };

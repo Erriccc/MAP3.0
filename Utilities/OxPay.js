@@ -1,13 +1,10 @@
-// const { testAccount,Map3address,Map3Abi,createQueryString,getTokenDecimal,WeiToWholeDecimals,IERC20Abi,WholeTOWeiDecimals} = require('./utils');
-
-
-
-import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
-  WholeTOWeiDecimals,IERC20Abi,slippage,Map3Abi,getSendersAllowanceBalance, getUserErc20Balance,functionBytesEncoder,
-  readFunctionBytesEncoderAndImplementor,
-  bytesEncodedBytesImplementor,
-  getFunctionSignatureHash
-} from'./utils';
+// import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
+//   WholeTOWeiDecimals,IERC20Abi,slippage,Map3Abi,getSendersAllowanceBalance, getUserErc20Balance,functionBytesEncoder,
+//   readFunctionBytesEncoderAndImplementor,
+//   bytesEncodedBytesImplementor,
+//   getFunctionSignatureHash
+// } from'./utils';
+import Utils from'./utils';
 const  ethers  = require("ethers");
 
 const OxPay = async (
@@ -25,10 +22,10 @@ const OxPay = async (
     ) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const oxPaySigner = provider.getSigner()
-        const Map3 = new ethers.Contract(Map3address,Map3Abi,oxPaySigner)
+        const Map3 = new ethers.Contract(Utils.Map3address,Utils.Map3Abi,oxPaySigner)
         // const Map3 = new ethers.Contract(Map3address,Map3Abi.abi,oxPaySigner)
-        const sellContract = new ethers.Contract(sellTokenAddress,IERC20Abi,provider)
-        const buyContract = new ethers.Contract(buyTokenAddress,IERC20Abi, provider)
+        const sellContract = new ethers.Contract(sellTokenAddress,Utils.IERC20Abi,provider)
+        const buyContract = new ethers.Contract(buyTokenAddress,Utils.IERC20Abi, provider)
 
         console.log("concatinating Map3SwapData from oxPay ....")
         const fillSwapData =  [
@@ -41,13 +38,13 @@ const OxPay = async (
               reciversAddress,// _toAddress
               data // swapCallData
         ]
-        const Map3SwapData =    functionBytesEncoder(Map3Abi,"fillQuote",fillSwapData)
+        const Map3SwapData =    Utils.functionBytesEncoder(Utils.Map3Abi,"fillQuote",fillSwapData)
         
       console.log("typeOf Map3SwapData: ", typeof Map3SwapData)
         console.log("Map3SwapData from oxPay : ", Map3SwapData)
 
         console.log("trying out new function2......")
-        const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(oxPaySigner,Map3address, Map3SwapData)
+        const returnOfFunctionBytesEncoderAndImplementor = await Utils.bytesEncodedBytesImplementor(oxPaySigner,Utils.Map3address, Map3SwapData)
         const receipt= await returnOfFunctionBytesEncoderAndImplementor.wait()
         console.log("completed new function2......")
 
@@ -64,15 +61,15 @@ const OxPay = async (
 //       )
 //       const receipt = await Map3Swap.wait()
 
-      const map3BuyBal = await buyContract.balanceOf(Map3address)
-      const map3FinalSellBal = await sellContract.balanceOf(Map3address)
-      const feeCollectorBuyBal = await buyContract.balanceOf(testAccount)
-      const feeCollectorFinalSellBal = await sellContract.balanceOf(testAccount)
+      const map3BuyBal = await buyContract.balanceOf(Utils.Map3address)
+      const map3FinalSellBal = await sellContract.balanceOf(Utils.Map3address)
+      const feeCollectorBuyBal = await buyContract.balanceOf(Utils.testAccount)
+      const feeCollectorFinalSellBal = await sellContract.balanceOf(Utils.testAccount)
       const signerBuyBal = await buyContract.balanceOf(User)
       const signerFinalSellBal = await sellContract.balanceOf(User)
       const reciverBuyBal = await buyContract.balanceOf(reciversAddress)
       const reciverFinalSellBal = await sellContract.balanceOf(reciversAddress)
-      const contactAllowanceBalance = await sellContract.allowance(Map3address,allowanceTargetquote)
+      const contactAllowanceBalance = await sellContract.allowance(Utils.Map3address,allowanceTargetquote)
 
       console.log('left over Map3.0 allowance for target spennder:',ethers.utils.formatEther(contactAllowanceBalance))
       console.log("signer Final Sell and Buy Balance, are: ",ethers.utils.formatEther(signerFinalSellBal),ethers.utils.formatEther(signerBuyBal))

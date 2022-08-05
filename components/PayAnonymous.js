@@ -4,7 +4,7 @@ import reciversTokenAdresses from '../constants/reciversTokens.json'
 import { useNotification } from "web3uikit";
 import ProgressBar from "@badrap/bar-of-progress";
 const {oxPriceFetcher} = require('../Utilities/oxPriceFetcher');
-import {getUserErc20Balance,EthAddress,WethAddress} from'../Utilities/utils';
+import Utils from'../Utilities/utils';
 import{oxSwapEventHandler, sameTokenEventHandler} from '../Utilities/payEventHandler';
 
 const progress = new ProgressBar({
@@ -18,6 +18,14 @@ const progress = new ProgressBar({
 export default function PayAnonymous({User}) {
 
     const dispatch = useNotification();
+    const handleError= (msg) => {
+        dispatch({
+          type: "error",
+          message: `${msg}`,
+          title: "failed",
+          position: "topR",
+        });
+      };
 
 // add input for expected slippage amount to complete swap!
     const submitPayment = async (event) => {
@@ -54,13 +62,14 @@ export default function PayAnonymous({User}) {
         let quotePrice = await oxPriceFetcher(
             sendersToken,
             reciversToken,
-            amountToBeSent)
+            amountToBeSent,
+            handleError)
           setQuote(quotePrice)
         }
 
         const loadUsersBalances = async () => {
-            setRciversTokenBalance( await getUserErc20Balance(reciversToken,User))
-            setSendersTokenBalance(await getUserErc20Balance(sendersToken,User))
+            setRciversTokenBalance( await Utils.getUserErc20Balance(reciversToken,User))
+            setSendersTokenBalance(await Utils.getUserErc20Balance(sendersToken,User))
         }
 
         fetchPrice()

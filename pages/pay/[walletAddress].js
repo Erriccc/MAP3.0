@@ -4,6 +4,7 @@ import { useMoralis, useWeb3ExecuteFunction  } from 'react-moralis';
 import Apphero from 'components/Apphero';
 import PayVendor from 'components/PayVendor';
 import VendorQrCode from 'components/VendorQrCode';
+import DashboardLayout from 'layouts/_dashboard';
 
 import { useNotification, CreditCard } from "web3uikit";
 import { useRouter } from "next/router";
@@ -25,12 +26,19 @@ export default function PAY () {
   // console.log("router.query : ", router.query)
   // // user is autenticated
   const {isAuthenticated} = useMoralis()
-  // if (!isAuthenticated) {
-    if (!account) {
-    return (
-      <Apphero/>
-    )
-  }
+  
+  
+  // // UNCOMMENT to AUTHENTICATE!!!!
+  // if (!account) {
+  //   // if (process.browser){
+  //   //   router.push({
+  //   //     pathname: "/"
+  //   //   });
+  //   // }
+  //   return (
+  //     <Apphero/>
+  //   )
+  // }
 //   const handleSuccess= () => {
 //     dispatch({
 //       type: "success",
@@ -59,6 +67,8 @@ export default function PAY () {
 //   };
 
   return (
+    <DashboardLayout>
+
     <div className="max-w-md relative al my-2 flex flex-col mx-auto justify-center">
 
          {account &&
@@ -97,6 +107,8 @@ export default function PAY () {
          </>
             }
          </div>
+    </DashboardLayout>
+
 
   );
 };

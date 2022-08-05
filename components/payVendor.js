@@ -11,9 +11,10 @@ const fetch = require('node-fetch');
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 const {oxPriceFetcher,oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
 // const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
-import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
-    WholeTOWeiDecimals,IERC20Abi,getTokenSymbol,slippage,Map3Abi,getSendersAllowanceBalance
- } from'../Utilities/utils';
+// import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
+//     WholeTOWeiDecimals,IERC20Abi,getTokenSymbol,slippage,Map3Abi,getSendersAllowanceBalance
+//  } from'../Utilities/utils';
+ import Utils from'../Utilities/utils';
 import{OxPay} from '../Utilities/OxPay';
 import{oxSwapEventHandler, sameTokenEventHandler} from '../Utilities/payEventHandler';
 
@@ -31,6 +32,14 @@ const progress = new ProgressBar({
 export default function PayVendor({walletAddress,vendorsToken,User,vendorsName,vendorsTokenSymbol}) {
 
     const dispatch = useNotification();
+    const handleError= (msg) => {
+        dispatch({
+          type: "error",
+          message: `${msg}`,
+          title: "failed",
+          position: "topR",
+        });
+      };
     console.log('testing values from paVendor:',walletAddress,vendorsToken,User,vendorsName,vendorsTokenSymbol)
 
     const submitPayment = async (event) => {
@@ -58,7 +67,7 @@ export default function PayVendor({walletAddress,vendorsToken,User,vendorsName,v
     useEffect(()=>{
         const fetchPrice = async () => {
             // this function comes from the utililty folder
-        let quotePrice = await oxPriceFetcher(sendersToken,vendorsToken,amountToBeSent)
+        let quotePrice = await oxPriceFetcher(sendersToken,vendorsToken,amountToBeSent,handleError)
           setQuote(quotePrice)
         }
         fetchPrice()

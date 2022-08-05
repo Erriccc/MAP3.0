@@ -1,7 +1,9 @@
 const {oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
 const {oxQuoteRelayer} = require('../Utilities/oxQuoteRelayer')
-import {numberExponentToLarge,WholeTOWeiDecimals,slippage,getSendersAllowanceBalance,EthAddress,WethAddress,
- } from'../Utilities/utils';
+import Utils from'../Utilities/utils';
+
+// import {numberExponentToLarge,WholeTOWeiDecimals,slippage,getSendersAllowanceBalance,EthAddress,WethAddress,Utils.getSendersAllowanceBalanceInWei,
+//  } from'../Utilities/utils';
  import{approveTransactionRelayer} from "../Utilities/approveTransactionRelayer"
  import{map3PayTransactionRelayer} from "../Utilities/map3PayTransactionRelayer"
  import{map3OxPayTransactionRelayer} from "../Utilities/map3OxPayTransactionRelayer"
@@ -44,23 +46,24 @@ const sameTokenEventHandler = async (event, User, dispatch ) => {
         let tokenammount;
         let sendersTokenAddress = event.target.token.value;
 
-        if ( sendersTokenAddress == EthAddress){
-          sendersTokenAddress = WethAddress;
-        tokenammount = await  WholeTOWeiDecimals(sendersTokenAddress,event.target.amount.value)
+        if ( sendersTokenAddress == Utils.EthAddress){
+          sendersTokenAddress = Utils.WethAddress;
+        tokenammount = await  Utils.WholeTOWeiDecimals(sendersTokenAddress,event.target.amount.value)
         console.log("tokenAmount is in eth")
         }else{
-        tokenammount = await  WholeTOWeiDecimals(sendersTokenAddress,event.target.amount.value)
+        tokenammount = await  Utils.WholeTOWeiDecimals(sendersTokenAddress,event.target.amount.value)
         console.log("tokenAmount is in ERC20")
 
         }
         console.log("token amount vs converted token amount", event.target.amount.value,tokenammount)
         // let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(event.target.token.value,User), 10).toString()
-        let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(sendersTokenAddress,User), 10).toString()
+        // let usersMap3SpendingTokenAwlloanceBallance = parseInt(await Utils.getSendersAllowanceBalance(sendersTokenAddress,User), 10).toString()
+        let usersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(sendersTokenAddress,User)
         console.log("usersMap3SpendingTokenAwlloanceBallance: ", usersMap3SpendingTokenAwlloanceBallance)
 
         // let sendersTokenAddress = event.target.token.value;
       // CHECK TO AVOID QUOTE ERROR IN THE CASE OF ETH TRANSACTION
-      if ( event.target.token.value == EthAddress){
+      if ( event.target.token.value == Utils.EthAddress){
         // sendersTokenAddress = WethAddress;
         usersMap3SpendingTokenAwlloanceBallance = tokenammount;
 
@@ -69,17 +72,23 @@ const sameTokenEventHandler = async (event, User, dispatch ) => {
         // CHECK FOR CURRENT  USER ALLOWNCE BALANCE
         if(tokenammount - usersMap3SpendingTokenAwlloanceBallance > 1){
             console.log("please approve more tokens")
+            alert("please approve more tokens")
+
 
             try{
 
             await approveTransactionRelayer(event,tokenammount)
+            alert("approval succesful")
             handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
 
             } catch(err){
                 if (err.reason){
+                alert("approval failed. from metamask")
                  handleError(` approval failed ${err.reason}`)
+
                 return;
                 }else{
+                alert("approval failed. from rpc")
                     handleError(` approval failed ${err.message}`)
                 return;
                 }
@@ -87,16 +96,21 @@ const sameTokenEventHandler = async (event, User, dispatch ) => {
 
         } else{
             // do something....
+            alert("we are all good. you have enough tokens")
             console.log("we are all good, you have enough tokens approved...", tokenammount-usersMap3SpendingTokenAwlloanceBallance)
         }
         try{
 
-          if ( event.target.token.value == EthAddress){
+          if ( event.target.token.value == Utils.EthAddress){
             await map3PayTransactionRelayer(event,tokenammount,tokenammount );
+            alert("NATIVE ETH Transaction Succesful")
+
 
     
           }else{
             await map3PayTransactionRelayer(event,tokenammount,0)
+            alert("ERC20 Transaction Succesful")
+
 
           }
     
@@ -105,8 +119,10 @@ const sameTokenEventHandler = async (event, User, dispatch ) => {
         } catch (err) {
             // handleError(` transfer failed please try again. ${err.message}`)
             if (err.reason){
+              alert("transaction failed. from metamask")
                 handleError(` transfer failed please try again ${err.reason}`)
                }else{
+                  alert("transaction failed. from rpc")
                    handleError(` transfer failed please try again ${err.message}`)
                }
 
@@ -141,19 +157,13 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
           position: "topL",
         });
       };
-      const handleNoAccount= () => {
-        dispatch({
-          type: "error",
-          message: `You need to connect your wallet to book a rental`,
-          title: "Not Connected",
-          position: "topL",
-        });
-      };
       // new inputed code
       let sendersTokenAddress = event.target.token.value;
       // CHECK TO AVOID QUOTE ERROR IN THE CASE OF ETH TRANSACTION
-      if ( sendersTokenAddress == EthAddress){
-        sendersTokenAddress = WethAddress;
+      if ( sendersTokenAddress == Utils.EthAddress){
+        console.log("weth address...", Utils.WethAddress)
+        console.log("ETH address...", Utils.EthAddress)
+        sendersTokenAddress = Utils.WethAddress;
       }
 
 
@@ -161,39 +171,47 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
         // event.target.token.value,
         sendersTokenAddress,
         event.target.reciversChoiceToken.value,
-        event.target.amount.value
+        event.target.amount.value,
+        handleError
         )
             console.log("this is amont to sell", quotedAmmountToSell)
-            const aprovalAmount = (quotedAmmountToSell *slippage).toFixed(0).toString() // change multiplier to come from slippage
-            console.log("this is the approval amount: ", numberExponentToLarge(aprovalAmount))
+            const aprovalAmount = (quotedAmmountToSell *Utils.slippage).toFixed(0).toString() // change multiplier to come from slippage
+            console.log("this is the approval amount: ", Utils.numberExponentToLarge(aprovalAmount))
 
             // let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(event.target.token.value,User), 10).toString() // Check for allowance balance?
-            let usersMap3SpendingTokenAwlloanceBallance = parseInt(await getSendersAllowanceBalance(sendersTokenAddress,User), 10).toString() // Check for allowance balance
+            // let usersMap3SpendingTokenAwlloanceBallance = parseInt(await Utils.getSendersAllowanceBalance(sendersTokenAddress,User), 10).toString() // Check for allowance balance
+            let usersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(sendersTokenAddress,User)
+
             console.log("usersMap3SpendingTokenAwlloanceBallance: ", usersMap3SpendingTokenAwlloanceBallance)
 
             // CHECK TO AVOID ALLOWANCE IN THE CASE OF ETH TRANSACTION
-            if ( event.target.token.value == EthAddress){
+            if ( event.target.token.value == Utils.EthAddress){
               usersMap3SpendingTokenAwlloanceBallance = aprovalAmount;
               console.log("equating approval amount to token ammount so we skip one transaction")
             }
 
       if(aprovalAmount - usersMap3SpendingTokenAwlloanceBallance > 1){
         console.log("please approve more tokens...")
+        alert("please approve more tokens")
 
-        const tokenammount = numberExponentToLarge(aprovalAmount)
+        const tokenammount = Utils.numberExponentToLarge(aprovalAmount)
 
 
 
         try{
 
             await approveTransactionRelayer(event,tokenammount)
+            alert("approval succesful")
             handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
 
             } catch(err){
                 if (err.reason){
+                alert("approval failed. from metamask")
+
                  handleError(` approval failed ${err.reason}`)
                 return;
                 }else{
+                alert("approval failed. from rpc")
                     handleError(` approval failed ${err.message}`)
                 return;
                 }
@@ -208,11 +226,13 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
         const oxQuoteResult = await oxQuoteRelayer(event,sendersTokenAddress,User)
         try{
 
-          if ( event.target.token.value == EthAddress){
+          if ( event.target.token.value == Utils.EthAddress){
             await map3OxPayTransactionRelayer(oxQuoteResult,aprovalAmount)// tx value = buyamount
+            alert("NATIVE ETH Transaction Succesful")
               
           }else{
             await map3OxPayTransactionRelayer(oxQuoteResult,0)// tx value = 0
+            alert("ERC20 Transaction Succesful")
 
 
           }
@@ -220,10 +240,13 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
             handleSuccess(`transfer succesfull Thank you!`)
         } catch(err){
             if (err.reason){
+              alert("transaction failed. from metamask")
              handleError(` transfer failed ${err.reason}`)
             return;
             }else{
+              alert("transaction failed. from rpc")
                 handleError(` transfer failed ${err.message}`)
+                
             return;
             }
         }
@@ -233,50 +256,3 @@ return
 }
 
 module.exports = {sameTokenEventHandler, oxSwapEventHandler}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // import React, { useState, useEffect } from 'react';
-// import PayVendor from 'components/PayVendor';
-// import tokenAdresses from '../constants/tokens.json'
-// const BigNumber = require('bignumber.js');
-// import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
-// const fetch = require('node-fetch');
-// import { Button, Icon, useNotification } from "web3uikit";
-// import ProgressBar from "@badrap/bar-of-progress";
-// const {oxPriceFetcher,oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
-// const {oxQuoteRelayer} = require('../Utilities/oxQuoteRelayer')
-// // const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
-// import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
-//     WholeTOWeiDecimals,IERC20Abi,slippage,Map3Abi,getSendersAllowanceBalance, getUserErc20Balance,functionBytesEncoder,
-//     readFunctionBytesEncoderAndImplementor,
-//     bytesEncodedBytesImplementor,
-//     getFunctionSignatureHash
-//     // ,listenForMap3Events
-//  } from'../Utilities/utils';
-// import{OxPay} from '../Utilities/OxPay';
-// import { ethers }from "ethers";
-
-// const payEventHandler = async (newVendorRegistrationData ) => {
-
-// return
-
-// }
-
-// module.exports = {payEventHandler}
