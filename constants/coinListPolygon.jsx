@@ -57,10 +57,10 @@ const  sendersCoinList = [
     //     name: '',
     // },
     {
-        icon: <DefaultCoinIcon symbol={'ETH'} />,
+        icon: <DefaultCoinIcon symbol={'MTC'} />,
         address: "0x0000000000000000000000000000000000000000",
         // code: await getTokenSymbol(address),
-        code: 'ETH',
+        code: 'MATIC',
         name: 'Native Token',
     },
     {
@@ -91,7 +91,7 @@ const  sendersCoinList = [
         icon: <DefaultCoinIcon symbol={'BU'}/>,
         address: "0xdAb529f40E671A1D4bF91361c21bf9f0C9712ab7",
         code: 'BUSD',
-        name: 'BNB-USD-Unstable!',
+        name: 'BNB-USD',
     },
     {
         icon: <Usdc />,

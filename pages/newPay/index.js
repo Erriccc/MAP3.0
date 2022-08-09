@@ -7,7 +7,7 @@ import{oxSwapEventHandler, sameTokenEventHandler} from '/Utilities/FrontEndUtili
 import { useMoralis, } from 'react-moralis';
 import { useRouter } from "next/dist/client/router"; // use to reroute after transaction is processed
 import dynamic from 'next/dynamic';
-import Spinner from '/components/spinner';
+
 import cn from 'classnames';
 import { NextSeo } from 'next-seo';
 import PayAnonymousLayout from 'layouts/PayAnonymousLayout';
@@ -17,6 +17,7 @@ import TransactionInfo from '/components/ui/transaction-info';
 import { SwapIcon } from '/components/icons/swap-icon';
 import Collapse from '/components/ui/collapse';
 import LoadingView from '/components/ui/LoadingView';
+
 
 const ProfileModalInput = dynamic(() => import('/components/ui/ProfileModalInput'));
 const ProcessingView = dynamic(() => import('/components/ui/ProcessingView'));
@@ -56,37 +57,28 @@ export default function PayAnonymous() {
 // add input for expected slippage amount to complete swap!
     const submitPayment = async (UsertransactionInput) => {
 
-    if(UsertransactionInput.sendersToken == Utils.EthAddress &&  UsertransactionInput.reciversToken == Utils.WethAddress ){
-
-            try{
-              await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting, true);
-
-            }catch(e){
-
-            }
-
-    }else{
-
-
     // listenForMap3Events();
         if (UsertransactionInput.sendersToken == UsertransactionInput.reciversToken) {
           try{
                 console.log("both tokens are the same", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
-                await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting,false);
-
+                await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting);
+          
           }catch(e){
 
           }
         } else {
           try{
+          
                 console.log("different tokens", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
                 await oxSwapEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, );
+            
               }catch(e){
 
-              }
-              }
-    }
 
+              }
+              }
+
+            console.log("UsertransactionInput: ", UsertransactionInput)
     };
 
 
@@ -237,3 +229,4 @@ export default function PayAnonymous() {
       </>);
 
           }
+

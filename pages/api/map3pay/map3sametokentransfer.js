@@ -17,7 +17,7 @@ export default function form(req, res) {
 
   
     
-  const  tempResponsePaymentData = apiUtils.map3PayData(body.amount, body.addressTo, body.tokenIn)
+  const  tempResponsePaymentData = apiUtils.map3PayData(body.amount, body.addressTo, body.tokenIn, body._sendAsWeth)
 
   const responsePaymentData = {
     txdata:tempResponsePaymentData

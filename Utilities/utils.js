@@ -7,14 +7,19 @@ const process = require('process');
 const Web3 = require('web3');
 const Map3AbiPlaceHolder = require( '../artifacts/contracts/Map3Pay.sol/Map3Pay.json')
 // const Map3Abi = Map3AbiPlaceHolder.abi;
-const Map3Abi = require( './map3PayABI.json')
-const Map3VendorsABi = require( './map3VendorPlansABI.json')
+// const Map3Abi = require( './map3PayABI.json')
+const Map3Abi = require( './Map3P2PContract.json')
+
+// const Map3VendorsABi = require( './map3VendorPlansABI.json')
+const Map3VendorsABi = require( './VendorAccountsManagerContract.json')
 const uniVoteAbi = require( './univotetoken.json')
 // const Map3WebsiteUrl = "https://www.map3.com"
 const Map3WebsiteUrl = "http://10.0.0.232:3001"
+const TypoEffectTexts = require('../constants/TypoEffectTexts')
 const PolygonCoinList = require('../constants/coinListPolygon')
 const ReciversCoinList = PolygonCoinList.reciversCoinList;
 const SendersCoinList = PolygonCoinList.sendersCoinList;
+
 
 
 
@@ -40,12 +45,16 @@ const  Map3PolygonTEST6="0x4e5Ae028918EB31FD5Ba99DcBCf608763272B4e3"
 const  Map3PolygonTEST7="0xa1784087D227e9891FEd0ED04f2f2Ad5361573Ad" // with plans and sending eth transactions
 const  Map3PolygonTEST8="0x0158345e52522C57ce34773c89D0214c2d10edd1" // with plans and sending eth transactions, fixed bug
 
+const Map3P2PContractTest1 ="0x11F15ad3D1f8Ab61b86FC2Bd2247Cf2EB96F3ddF"
 
 const  Map3VendorPlansPolgonTest1="0xfdD4e6BFC94a402bC40161067fC29860518159Ca" // with plans and sending eth transactions
 const  Map3VendorPlansPolgonTest2="0x3095d04AdC87dF6C50A9de0A5106602DB6fc902e" // with plans and sending eth transactions
+const  VendorAccountsManagerContractTest1 = "0xfdF123c9E8BD78a50bdD41aaEe069d89e8B4BE57"
 
-const  Map3address=Map3PolygonTEST8;
-const  Map3VendorAddress=Map3VendorPlansPolgonTest2;
+// 0xfdF123c9E8BD78a50bdD41aaEe069d89e8B4BE57 // VendorAccountsManagerContract
+//0x11F15ad3D1f8Ab61b86FC2Bd2247Cf2EB96F3ddF //Map3P2PContract
+const  Map3address=Map3P2PContractTest1;
+const  Map3VendorAddress=VendorAccountsManagerContractTest1;
 
 const EthAddress = "0x0000000000000000000000000000000000000000";
 const _wethAddresses = {
@@ -58,6 +67,8 @@ const WethAddress = _wethAddresses. polygon;
 const testAccount ="0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f";
 const vendorSignUpFee = 0;
 const slippage = 1.15;
+const U256MAXVALUE = ethers.constants.MaxUint256
+// const U256MAXVALUE =(2**256) - 10
 
 
 const IERC20Abi = [
@@ -232,9 +243,35 @@ const getUserNativeBalanceInWei = async (owner) => {
     console.log("getUserNativeBalanceInWei requested...", tx1)
     return tx1
   }
-  
 
 
+
+  const ValidateIfAddressIsErc20 = async (address) => {
+    let addressBalance;
+    let addressSymbol;
+    let addressBalanceValidated = false;
+    let addressSymbolValidated = false;
+    try{
+        addressBalance = await provider.getBalance(address);
+        console.log("was able to fetch a balance for the address")
+        addressBalanceValidated = true;
+    }catch(e){
+        return [false, null]
+    }
+    try{
+        addressSymbol = await getTokenSymbol(address);
+        addressSymbolValidated = true;
+    }catch(e){
+        return [false, null]
+    }
+    if(addressBalanceValidated && addressSymbolValidated){
+        return [true, addressSymbol]
+    }else{
+        return [false, null]
+    }
+
+    
+}
 
   const WeiToWholeDecimals = async (_tokenAddress, _num) => {
 
@@ -300,7 +337,8 @@ const map3Pay = async (_tokenamount,  _to,  _tokenIn,User) => {
      const tokenContract = new ethers.Contract(_tokenIn,IERC20Abi, provider)
     
     console.log("trying out new function1......")
-    const returnOfFunctionBytesEncoder = await functionBytesEncoder(Map3Abi,"SameTokenPay", [_tokenamount,_to,_tokenIn])
+    // const returnOfFunctionBytesEncoder = await functionBytesEncoder(Map3Abi,"SameTokenPay", [_tokenamount,_to,_tokenIn])
+    const returnOfFunctionBytesEncoder = functionBytesEncoder(Map3Abi,"SameTokenPay", [_tokenamount,_to,_tokenIn,false]) // added false for new implimentation
     console.log("returnOfFunctionBytesEncoder: ", returnOfFunctionBytesEncoder)
     console.log("typeOf returnOfFunctionBytesEncoder: ", typeof returnOfFunctionBytesEncoder)
     console.log("completed new function1......")
@@ -537,6 +575,10 @@ module.exports = {
     PolygonCoinList,
     getUserErc20BalanceInWei,
     getUserNativeBalanceInWei,
+    TypoEffectTexts,
+    ValidateIfAddressIsErc20,
+    U256MAXVALUE,
+    ethers,
 
 };
 

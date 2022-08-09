@@ -11,13 +11,15 @@ const oxQuoteRelayer = async (UsertransactionInput,sendersTokenAddress,User) => 
     const sendingAmout = UsertransactionInput.amountToBeSent
     const reciver = UsertransactionInput.reciver
     const sender = User
+    const userSetSlippage= UsertransactionInput.slippage
 
      const paymentData = {
         amount: sendingAmout,
         reciver: reciver,
         sender: sender,
         reciversTokenOfChoice :reciversChoiceToken,
-        sendersToken: sendersTokenOfChoice //
+        sendersToken: sendersTokenOfChoice ,//
+        userSetSlippage:userSetSlippage
       }
 
       console.log("paymentdata: from oxQuoteRelayer", paymentData)

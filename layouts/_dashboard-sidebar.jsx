@@ -122,8 +122,7 @@ export default function Sidebar({ className }) {
 
       <Scrollbar style={{ height: 'calc(100% - 96px)' }}>
         <div className="px-6 pb-5 2xl:px-8">
-          <AuthorCard image={AuthorImage} name="Cameron Williamson" role="admin"/>
-
+          <AuthorCard image={AuthorImage} name="Map3 User" role="admin"/>
           <div className="mt-12">
             {menuItems && menuItems.map((item, index) => (<MenuItem key={index} name={item.name} href={item.href} icon={item.icon} dropdownItems={item.dropdownItems}/>))}
           </div>
@@ -135,3 +134,4 @@ export default function Sidebar({ className }) {
       </Scrollbar>
     </aside>);
 }
+//

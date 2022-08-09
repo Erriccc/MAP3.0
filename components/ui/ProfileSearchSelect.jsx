@@ -12,6 +12,13 @@ export default function ProfileSearchSelect({ onSelect }) {
         searchData = vendorsData.filter(function (item) {
             const name = item.name;
             const walletAddress = item.walletAddress;
+            console.log("raw data.., ",
+            
+            name.match(searchKeyword) ||
+                walletAddress.match(searchKeyword) ||
+                (name.toLowerCase().match(searchKeyword) && name) ||
+                (walletAddress.toLowerCase().match(searchKeyword) && walletAddress)
+            )
             return (
                 name.match(searchKeyword) ||
                 walletAddress.match(searchKeyword) ||
@@ -50,19 +57,28 @@ export default function ProfileSearchSelect({ onSelect }) {
 
 
         //  VALIDATE THAT INPUT IS AN ADDRESS
-        <li  role="listitem" onClick={() => handleSelectedCoin(searchKeyword)} className="mb-1 flex cursor-pointer items-center gap-3 py-1.5 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-600">
+        
+        <div className=''>
+          <li  role="listitem" onClick={() => handleSelectedCoin(searchKeyword)} className="mb-1 flex flex-col cursor-pointer items-center gap-3 py-1.5 px-6 outline-none hover:bg-gray-300 focus:bg-gray-400 dark:hover:bg-gray-700 dark:focus:bg-gray-600">
               <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full shadow-card">
                 <Image src={CollectionImage1} placeholder="blur" layout="fill" objectFit="cover" className="rounded-full" alt={searchKeyword}/>
               </div>
+              <div className='flex flex-col'>
               <span className="text-sm tracking-tight text-gray-600 dark:text-white">
-              Ops! not found please type full address
+                new wallet address
               </span>
+              <span className="text-sm tracking-tight text-gray-600 dark:text-white">
+              {searchKeyword}
+              </span>
+              </div>
             </li>
+            </div>
           )}
       </ul>
     </div>);
 }
 
+// 0x5559edb74751a0ede9dea4dc23aee72cca6be3d5
 
 // "name": "Resturant on Georgia Avenue",
 //     "city": "DC",

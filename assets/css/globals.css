@@ -16,7 +16,19 @@
     @apply mb-3;
   }
 }
+@layer components {
+  .blinking-cursor:after {
+    content: '|';
+    @apply text-blue-300;
+    animation: blink 1s step-start infinite;
+  }
 
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+}
 @layer utilities {
   .text-case-inherit {
     text-transform: inherit;

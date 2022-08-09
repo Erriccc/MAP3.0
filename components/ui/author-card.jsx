@@ -15,8 +15,8 @@ function NotificationButton() {
 
 export default function AuthorCard({ image, name, role }) {
     return (<div className="flex items-center rounded-lg bg-gray-100 p-5 dark:bg-light-dark">
-      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-3 border-white drop-shadow-main dark:border-gray-400">
-        <Image src={image} alt={name} className="rounded-full" placeholder="blur" layout="fill" objectFit="cover"/>
+      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-3 bg-gradient-to-r from-green-300 to-gray-300 border-white drop-shadow-main dark:border-gray-400">
+        {/* <Image src={image} alt={name} className="rounded-full" placeholder="blur" layout="fill" objectFit="cover"/> */}
       </div>
       <div className="ltr:pl-3 rtl:pr-3">
         <h3 className="text-sm font-medium uppercase tracking-wide text-gray-900 dark:text-white">
@@ -31,3 +31,4 @@ export default function AuthorCard({ image, name, role }) {
 
     </div>);
 }
+//

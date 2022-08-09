@@ -1,56 +1,123 @@
 const fetch = require('node-fetch');
 const process = require('process');
-const { createQueryString,WholeTOWeiDecimals,API_PRICE_URL, API_QUOTE_URL} = require('/Utilities/utils');
+const Utils = require('/Utilities/utils');
 
 const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent,handleError) => {
+  let validatedSendersToken = sendersToken;
+  let validatedReciversToken = reciversToken;
   
-
-if (sendersToken == null || sendersToken.length != 42){
+if (amountToBeSent <= 0 || amountToBeSent == null || amountToBeSent == "" || isNaN(amountToBeSent)){
   // sendersToken = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
-  return("ENS Addresses Are currently not allowed, input full valid address")
+  return(" invalid amount")
   
 }
-if (reciversToken == null || reciversToken.length != 42){
+
+if (sendersToken == null){
   // sendersToken = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
-  return("ENS Addresses Are currently not allowed, input valid address")
+  return(" input full valid address")
+  
+}
+if (reciversToken == null){
+  // sendersToken = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+  return(" input valid address")
 }
 
-// if(amountToBeSent < 0 || isNaN(amountToBeSent)){
-//   return("set a valid Number!")
+        //VALIDATE sendersToken ADDRESS INPUT
+        try{
+            await Utils.getUserNativeBalanceInWei(validatedSendersToken)
+
+        }catch(e){
+          return("invalid ENS address")
+        }
+        console.log("validation passed for sender's token");
+
+        //VALIDATE reciversToken ADDRESS INPUT
+        try{
+            await Utils.getUserNativeBalanceInWei(validatedReciversToken)
+
+        }catch(e){
+          return("invalid ENS address")
+        }
+        console.log("validation passed for reciver");
+
+        //VALIDATE same tokens 
+        if (validatedSendersToken == validatedReciversToken){
+        console.log("validation passed for reciver");
+          return 1
+        }
+else{
+        console.log("validating for eth addresses")
+        if (validatedSendersToken == Utils.EthAddress){
+          console.log("validatedSendersToken == Utils.EthAddress detected")
+          validatedSendersToken = Utils.WethAddress
+        }
+        if (validatedReciversToken == Utils.EthAddress){
+          console.log("validatedReciversToken = Utils.EthAddress detected")
+          validatedReciversToken = Utils.WethAddress
+        }
+        //second VALIDATE for same WETH tokens 
+        if (validatedSendersToken == validatedReciversToken){
+          console.log("validation passed for reciver");
+            return 1
+        }else{
+        console.log("making api call")
+              console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", await Utils.WholeTOWeiDecimals(validatedReciversToken,amountToBeSent) )
+              const qs = Utils.createQueryString({
+                  // Directly Swap and Send Any Token for USDT online
+                  sellToken: validatedSendersToken,
+                  buyToken: validatedReciversToken,
+                  buyAmount: await Utils.WholeTOWeiDecimals(validatedReciversToken,amountToBeSent),
+              });
+              const quoteUrl = `${Utils.API_PRICE_URL}?${qs}`;
+              console.log(quoteUrl)
+              // const quoteUrl = `${Ox_POLYGON_API_PRICE_URL}?${qs}`;
+              const response = await fetch(quoteUrl);
+
+              const quote = await response.json();
+              if (response.status == 100 || response.status == 400){
+                  // 0x5559edb74751a0ede9dea4dc23aee72cca6be3d5
+               console.log("validation error caught", quote)
+               console.log("quote.validationErrors[0].reason", quote.validationErrors[0].reason)
+               return (quote.validationErrors[0].reason)
+              }
+              else{
+                console.log(quote);
+
+                return(quote.price)
+
+              }
+            }
+          }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
 // }
-
-
-console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", await WholeTOWeiDecimals(reciversToken,amountToBeSent) )
-
-    const qs = createQueryString({
-        // Directly Swap and Send Any Token for USDT online
-        sellToken: sendersToken,
-        buyToken: reciversToken,
-        buyAmount: await WholeTOWeiDecimals(reciversToken,amountToBeSent),
-    });
-    const quoteUrl = `${API_PRICE_URL}?${qs}`;
-    console.log(quoteUrl)
-    // const quoteUrl = `${Ox_POLYGON_API_PRICE_URL}?${qs}`;
-    const response = await fetch(quoteUrl);
-    const quote = await response.json();
-    console.log(quote);
-
-  return(quote.price)
-}
 
 
 const oxQuoteFetcher = async (sendersToken,reciversToken,amountToBeSent,handleError) => {
   
 
-console.log("ammount to be sent from Quotefetcher : ",amountToBeSent, " - ", await WholeTOWeiDecimals(reciversToken,amountToBeSent) )
+console.log("ammount to be sent from Quotefetcher : ",amountToBeSent, " - ", await Utils.WholeTOWeiDecimals(reciversToken,amountToBeSent) )
 
-  const qs = createQueryString({
+  const qs = Utils.createQueryString({
       // Directly Swap and Send Any Token for USDT online
       sellToken: sendersToken,
       buyToken: reciversToken,
-      buyAmount: await WholeTOWeiDecimals(reciversToken,amountToBeSent),
+      buyAmount: await Utils.WholeTOWeiDecimals(reciversToken,amountToBeSent),
   });
-  const quoteUrl = `${API_QUOTE_URL}?${qs}`;
+  const quoteUrl = `${Utils.API_QUOTE_URL}?${qs}`;
   console.log("Quotefetcher url for price..", quoteUrl)
   // const quoteUrl = `${Ox_POLYGON_API_PRICE_URL}?${qs}`;
   const response = await fetch(quoteUrl);

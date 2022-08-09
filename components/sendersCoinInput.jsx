@@ -12,7 +12,7 @@ import { sendersCoinList,reciversCoinList } from '../constants/coinListPolygon';
 const Map3CoinSelectView = dynamic(() => import('/components/ui/map3coinSelectView'));
 
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
-export default function SendersCoinInput({ label, getCoinValue, exchangeRate, className, ...rest }) {
+export default function SendersCoinInput({ label, getCoinValue, exchangeRate, currencybalance, className, ...rest }) {
     // let [value, setValue] = useState('');
     let [selectedCoin, setSelectedCoin] = useState(sendersCoinList[0]);
     let [visibleCoinList, setVisibleCoinList] = useState(false);
@@ -20,7 +20,7 @@ export default function SendersCoinInput({ label, getCoinValue, exchangeRate, cl
     useClickAway(modalContainerRef, () => {
         setVisibleCoinList(false);
     });//
-    useLockBodyScroll(visibleCoinList);
+    // useLockBodyScroll(visibleCoinList);
 
     function handleSelectedCoin(coin) {
         setSelectedCoin(coin);
@@ -31,26 +31,38 @@ export default function SendersCoinInput({ label, getCoinValue, exchangeRate, cl
     }
     return (<>
       <div className={cn('group flex min-h-[70px] rounded-lg border border-gray-200 transition-colors duration-200 hover:border-gray-900 dark:border-gray-700 dark:hover:border-gray-600', className)}>
-        <div className="w-full border-r border-gray-200 p-3 transition-colors duration-200 group-hover:border-gray-900 dark:border-gray-700 dark:group-hover:border-gray-600">
+        <div className="w-1/2  md:w-1/3 border-r border-gray-200 p-3 transition-colors duration-200 group-hover:border-gray-900 dark:border-gray-700 dark:group-hover:border-gray-600">
           <span className="mb-1.5 block text-xs uppercase text-gray-600 dark:text-gray-400">
             {label}
           </span>
-          <button onClick={() => setVisibleCoinList(true)}  className="flex w-full items-center justify-between font-medium outline-none dark:text-gray-100">
-            <div className='flex '>{selectedCoin?.icon}{' '}
-            <span className="ltr:ml-2 rtl:mr-2">{selectedCoin?.code} </span>
-            </div>
+        
+        
 
-          <div className="relative flex h-10 w-1/4 items-center justify-center bg-white/80 text-gray-600 shadow-large backdrop-blur ltr:rounded-r-lg rtl:rounded-l-lg dark:bg-brand/80 dark:text-gray-200" >
-            <ChevronDown className="ltr:ml-1.5 rtl:mr-1.5"/>
-              <span className="absolute top-1 right-1 flex h-3 w-3 items-center justify-center">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-80"></span>
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
-              </span>
+          
+          <div className=" relative flex h-10 w-full items-center justify-center bg-white/80 text-gray-600 shadow-large backdrop-blur ltr:rounded-l-lg rtl:rounded-r-lg dark:bg-brand/80 dark:text-gray-200" >
+                <button onClick={() => setVisibleCoinList(true)} className="flex items-center font-medium outline-none dark:text-gray-100">
+                    {selectedCoin?.icon}{' '}
+                        <span className="ltr:ml-2 rtl:mr-2">{selectedCoin?.code} </span>
+                        <ChevronDown className="ltr:ml-1.5 rtl:mr-1.5"/>
+                        <span className="absolute top-1 right-1 flex h-3 w-3 items-center justify-center">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-80"></span>
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+                      </span>
+              </button>
+
           </div>
+        </div>
 
-          </button>
+        <div className="flex flex-col flex-1 justify-evenly text-right">
+          <span className="font-xs px-3 text-gray-400">
+          price: {exchangeRate ? exchangeRate : '0.00'}
+          </span>
+          <span className="w-full px-1 rounded-tr-lg rounded-br-lg text-gray-400 border-0 pb-0.5 text-sm outline-none focus:ring-0 dark:bg-light-dark" {...rest}>
+          bal: {currencybalance ? currencybalance : "0.00" }
+          </span>
         </div>
       </div>
+
 
       <AnimatePresence>
         {visibleCoinList && (<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden bg-gray-700 bg-opacity-60 p-4 text-center backdrop-blur xs:p-5">
@@ -66,3 +78,27 @@ export default function SendersCoinInput({ label, getCoinValue, exchangeRate, cl
     </>);
 }
 SendersCoinInput.displayName = 'SendersCoinInput';
+
+
+ {/* // cn('group flex min-h-[70px] rounded-lg border border-gray-200 transition-colors duration-200 hover:border-gray-900 dark:border-gray-700 dark:hover:border-gray-600', className)}>
+        // <div className="w-full border-r border-gray-200 p-3 transition-colors duration-200 group-hover:border-gray-900 dark:border-gray-700 dark:group-hover:border-gray-600">
+        //   <span className="mb-1.5 block text-xs uppercase text-gray-600 dark:text-gray-400">
+        //     {label}
+        //   </span> */}
+
+          {/* <button onClick={() => setVisibleCoinList(true)}  className="flex w-full items-center justify-between font-medium outline-none dark:text-gray-100">
+            <div className='flex '>{selectedCoin?.icon}{' '}
+            <span className="ltr:ml-2 rtl:mr-2">{selectedCoin?.code} </span>
+            </div>
+          {/* <div className=" relative flex h-10 w-full items-center justify-center bg-white/80 text-gray-600 shadow-large backdrop-blur ltr:rounded-l-lg rtl:rounded-r-lg dark:bg-brand/80 dark:text-gray-200" >
+          <div className="relative flex h-10 w-1/4 items-center justify-center bg-white/80 text-gray-600 shadow-large backdrop-blur ltr:rounded-r-lg rtl:rounded-l-lg dark:bg-brand/80 dark:text-gray-200" >
+            <ChevronDown className="ltr:ml-1.5 rtl:mr-1.5"/>
+              <span className="absolute top-1 right-1 flex h-3 w-3 items-center justify-center">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-80"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+              </span>
+          </div>
+
+          </button>
+        </div>
+      </div> */}

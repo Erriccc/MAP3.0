@@ -21,7 +21,9 @@ import Utils from'/Utilities/utils';
 
 
 
-const sameTokenEventHandler = async (UsertransactionInput, User, handleSuccess,handleError, setprocessingTransaction ) => {
+const sameTokenEventHandler = async (UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing , setTransacting, _sendAsWeth) => {
+
+        setSystemProcessing(true)
 
         console.log('payevent recieved')
         console.log("initiating simple SameTokenTransfer")
@@ -39,8 +41,7 @@ const sameTokenEventHandler = async (UsertransactionInput, User, handleSuccess,h
 
         }
         console.log("token amount vs converted token amount", UsertransactionInput.amountToBeSent,tokenammount)
-        // let usersMap3SpendingTokenAwlloanceBallance = parseInt(await Utils.getSendersAllowanceBalance(UsertransactionInput.sendersToken,User), 10).toString()
-        // let usersMap3SpendingTokenAwlloanceBallance = parseInt(await Utils.getSendersAllowanceBalance(sendersTokenAddress,User), 10).toString()
+        
         let usersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(sendersTokenAddress,User)
 
         console.log("usersMap3SpendingTokenAwlloanceBallance: ", usersMap3SpendingTokenAwlloanceBallance)
@@ -52,61 +53,49 @@ const sameTokenEventHandler = async (UsertransactionInput, User, handleSuccess,h
         usersMap3SpendingTokenAwlloanceBallance = tokenammount;
 
       }
+      setSystemProcessing(false)  
 
         // CHECK FOR CURRENT  USER ALLOWNCE BALANCE
         if(tokenammount - usersMap3SpendingTokenAwlloanceBallance > 1){
             console.log("please approve more tokens")
-            //alert("please approve more tokens")
-
-
+            setTransacting(true)
             try{
-
-            await approveTransactionRelayer(UsertransactionInput,tokenammount)
-            //alert("approval succesful")
-            handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
-
-            } catch(err){
+              await approveTransactionRelayer(UsertransactionInput,Utils.U256MAXVALUE)
+            } catch(err){ 
+                setTransacting(false)
                 if (err.reason){
-                //alert("approval failed. from metamask")
                  handleError(` approval failed ${err.reason}`)
-
                 return;
                 }else{
-                //alert("approval failed. from rpc")
-                    handleError(` approval failed ${err.message}`)
+                handleError(` approval failed ${err.message}`)
                 return;
                 }
             }
+            setTransacting(false)
+            handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
 
-        } else{
-            // do something....
-            //alert("we are all good. you have enough tokens")
-            console.log("we are all good, you have enough tokens approved...", tokenammount-usersMap3SpendingTokenAwlloanceBallance)
-        }
+        } 
+//         i am having the exact problem. 
+// i have a try{}catch(e){} block that helps me handle errors on my front end but the problem is.
+// i am rejecting an erc20 approval transaction on my metamask mobile browser but meta mask does not throw the expected 4001 code error. However when i try the same steps with the same wallet connected to my pc chrome browser,  it throws.
+
         try{
 
+          setTransacting(true)
           if ( UsertransactionInput.sendersToken == Utils.EthAddress){
-            await map3PayTransactionRelayer(UsertransactionInput,tokenammount,tokenammount );
-            //alert("NATIVE ETH Transaction Succesful")
-
-
-    
+                await map3PayTransactionRelayer(UsertransactionInput,tokenammount,tokenammount,_sendAsWeth );
+          setTransacting(false)
           }else{
-            await map3PayTransactionRelayer(UsertransactionInput,tokenammount,0)
-            //alert("ERC20 Transaction Succesful")
-
-
+            await map3PayTransactionRelayer(UsertransactionInput,tokenammount,0,_sendAsWeth)
           }
-    
-            handleSuccess(`transfer succesfull Thank you!`)
+          setTransacting(false)
+          handleSuccess(`transfer succesfull Thank you!`)
 
         } catch (err) {
-            // handleError(` transfer failed please try again. ${err.message}`)
+          setTransacting(false)
             if (err.reason){
-              //alert("transaction failed. from metamask")
                 handleError(` transfer failed please try again ${err.reason}`)
                }else{
-                  //alert("transaction failed. from rpc")
                    handleError(` transfer failed please try again ${err.message}`)
                }
 
@@ -121,7 +110,7 @@ const sameTokenEventHandler = async (UsertransactionInput, User, handleSuccess,h
 
 
 
-const oxSwapEventHandler = async (UsertransactionInput, User, handleSuccess,handleError, setprocessingTransaction ) => {
+const oxSwapEventHandler = async (UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing, setTransacting ) => {
         // situation where Tokens do not match
       // new inputed code
       let sendersTokenAddress = UsertransactionInput.sendersToken;
@@ -167,7 +156,7 @@ const oxSwapEventHandler = async (UsertransactionInput, User, handleSuccess,hand
 
         try{
 
-            await approveTransactionRelayer(UsertransactionInput,tokenammount, )
+            await approveTransactionRelayer(UsertransactionInput,Utils.U256MAXVALUE, )
             //alert("approval succesful")
             handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
 

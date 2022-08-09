@@ -1,7 +1,7 @@
 import React from 'react';
 // import ReactDOM from 'react-dom';
 import Head from "next/head";
-// import "tailwindcss/tailwind.css";
+// import "/tailwind.css";
 // import "pages/profile/profile.css"
 // import "pages/appvendors/vendors.css"
 import "components/hero.css"

@@ -7,31 +7,33 @@ import { useClickAway } from 'lib/hooks/use-click-away';
 import { useLockBodyScroll } from 'lib/hooks/use-lock-body-scroll';
 import { sendersCoinList } from '../constants/coinListPolygon'; //
 
-
 // dynamic import
 const Map3CoinSelectView = dynamic(() => import('/components/ui/map3coinSelectView'));
 
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
-export default function ReciversCoinInput({ label, getCoinValue, exchangeRate, className, ...rest }) {
-    let [value, setValue] = useState('');
+export default function ReciversCoinInput({ label, getCoinValue, className, ...rest }) {
+    let [value, setValue] = useState(1);
     let [selectedCoin, setSelectedCoin] = useState(sendersCoinList[0]);
     let [visibleCoinList, setVisibleCoinList] = useState(false);
     const modalContainerRef = useRef(null);//
     useClickAway(modalContainerRef, () => {
         setVisibleCoinList(false);
     });
-    useLockBodyScroll(visibleCoinList);
-    const handleOnChange = (event) => {
-        if (event.target.value.match(decimalPattern)) {
-            setValue(event.target.value);
-            let param = { coin: selectedCoin.code, value: event.target.value, address: selectedCoin.address };
-            getCoinValue && getCoinValue(param);
-        }
+    // useLockBodyScroll(visibleCoinList);
+    const handleOnChange = (coin, event) => {
+      if(event){
+          if (event.target.value.match(decimalPattern)) { setValue(event.target.value)} else{ console.log("value does not match  decimal pattern")}
+          let param = { coin: selectedCoin.code, value: event.target.value, address: coin.address };
+          getCoinValue && getCoinValue(param)
+      }else{
+            let param = { coin: selectedCoin.code, value: value, address: coin.address };
+            getCoinValue && getCoinValue(param)
+      }
     };
     function handleSelectedCoin(coin) {
         setSelectedCoin(coin);
         setVisibleCoinList(false);
-        handleOnChange();
+        handleOnChange(coin);
     }
     return (<>
       <div className={cn('group flex min-h-[70px] rounded-lg border border-gray-200 transition-colors duration-200 hover:border-gray-900 dark:border-gray-700 dark:hover:border-gray-600', className)}>
@@ -55,11 +57,11 @@ export default function ReciversCoinInput({ label, getCoinValue, exchangeRate, c
             
         </div>
 
-        <div className="flex flex-1 flex-col text-right">
-          <input type="text" value={value} placeholder="0.0" inputMode="decimal" onChange={handleOnChange} className="w-full rounded-tr-lg rounded-br-lg border-0 pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark" {...rest}/>
-          <span className="font-xs px-3 text-gray-400">
-            = ${exchangeRate ? exchangeRate : '0.00'}
-          </span>
+        <div className="flex flex-1 flex-col justify-center text-right">
+          <input type="text" value={value} placeholder="0.0" inputMode="decimal" onChange={(e) => {handleOnChange(selectedCoin,e)}} className="w-full rounded-tr-lg rounded-br-lg border-0 pb-0.5 text-right text-2xl outline-none focus:ring-0 dark:bg-light-dark" {...rest}/>
+          {/* <span className="font-xs px-3 text-gray-400">
+            ={exchangeCurrency ? exchangeCurrency : "$" } {exchangeRate && !isNaN(exchangeRate) ? exchangeRate : '0.00'}
+          </span> */}
         </div>
       </div>
 
@@ -70,7 +72,6 @@ export default function ReciversCoinInput({ label, getCoinValue, exchangeRate, c
               &#8203;
             </span>
             <motion.div initial={{ scale: 1.05 }} animate={{ scale: 1 }} exit={{ scale: 1.05 }} transition={{ duration: 0.3 }} ref={modalContainerRef} className="inline-block text-left align-middle">
-              {/* <CoinSelectView onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}/> */}
               <Map3CoinSelectView coinList= {sendersCoinList} onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}/>
 
             </motion.div>

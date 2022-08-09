@@ -19,7 +19,7 @@ export default function ProfileModalInput({ label, getCoinValue,  className, ...
     useClickAway(modalContainerRef, () => {
         setVisibleCoinList(false);
     });
-    useLockBodyScroll(visibleCoinList);
+    // useLockBodyScroll(visibleCoinList);
     function handleSelectedCoin(coin) {
         setSelectedCoin(coin);
         setVisibleCoinList(false);
@@ -56,7 +56,7 @@ export default function ProfileModalInput({ label, getCoinValue,  className, ...
       <AnimatePresence>
         {visibleCoinList && (<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden bg-gray-700 bg-opacity-60 p-4 text-center backdrop-blur xs:p-5">
             {/* This element is to trick the browser into centering the modal contents. */}
-            <span className="inline-block h-full align-middle" aria-hidden="true">
+            <span className="inline-block h-1/2 align-middle" aria-hidden="true">
               &#8203;
             </span>
             <motion.div initial={{ scale: 1.05 }} animate={{ scale: 1 }} exit={{ scale: 1.05 }} transition={{ duration: 0.3 }} ref={modalContainerRef} className="inline-block text-left align-middle">

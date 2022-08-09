@@ -1,12 +1,4 @@
-// import {
-//     getUserErc20Balance,
-//     getUserNativeBalance,
-//     EthAddress,
-//     WethAddress,
-//     getTokenDecimal,
-// getUserErc20BalanceInWei,
-// getUserNativeBalanceInWei,
-// } from'/Utilities/utils';
+
 import Utils from'/Utilities/utils';
 const {oxQuoteFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
 
@@ -109,8 +101,32 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
                     // note each of them could originally be 
                     if(sendersToken == reciversToken ){
                         console.log("detected same tokens, will skip 0x api call")
-                        aprovalAmount = UsertransactionInput.amountToBeSent;
-                        sendersBalance = parseInt(await Utils.getUserErc20Balance(UsertransactionInput.sendersToken,UsertransactionInput.sender), 10).toString()
+                        // sendersBalance = parseInt(await Utils.getUserErc20Balance(UsertransactionInput.sendersToken,UsertransactionInput.sender), 10).toString()
+                        if(UsertransactionInput.sendersToken ==Utils.EthAddress ){
+                        console.log("users token is eth")
+
+                        // alert(aprovalAmount)
+                    // WholeTOWeiDecimals
+                        // aprovalAmount= Utils.ethers.utils.parseEther(UsertransactionInput.amountToBeSent)
+                        aprovalAmount = parseInt(UsertransactionInput.amountToBeSent,18).toString();
+
+                        console.log("aprovalAmount.. from validator..1", aprovalAmount)
+                        sendersBalance = await Utils.getUserNativeBalanceInWei(UsertransactionInput.sender)
+                        console.log("sendersBalance.. from validator..1", sendersBalance)
+
+                        }else{
+                        // aprovalAmount = parseInt(UsertransactionInput.amountToBeSent, await Utils.getTokenDecimal(sendersToken)).toString();
+                        // aprovalAmount = parseInt(UsertransactionInput.amountToBeSent, await Utils.getTokenDecimal(sendersToken)).toString();
+                        console.log("users token is weth")
+
+                        aprovalAmount= await Utils.WholeTOWeiDecimals( sendersToken,UsertransactionInput.amountToBeSent)
+                        console.log("aprovalAmount.. from validator..2", aprovalAmount)
+
+                        sendersBalance = await Utils.getUserErc20BalanceInWei(sendersToken,UsertransactionInput.sender)
+                        console.log("sendersBalance.. from validator..2", sendersBalance)
+
+                        // sendersBalance = parseInt(await Utils.getUserErc20Balance(UsertransactionInput.sendersToken,UsertransactionInput.sender), 10).toString()
+                        }
                         console.log("sendersBalance == aprovalAmount", sendersBalance, aprovalAmount)
                     }else{
                         console.log("attempting 0x call")
@@ -127,11 +143,11 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
                         console.log("quotedAmmountToSell *UsertransactionInput.slippage.", quotedAmmountToSell *UsertransactionInput.slippage)
                     }
 
-                    //SPECIAL CONDITION: where sending token was initially Native
-                    if(UsertransactionInput.sendersToken ==Utils.EthAddress){
-                        sendersBalance = await Utils.getUserNativeBalanceInWei(UsertransactionInput.sender)
-                        console.log("sendersBalance from user spending eth situation.. remember to conver to weigh numbers..", sendersBalance)
-                    }
+                    // //SPECIAL CONDITION: where sending token was initially Native
+                    // if(UsertransactionInput.sendersToken ==Utils.EthAddress){
+                    //     sendersBalance = await Utils.getUserNativeBalanceInWei(UsertransactionInput.sender)
+                    //     console.log("sendersBalance from user spending eth situation.. remember to conver to weigh numbers..", sendersBalance)
+                    // }
 
 
                     console.log("sendersBalance AND aprovalAmount final Values 1", sendersBalance, aprovalAmount)
@@ -157,8 +173,9 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
 
         //Require no ERC20 to Native Token Conversions
         if ( UsertransactionInput.reciversToken == Utils.EthAddress && UsertransactionInput.sendersToken !== Utils.EthAddress){
+            setvalidatingInput(false);
             handleError("ERC20 to Native transactions are not available atm, Try Native to ERC20, ERC20 to ERC20, or Native to Native");
-           ;
+            return false;
         }else{
             console.log("validation no ERC20 to Native Token Conversions");
         }

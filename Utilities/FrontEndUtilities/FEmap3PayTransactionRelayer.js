@@ -3,12 +3,13 @@ import {map3SameTokenTransferEndpoint} from'/Utilities/utils';
 import {map3PayExecutor} from '/Utilities/apiUtils'
 
 
-const map3PayTransactionRelayer = async (UsertransactionInput,tokenammount, txValue ) => {
+const map3PayTransactionRelayer = async (UsertransactionInput,tokenammount, txValue, _sendAsWeth ) => {
 
      const map3SameTokenTransferData = {
         amount: tokenammount,
         addressTo: UsertransactionInput.reciver,
         tokenIn: UsertransactionInput.reciversToken,
+        _sendAsWeth: _sendAsWeth
       }
 
         console.log("map3SameTokenTransferData: from map3PayTransactionRelayer", map3SameTokenTransferData)
