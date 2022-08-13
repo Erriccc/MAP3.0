@@ -17,10 +17,6 @@ export default function SettingsButton() {
         </div> */}
         <button className="flex p-3 items-center justify-center  text-gray-300 shadow-large " onClick={opeSettings} title="Settings">
           <OptionIcon />
-          <span className="absolute top-1 right-1 flex h-3 w-3 items-center justify-center">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-80"></span>
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
-          </span>
         </button>
       </div>
     </>);

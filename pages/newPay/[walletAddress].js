@@ -1,34 +1,226 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import Link from "next/link";
-import { useMoralis, useWeb3ExecuteFunction  } from 'react-moralis';
-import Apphero from 'components/Apphero';
-import PayVendor from 'components/PayVendor';
-import VendorQrCode from 'components/VendorQrCode';
-import DashboardLayout from 'layouts/_dashboard';
-
+import { useMoralis} from 'react-moralis'
+import Apphero from 'components/Apphero'
 import { useNotification, CreditCard } from "web3uikit";
-import { useRouter } from "next/router";
-import {Map3WebsiteUrl} from "../../Utilities/utils"
+import { useRouter } from "next/dist/client/router";
+import { NextSeo } from 'next-seo';
+import { useCopyToClipboard } from 'lib/hooks/use-copy-to-clipboard';
+import DashboardLayout from 'layouts/_dashboard';
+import Button from '/components/ui/button';
+import Image from '/components/ui/image';
+import { Copy } from '/components/icons/copy';
+import { Check } from '/components/icons/check';
+import AuthorInformation from '/components/author/author-information';
+import vendorsData from "constants/testdata.json"
+import ProfileQrCode from 'components/ProfileQrCode';
+
+const {oxPriceFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
+import Utils from'/Utilities/utils';
+import{PaymentInputValidator} from '/Utilities/FrontEndUtilities/FEpaymentUserInputValidator'
+import{oxSwapEventHandler, sameTokenEventHandler, oxSwapERC20ToEth} from '/Utilities/FrontEndUtilities/FEpayEventHandler';
+import cn from 'classnames';
+
+import Collapse from '/components/ui/collapse';
+import PayVendorLayout from 'layouts/PayVendorLayout';
+import TransactionInfo from '/components/ui/transaction-info';
+import Slider from 'rc-slider';
+import dynamic from 'next/dynamic';
+import { number } from 'yup';
+
+const ProcessingView = dynamic(() => import('/components/ui/ProcessingView'));
+const VendorReciverCoinInput = dynamic(() => import('/components/VendorReciverCoinInput'));
+const SendersCoinInput = dynamic(() => import('/components/SendersCoinInput'));
 
 
-
-
-
-export default function PAY () {
-
-  const { Moralis, account } = useMoralis();
-  const contractProcessor = useWeb3ExecuteFunction();
-  const dispatch = useNotification();
+const AuthorProfilePage = () => {
   let router = useRouter();
+  const {walletAddress} = router.query;
+  const { account } = useMoralis();
 
-  const {walletAddress,vendorsName, vendorsToken,vendorsTokenSymbol} = router.query
-  // console.log("router : ", router)
-  // console.log("router.query : ", router.query)
-  // // user is autenticated
-  const {isAuthenticated} = useMoralis()
-  
-  
-  // // UNCOMMENT to AUTHENTICATE!!!!
+    const address = account;
+    let [copyButtonStatus, setCopyButtonStatus] = useState(false);
+    let [_, copyToClipboard] = useCopyToClipboard();
+    const handleCopyToClipboard = () => {
+        copyToClipboard(address);
+        setCopyButtonStatus(true);
+        setTimeout(() => {
+            setCopyButtonStatus(copyButtonStatus);
+        }, 2500);
+    };
+
+  const dispatch = useNotification();
+
+  const handleSuccess= (msg) => {
+    dispatch({
+      type: "success",
+      message: msg,
+      title: "Done",
+      position: "bottomR",
+    });
+  };
+const handleError= (msg) => {
+  dispatch({
+    type: "error",
+    message: `${msg}`,
+    title: "failed",
+    position: "bottomR",
+  });
+};
+const handleNoAccount= () => {
+  dispatch({
+    type: "error",
+    message: `You need to connect your wallet to book a rental`,
+    title: "Not Connected",
+    position: "topR",
+  });
+};
+
+// add input for expected slippage amount to complete swap!
+    const submitPayment = async (UsertransactionInput) => {
+
+/////// SWAP From ERC20 To ETH or Native Token
+  if(UsertransactionInput.reciversToken == Utils.EthAddress && UsertransactionInput.sendersToken !== Utils.EthAddress){
+    try{
+      await oxSwapERC20ToEth(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing,setTransacting);
+
+    }catch(e){
+
+    }
+
+  }else if
+
+  // /// SWAP ETH TO WETH
+    (UsertransactionInput.sendersToken == Utils.EthAddress &&  UsertransactionInput.reciversToken == Utils.WethAddress ){
+
+            try{
+              await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting, true);
+
+            }catch(e){
+
+            }
+
+    } else{
+
+
+      // listenForMap3Events();
+          if (UsertransactionInput.sendersToken == UsertransactionInput.reciversToken) {
+              try{
+                    console.log("both tokens are the same", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
+                    await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting,false);
+
+              }catch(e){
+
+              }
+          } else {
+            try{
+                  console.log("different tokens", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
+                  await oxSwapEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing,setTransacting );
+                }catch(e){
+
+                }
+          }
+    }
+
+    };
+
+
+
+    const [userData, setUserData] = useState({});
+    
+    const [sendersTokenBalance, setSendersTokenBalance] = React.useState("0");
+    const [rate, setRate] = React.useState(1); // Echange rate .. gotten from 0x api
+    const [quote, setQuote] = React.useState("select tokens"); //  Quote is the current rate multiplied by the amount of cryptocurrency to be bouth
+    const [totalQuoteWithSlippage, setTotalQuoteWithSlippage] = React.useState("select tokens"); //  estimate that includes slippage
+    const [sendersToken, setSendersToken] = React.useState(Utils.EthAddress);
+    const [reciversToken, setReciversToken] = React.useState(); 
+    const [amountToBeSent, setamountToBeSent] = React.useState(0.01);
+    let [toggleCoin, setToggleCoin] = useState(false);
+    let [reciver, setReciver] = useState(Utils.EthAddress);
+    let [tempSlippage, setTempSlippage] = useState(Utils.slippage);
+    let [userSlippage, setUserSlippage] = useState(Utils.slippage);
+    let [systemProcessing, setSystemProcessing] = useState(false);
+    let [validatingInput, setvalidatingInput] = useState(false);
+    let [transacting, setTransacting] = useState(false);
+
+
+
+useEffect(() => {
+  let isMounted = true;
+
+    let fetchedUserData = vendorsData;
+    if (walletAddress) {
+      console.log("vendorsData", vendorsData)
+        fetchedUserData = vendorsData.find(function (item) {
+            // const name = item.name;
+            const userAddress = item.walletAddress;
+            return(
+                // name.match(walletAddress) ||
+                userAddress.match(walletAddress) ||
+                // (name.toLowerCase().match(walletAddress) && name) ||
+                (userAddress.toLowerCase().match(walletAddress) && userAddress)
+              )
+        });
+        setUserData(fetchedUserData);
+        setReciversToken(fetchedUserData.vendorsToken)
+        setReciver(fetchedUserData.walletAddress)
+    }
+    return () => { isMounted = false };
+}, [walletAddress])
+
+
+
+
+
+
+    /// USER EXPIRIENCE TOOLS
+    useEffect(()=>{
+      let isMounted = true;
+        const fetchPrice = async () => {
+            // this function comes from the utililty folder
+       try{ 
+        let quotePrice = await oxPriceFetcher(
+            sendersToken,
+            reciversToken,
+            amountToBeSent,
+            handleError)
+            if (isNaN(quotePrice) ){
+              setRate(quotePrice)
+              setQuote(quotePrice)
+              setTotalQuoteWithSlippage(quotePrice)
+            }else{
+              setRate(quotePrice)
+              setQuote(quotePrice*amountToBeSent)
+              setTotalQuoteWithSlippage(quote*userSlippage)
+            }
+            
+        }catch(e){
+          setQuote("quote Failed")
+
+        }
+}
+        const loadUsersBalances = async () => {
+            try{
+            if(sendersToken == Utils.EthAddress){
+              setSendersTokenBalance(await Utils.getUserNativeBalance(account))
+            }else{
+              setSendersTokenBalance(await Utils.getUserErc20Balance(sendersToken,account))
+            }
+          } catch(e){
+            return
+          }
+
+        }
+
+        fetchPrice()
+        loadUsersBalances()
+        return () => { isMounted = false };
+      }, [sendersToken, reciversToken,amountToBeSent, userSlippage, quote]);
+
+
+
+
+  // // // UNCOMMENT to AUTHENTICATE!!!!
   // if (!account) {
   //   // if (process.browser){
   //   //   router.push({
@@ -39,76 +231,143 @@ export default function PAY () {
   //     <Apphero/>
   //   )
   // }
-//   const handleSuccess= () => {
-//     dispatch({
-//       type: "success",
-//       message: `Nice! You are going to ${searchFilters.destination}!!`,
-//       title: "Booking Succesful",
-//       position: "topL",
-//     });
-//   };
+    return (<>
+      <NextSeo title="Profile" description="Map3 - React Next Web3 NFT Crypto Dashboard Template"/>
+      {walletAddress && (
+      // {walletAddress && userData && (
 
-//   const handleError= (msg) => {
-//     dispatch({
-//       type: "error",
-//       message: `${msg}`,
-//       title: "Booking Failed",
-//       position: "topL",
-//     });
-//   };
+      <DashboardLayout>
+        {/* Profile Cover Image */}
+        <div className="relative h-36 w-full overflow-hidden rounded-lg sm:h-44 md:h-64 xl:h-80 2xl:h-96 3xl:h-[448px]">
+          <Image 
+          src={`/api/imagefetcher?url=${encodeURIComponent(
+            userData?.imgUrl
+          )}`}
+          layout="fill" objectFit="cover" alt="Cover Image"/>
+        </div>
 
-//   const handleNoAccount= () => {
-//     dispatch({
-//       type: "error",
-//       message: `You need to connect your wallet to book a rental`,
-//       title: "Not Connected",
-//       position: "topL",
-//     });
-//   };
+        {/* Profile Container */}
+        <div className="mx-auto flex w-full shrink-0 flex-col md:px-4 xl:px-6 3xl:max-w-[1700px] 3xl:px-12">
+          {/* Profile Image */}
+          <div className="relative z-10 mx-auto -mt-12 h-24 w-24 shrink-0 overflow-hidden rounded-full border-[5px] border-white shadow-large dark:border-gray-500 sm:-mt-14 sm:h-28 sm:w-28 md:mx-0 md:-mt-16 md:h-32 md:w-32 xl:mx-0 3xl:-mt-20 3xl:h-40 3xl:w-40 3xl:border-8">
+            <Image 
+            src={`/api/imagefetcher?url=${encodeURIComponent(
+              userData?.imgUrl
+            )}`}
+             layout="fill" objectFit="cover" className="rounded-full" alt="Author"/>
+          </div>
+          {/* Profile Info */}
+          <div className="flex w-full flex-col pt-4 md:flex-row md:pt-10 lg:flex-row xl:pt-12">
+            <div className="shrink-0 border-dashed border-gray-200 dark:border-gray-700 md:w-72 ltr:md:border-r md:ltr:pr-7 rtl:md:border-l md:rtl:pl-7 lg:ltr:pr-10 lg:rtl:pl-10 xl:ltr:pr-14 xl:rtl:pl-14 2xl:w-80 3xl:w-96 3xl:ltr:pr-16 3xl:rtl:pl-16">
+              <div className="text-center ltr:md:text-left rtl:md:text-right">
+                {/* Name */}
+                <h2 className="text-xl font-medium tracking-tighter text-gray-900 dark:text-white xl:text-2xl">
+                  {userData?.name}
+                </h2>
 
-  return (
-    <DashboardLayout>
+                {/* Username */}
+                <div className="mt-1 text-sm font-medium tracking-tighter text-gray-600 dark:text-gray-400 xl:mt-3">
+                  {/* @{authorData?.user_name} */}
+                  @{userData?.email}
 
-    <div className="max-w-md relative al my-2 flex flex-col mx-auto justify-center">
+                  
+                </div>
 
-         {account &&
-         <>
-            <div className="text-[#64748b] p-2 m-2 text-3xl font-semibold">
-
-            <h4 className="text-blue-500 text-lg italic">
-
-            {vendorsName} Map3Pay profile
-              </h4>
+                {/* User ID and Address */}
+                <div className="mt-5 inline-flex h-9 items-center rounded-full bg-white shadow-card dark:bg-light-dark xl:mt-6">
+                  <div className="inline-flex h-full shrink-0 grow-0 items-center rounded-full bg-gray-900 px-4 text-xs text-white sm:text-sm">
+                    {userData?.city}
+                  </div>
+                  <div className="text w-28 grow-0 truncate text-ellipsis bg-center text-xs text-gray-500 ltr:pl-4 rtl:pr-4 dark:text-gray-300 sm:w-32 sm:text-sm">
+                    {userData?.walletAddress}
+                  </div>
+                  <div className="flex cursor-pointer items-center px-4 text-gray-500 transition hover:text-gray-900 dark:text-gray-300 dark:hover:text-white" title="Copy Address" onClick={handleCopyToClipboard}>
+                    {copyButtonStatus ? (<Check className="h-auto w-3.5 text-green-500"/>) : (<Copy className="h-auto w-3.5"/>)}
+                  </div>
+                </div>
+              </div>
+              <AuthorInformation map3Url={Utils.Map3WebsiteUrl} userPath={router.asPath} className="hidden md:block" data={userData}/>
             </div>
-            <div>
-              {console.log("is this your user object or address?",account, "from [walletAddress].js")}
 
-              {/* 
-              NOTE PASS VENDORS WALLET ADDRESS HERE AUTOMATICALY TO PAY VENDORS
-              
-              NOTE by checking for vendorsTokenSymbol we are making sure we have all our parameters before rendering 
-              the payVendor and VendorQrcode componnents
-              */}
+            <div className="grow pt-6 pb-9 md:-mt-2.5 md:pt-1.5 md:pb-0 md:ltr:pl-7 md:rtl:pr-7 lg:ltr:pl-10 lg:rtl:pr-10 xl:ltr:pl-14 xl:rtl:pr-14 3xl:ltr:pl-16 3xl:rtl:pr-16">
+              <PayVendorLayout>
+          <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
+            <VendorReciverCoinInput
+            label={'Recivers Token'}
+            tokenAddress={reciversToken && reciversToken}
+            getCoinValue={(data) => {
+              console.log('Recivers coin value:', data)
+              setamountToBeSent(data.value)
+          }}
+            />
 
-            {vendorsTokenSymbol && <>
-              <PayVendor
-            User={account}
-            walletAddress={walletAddress}
-            vendorsToken={vendorsToken}
-            vendorsName={vendorsName}
-            vendorsTokenSymbol={vendorsTokenSymbol}
-             />
-              <VendorQrCode url={`${Map3WebsiteUrl}${router.asPath}`} />
-			      </>}
+            <div className={cn('relative flex gap-3',  'flex-col')}>
+              <SendersCoinInput label={'Senders Token'} currencybalance={sendersTokenBalance} exchangeRate={quote}
+                getCoinValue={(data) => {
+                console.log('senders coin value:', data)
+                setSendersToken(data.address)
+                }}
+                />
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 xs:gap-[18px]">
+          <Collapse label={`Transaction Details`}>
+          <div className="flex flex-col gap-4 xs:gap-[18px] p-3 ">
+                    <TransactionInfo label={'conversion rate'} value ={rate}/>
+                    <TransactionInfo label={`estimate Price:`} value={quote}/>
+                    <TransactionInfo label={`Price + slippage:`} value={totalQuoteWithSlippage}/>
+                    <TransactionInfo label={'Price Slippage'} value={`${tempSlippage}%`}/> 
+                    <div className="p-1">
+                    <Slider  min={0} max={100} value={tempSlippage} handleStyle={{padding:"8px", color: "red"}}  onChange={(value) => {
+                      let realValue = 1+(value/100)
+                      setTempSlippage(value)
+                      setUserSlippage(realValue)
+                      }}/>
+                    </div>
+                    </div>
+            </Collapse>
+          </div>
+          <Button size="large" shape="rounded" fullWidth={true} className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
+           onClick={
+            () => {
+                let UsertransactionInput = {
+                    sender: account,
+                    reciver: reciver,
+                    sendersToken: sendersToken,
+                    reciversToken: reciversToken,
+                    amountToBeSent: amountToBeSent,
+                    slippage: userSlippage
+                };
+                (async function() {
+                  if(await PaymentInputValidator(UsertransactionInput,handleError,setvalidatingInput)){
+                    // if(true){
+                  console.log("All validation passed........... processing transaction")
+                  submitPayment(UsertransactionInput);
 
+                  }
+                  else{
+                    console.log("validation is false")
+                  }
+                })();
+            }}
+           >
+            SEND
+          </Button>
+              {validatingInput && (<ProcessingView status={"validating Input..."} arrayToDisplay={Utils.TypoEffectTexts.Validating}/>)}
+              {systemProcessing && (<ProcessingView status={"System Processing... "} arrayToDisplay={Utils.TypoEffectTexts.Processing}/>)}
+              {transacting && (<ProcessingView status={"Transacting..."} arrayToDisplay={Utils.TypoEffectTexts.Transacting}/>)}
+        </PayVendorLayout>
 
+        {/* <ProfileQrCode url={`${Utils.Map3WebsiteUrl}${router.asPath}`} /> */}
 
             </div>
-         </>
-            }
-         </div>
-    </DashboardLayout>
+            <AuthorInformation map3Url={Utils.Map3WebsiteUrl} userPath={router.asPath}  data={userData}/>
 
+          </div>
+        </div>
+      </DashboardLayout>
+)}
 
-  );
+    </>);
 };
+export default AuthorProfilePage;

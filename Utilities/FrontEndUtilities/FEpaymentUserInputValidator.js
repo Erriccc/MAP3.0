@@ -143,11 +143,11 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
                         console.log("quotedAmmountToSell *UsertransactionInput.slippage.", quotedAmmountToSell *UsertransactionInput.slippage)
                     }
 
-                    // //SPECIAL CONDITION: where sending token was initially Native
-                    // if(UsertransactionInput.sendersToken ==Utils.EthAddress){
-                    //     sendersBalance = await Utils.getUserNativeBalanceInWei(UsertransactionInput.sender)
-                    //     console.log("sendersBalance from user spending eth situation.. remember to conver to weigh numbers..", sendersBalance)
-                    // }
+                    //SPECIAL CONDITION: where sending token was initially Native
+                    if(UsertransactionInput.sendersToken ==Utils.EthAddress){
+                        sendersBalance = await Utils.getUserNativeBalanceInWei(UsertransactionInput.sender)
+                        console.log("sendersBalance from user spending eth situation.. remember to conver to weigh numbers..", sendersBalance)
+                    }
 
 
                     console.log("sendersBalance AND aprovalAmount final Values 1", sendersBalance, aprovalAmount)
@@ -172,13 +172,13 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
 
 
         //Require no ERC20 to Native Token Conversions
-        if ( UsertransactionInput.reciversToken == Utils.EthAddress && UsertransactionInput.sendersToken !== Utils.EthAddress){
-            setvalidatingInput(false);
-            handleError("ERC20 to Native transactions are not available atm, Try Native to ERC20, ERC20 to ERC20, or Native to Native");
-            return false;
-        }else{
-            console.log("validation no ERC20 to Native Token Conversions");
-        }
+        // if ( UsertransactionInput.reciversToken == Utils.EthAddress && UsertransactionInput.sendersToken !== Utils.EthAddress){
+        //     setvalidatingInput(false);
+        //     handleError("ERC20 to Native transactions are not available atm, Try Native to ERC20, ERC20 to ERC20, or Native to Native");
+        //     return false;
+        // }else{
+        //     console.log("validation no ERC20 to Native Token Conversions");
+        // }
 
     setvalidatingInput(false)
 
@@ -194,4 +194,4 @@ module.exports = {PaymentInputValidator}
 //   reciversToken: reciversToken,
 //   amountToBeSent: amountToBeSent,
 //   slippage: userSlippage
-// }
+// }//

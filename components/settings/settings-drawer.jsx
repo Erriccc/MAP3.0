@@ -78,45 +78,7 @@ function ThemeSwitcher() {
       </RadioGroup>
     </div>);
 }
-function LayoutSwitcher() {
-    const [layout, setLayout] = useLocalStorage('map3-layout', 'ltr');
-    useDirection(layout ? layout : 'ltr');
-    return (<div className="px-6 pt-8">
-      <h4 className="mb-4 text-sm font-medium text-gray-900 dark:text-white">
-        Layout
-      </h4>
-      <RadioGroup value={layout} onChange={setLayout} className="grid grid-cols-2 gap-5 ">
-        <RadioGroup.Option value="ltr">
-          {({ checked }) => (<div className="group cursor-pointer">
-              <span className={`flex h-[70px] items-center justify-center rounded-lg text-center text-sm font-medium uppercase tracking-wide transition-all ${checked
-                ? 'bg-white shadow-large dark:bg-gray-600'
-                : 'bg-gray-100 text-gray-500 group-hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:group-hover:bg-gray-700'}`}>
-                <LeftAlign />
-              </span>
-              <span className={`mt-3 block text-center text-sm transition-all ${checked
-                ? 'text-brand dark:text-white'
-                : 'text-gray-500 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white'}`}>
-                LTR
-              </span>
-            </div>)}
-        </RadioGroup.Option>
-        <RadioGroup.Option value="rtl">
-          {({ checked }) => (<div className="group cursor-pointer">
-              <span className={`flex h-[70px] items-center justify-center rounded-lg text-center text-sm font-medium uppercase tracking-wide transition-all ${checked
-                ? 'bg-white shadow-large dark:bg-gray-600'
-                : 'bg-gray-100 text-gray-500 group-hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:group-hover:bg-gray-700'}`}>
-                <RightAlign />
-              </span>
-              <span className={`mt-3 block text-center text-sm transition-all ${checked
-                ? 'text-brand dark:text-white'
-                : 'text-gray-500 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white'}`}>
-                RTL
-              </span>
-            </div>)}
-        </RadioGroup.Option>
-      </RadioGroup>
-    </div>);
-}
+
 function ColorSwitcher() {
     const [themeColor, setThemeColor] = useLocalStorage('map3-color', '#323743');
     useThemeColor(themeColor ? themeColor : '#323743');
@@ -165,7 +127,7 @@ export default function SettingsDrawer() {
               <Scrollbar style={{ height: 'calc(100% - 64px)' }}>
                 <div className="pb-8">
                   <ThemeSwitcher />
-                  <LayoutSwitcher />
+                  {/* <LayoutSwitcher /> */}
                   <ColorSwitcher />
                 </div>
               </Scrollbar>

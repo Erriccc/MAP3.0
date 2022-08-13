@@ -14,7 +14,7 @@ const Map3Abi = require( './Map3P2PContract.json')
 const Map3VendorsABi = require( './VendorAccountsManagerContract.json')
 const uniVoteAbi = require( './univotetoken.json')
 // const Map3WebsiteUrl = "https://www.map3.com"
-const Map3WebsiteUrl = "http://10.0.0.232:3001"
+const Map3WebsiteUrl = "http://10.0.0.232:3000"
 const TypoEffectTexts = require('../constants/TypoEffectTexts')
 const PolygonCoinList = require('../constants/coinListPolygon')
 const ReciversCoinList = PolygonCoinList.reciversCoinList;
@@ -34,10 +34,16 @@ const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
 const PaymentHandlerEndpoint = '/api/oxQuoteHandler' 
 const map3SameTokenTransferEndpoint = '/api/map3pay/map3sametokentransfer' 
 const map3SwapAndTransferEndpoint = '/api/map3pay/map3swapandtransfer' 
+const map3OxMap3SwapERC20ToEthEndpoint = '/api/map3pay/oxmap3SwapERC20ToEth' 
+
+
 const map3SignUpEndpoint = '/api/map3signup' 
 const map3ApproveEndpoint = '/api/map3pay/map3approve' 
 
 const  { ethers }=require( "ethers"); // from hardhat throws error "Can't resolve 'console'"
+
+const dummyHexData = "0xd4984f8a000000000000000000000000000000000000000000000000016345785d8a0000000000000000000000000000bb2cb98982ed6547aa7e39707807253a999796b700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+
 // const  Map3Polygon4="0xb403aBD7aD3e45F052eb801059b08048798fb508";
 const  Map3Polygon5="0xD38B508e98B092FA7baBefc30652F1AfFA8c857C";
 const  Map3PolygonTEST6="0x4e5Ae028918EB31FD5Ba99DcBCf608763272B4e3"
@@ -46,6 +52,7 @@ const  Map3PolygonTEST7="0xa1784087D227e9891FEd0ED04f2f2Ad5361573Ad" // with pla
 const  Map3PolygonTEST8="0x0158345e52522C57ce34773c89D0214c2d10edd1" // with plans and sending eth transactions, fixed bug
 
 const Map3P2PContractTest1 ="0x11F15ad3D1f8Ab61b86FC2Bd2247Cf2EB96F3ddF"
+const Map3P2PContractTest2 ="0x5416c30970a66B041Df941e2A28711E1c7f8e0Ce"
 
 const  Map3VendorPlansPolgonTest1="0xfdD4e6BFC94a402bC40161067fC29860518159Ca" // with plans and sending eth transactions
 const  Map3VendorPlansPolgonTest2="0x3095d04AdC87dF6C50A9de0A5106602DB6fc902e" // with plans and sending eth transactions
@@ -53,7 +60,7 @@ const  VendorAccountsManagerContractTest1 = "0xfdF123c9E8BD78a50bdD41aaEe069d89e
 
 // 0xfdF123c9E8BD78a50bdD41aaEe069d89e8B4BE57 // VendorAccountsManagerContract
 //0x11F15ad3D1f8Ab61b86FC2Bd2247Cf2EB96F3ddF //Map3P2PContract
-const  Map3address=Map3P2PContractTest1;
+const  Map3address=Map3P2PContractTest2;
 const  Map3VendorAddress=VendorAccountsManagerContractTest1;
 
 const EthAddress = "0x0000000000000000000000000000000000000000";
@@ -563,6 +570,7 @@ module.exports = {
     bytesEncodedBytesImplementor,
     getFunctionSignatureHash,
     PaymentHandlerEndpoint,
+    map3OxMap3SwapERC20ToEthEndpoint,
     map3SameTokenTransferEndpoint,
     map3SwapAndTransferEndpoint,
     map3ApproveEndpoint,
@@ -579,6 +587,7 @@ module.exports = {
     ValidateIfAddressIsErc20,
     U256MAXVALUE,
     ethers,
+    dummyHexData,
 
 };
 

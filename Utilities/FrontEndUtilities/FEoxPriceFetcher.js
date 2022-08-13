@@ -118,7 +118,7 @@ console.log("ammount to be sent from Quotefetcher : ",amountToBeSent, " - ", awa
       buyAmount: await Utils.WholeTOWeiDecimals(reciversToken,amountToBeSent),
   });
   const quoteUrl = `${Utils.API_QUOTE_URL}?${qs}`;
-  console.log("Quotefetcher url for price..", quoteUrl)
+  console.log("Quotefetcher url for pre swap price..", quoteUrl)
   // const quoteUrl = `${Ox_POLYGON_API_PRICE_URL}?${qs}`;
   const response = await fetch(quoteUrl);
   const quote = await response.json();

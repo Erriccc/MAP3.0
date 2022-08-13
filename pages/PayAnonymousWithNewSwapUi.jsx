@@ -3,7 +3,7 @@ import { useNotification } from "web3uikit";
 const {oxPriceFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
 import Utils from'/Utilities/utils';
 import{PaymentInputValidator} from '/Utilities/FrontEndUtilities/FEpaymentUserInputValidator'
-import{oxSwapEventHandler, sameTokenEventHandler} from '/Utilities/FrontEndUtilities/FEpayEventHandler';
+import{oxSwapEventHandler, sameTokenEventHandler, oxSwapERC20ToEth} from '/Utilities/FrontEndUtilities/FEpayEventHandler';
 import { useMoralis, } from 'react-moralis';
 import { useRouter } from "next/dist/client/router"; // use to reroute after transaction is processed
 import dynamic from 'next/dynamic';
@@ -56,7 +56,19 @@ export default function PayAnonymous() {
 // add input for expected slippage amount to complete swap!
     const submitPayment = async (UsertransactionInput) => {
 
-    if(UsertransactionInput.sendersToken == Utils.EthAddress &&  UsertransactionInput.reciversToken == Utils.WethAddress ){
+/////// SWAP From ERC20 To ETH or Native Token
+  if(UsertransactionInput.reciversToken == Utils.EthAddress && UsertransactionInput.sendersToken !== Utils.EthAddress){
+    try{
+      await oxSwapERC20ToEth(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing,setTransacting);
+
+    }catch(e){
+
+    }
+
+  }else if
+
+  // /// SWAP ETH TO WETH
+    (UsertransactionInput.sendersToken == Utils.EthAddress &&  UsertransactionInput.reciversToken == Utils.WethAddress ){
 
             try{
               await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting, true);
@@ -65,26 +77,26 @@ export default function PayAnonymous() {
 
             }
 
-    }else{
+    } else{
 
 
-    // listenForMap3Events();
-        if (UsertransactionInput.sendersToken == UsertransactionInput.reciversToken) {
-          try{
-                console.log("both tokens are the same", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
-                await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting,false);
+      // listenForMap3Events();
+          if (UsertransactionInput.sendersToken == UsertransactionInput.reciversToken) {
+              try{
+                    console.log("both tokens are the same", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
+                    await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting,false);
 
-          }catch(e){
-
-          }
-        } else {
-          try{
-                console.log("different tokens", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
-                await oxSwapEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, );
               }catch(e){
 
               }
-              }
+          } else {
+            try{
+                  console.log("different tokens", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
+                  await oxSwapEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing,setTransacting );
+                }catch(e){
+
+                }
+          }
     }
 
     };
@@ -97,7 +109,7 @@ export default function PayAnonymous() {
     const [totalQuoteWithSlippage, setTotalQuoteWithSlippage] = React.useState("select tokens"); //  estimate that includes slippage
     const [sendersToken, setSendersToken] = React.useState(Utils.EthAddress);
     const [reciversToken, setReciversToken] = React.useState(Utils.EthAddress); 
-    const [amountToBeSent, setamountToBeSent] = React.useState(1);
+    const [amountToBeSent, setamountToBeSent] = React.useState(0.01);
     let [toggleCoin, setToggleCoin] = useState(false);
     let [reciver, setReciver] = useState("");
     let [tempSlippage, setTempSlippage] = useState(Utils.slippage);
@@ -215,6 +227,7 @@ export default function PayAnonymous() {
                 };
                 (async function() {
                   if(await PaymentInputValidator(UsertransactionInput,handleError,setvalidatingInput)){
+                    // if(true){
                   console.log("All validation passed........... processing transaction")
                   submitPayment(UsertransactionInput);
 

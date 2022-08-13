@@ -5,14 +5,12 @@ import { useRouter } from "next/dist/client/router";
 import { Button, Icon, useNotification } from "web3uikit";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import VendorsMap from "components/VendorsMap";
+import SearchVendorInfo from "components/SearchVendorInfo";
 import vendorsData from "constants/testdata.json"
+import DashboardLayout from 'layouts/_dashboard';
 import { NextSeo } from 'next-seo';
 import VendorSlider from '/components/ui/vendorCard';
-import VerticalVendorSlider from '/components/ui/verticalVendorCard';
-import Hamburger from '/components/ui/hamburger';
-import SearchButton from '/components/search/button';
-import { useDrawer } from '/components/drawer-views/context';
-
+import { coinSlideData } from 'data/static/coin-slide-data';
 
 
 export default function Rentals () {
@@ -65,17 +63,6 @@ export default function Rentals () {
     });
   };
 
-  const { openDrawer } = useDrawer();
-    let [isOpen, setIsOpen] = useState(false);
-
-
-// import { useIsMounted } from 'lib/hooks/use-is-mounted';
-// import { useWindowScroll } from 'lib/hooks/use-window-scroll';
-// const isMounted = useIsMounted();
-// let windowScroll = useWindowScroll();
-// ${isMounted && windowScroll.y > 10? : }
-
-
 
   // useEffect(() => {
   //   async function fetchvendorsList() {
@@ -103,53 +90,64 @@ export default function Rentals () {
   //   fetchvendorsList();
   // }, [map3Querry]); // Note we are running the use effect every time we recieve a new search filter
 
-
-
-
-
   return (
     <>
     <NextSeo title="Map of Vendors" description="Map3 - find vendors that accept crypto near you"/>
+    <DashboardLayout>
+    {/* <div className=" mx-auto relative al m-2"> */}
 
+        
+        {/* <div className="xl:overflow-y-auto xl:max-h-screen xl:h-full">  */}
+        {/* {vendorsData.map((
+          { name,city, walletAddress,imgUrl,distance,description,vendorsToken}) => (
+        <SearchVendorInfo
+
+        key={walletAddress}
+         name={name}
+         city={city}
+         imgUrl={imgUrl}
+         description={description}
+         distance={distance}
+         walletAddress={walletAddress}
+         vendorsToken={vendorsToken}
+        //  vendorsTokenSymbol={vendorsTokenSymbol}
+
+         />
+              )
+            )} */}
+            {/* </div>
+          <div/>
+      </div> */}
+               
       {map3Querry &&
 
-<div className=" ">
+            //  // display search results
+                  <div className="flex flex-col	">
+                     {/* <div className="flex">
+                      <h1 className="text-3xl font-semibold mt-2 mb-6 text-blue-500">Map</h1>
+                      <span className="text-lg font-semibold my-auto">3.0</span>
+                      <h1 className="text-3xl font-semibold mx-1 px-1 mt-2 mb-6 text-[#64748b]">results for {map3Querry} </h1>
+                    </div> */}
+                
+                  
+                  
 
-<nav className={`fixed top-0 z-40 right-0`}
-            >
-      <div className="flex px-4 sm:px-6 lg:px-8 xl:px-10 3xl:px-12">
+                  <div className="mb-4 w-full sm:mb-0 sm:w-4/5 sm:ltr:pr-6 sm:rtl:pl-6 ">
+                    {/* <VendorSlider coins={coinSlideData}/> */}
+                    <VendorSlider vendorsData={vendorsData}/>
+                  </div>
 
-        <div className="flex flex-col  items content-end mt-12">
-            <div className="m-2 rounded-full bg-gradient-to-b from-gray-50 to-gray-100 shadow-card backdrop-blur dark:from-dark dark:to-dark/80">
-              <SearchButton variant="transparent" className="dark:text-white"/>
-            </div>
-            <div className="m-2 rounded-full bg-gradient-to-b from-gray-50 to-gray-100 shadow-card backdrop-blur dark:from-dark dark:to-dark/80">
-              <Hamburger isOpen={isOpen} onClick={() => openDrawer('DASHBOARD_SIDEBAR')} variant="transparent" className="dark:text-white "/>
-          </div>
-        </div>
-      </div>
-    </nav>
-<div className="w-full  shrink-0 flex-col md:px-4 xl:px-6 3xl:max-w-[1700px] 3xl:px-12">
 
-      <div className="ml-5 absolute overflow-y-auto h-full py-10 px-3 z-40 left-0 hidden sm:block shrink-0  w-64  3xl:w-96  ">
-            <VerticalVendorSlider  className="" vendorsData={vendorsData}/>
-        </div>
-
-        <div className="grow pt-6 pb-9">
-
-          <div className="flex justify-center w-full sm:ltr:pr-6 sm:rtl:pl-6  rounded-lg  bg-white p-6 shadow-card dark:bg-light-dark ">
-              <VendorsMap locations={coOrdinates} setHighLight={setHighLight} />
-            </div>
-        </div>
-        <div className="z-40 absolute w-full p-6 bottom-0 sm:hidden">
-            <VendorSlider  className="" vendorsData={vendorsData}/>
-        </div>
-</div>
-
-</div>
+                  {/*  NOTE DO NOT CHANGE THIS LINE OR MAP UI WILL CHANGE  */}
+                  <div className="flex justify-center sm:w-4/5 sm:ltr:pr-6 sm:rtl:pl-6  rounded-lg  bg-white p-6 shadow-card dark:bg-light-dark sm:p-8 ">
+                    {/* Note this is where the map3Querrys variable comes from */}
+                    <VendorsMap locations={coOrdinates} setHighLight={setHighLight} /> 
+                  </div>
+                </div>
           }
+     {/* </div> */}
+     </DashboardLayout>
      </>
   );
 };
-
 

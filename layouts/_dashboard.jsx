@@ -26,6 +26,7 @@ function HeaderRightArea() {
       <WalletConnect />
     </div>);
 }
+
 export function Header() {
     const { openDrawer } = useDrawer();
     const isMounted = useIsMounted();

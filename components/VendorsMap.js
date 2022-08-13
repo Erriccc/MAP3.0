@@ -23,17 +23,21 @@ function VendorsMap({ locations, google, setHighLight }) {
     <>
     {center && (
       // NOTE DO NOT CHANGE THIS LINE OR MAP UI WILL CHANGE 
-      <div className="flex justify-center" style={{width: '70%', height: '70vh'}}> 
+      // <div className="flex justify-center" style={{width: '70%', height: '70vh'}}> 
+      <div className="flex justify-center"> 
         <Map
           google={google}
           
           containerStyle={{
-            width: "60vw",
-            height: "65vh",
+            width: "100%",
+            height: "100%",
+            position:"absolute",
+            top: 0,
+            left: 0,
           }}
           center={center}
           initialCenter={locations[0]}
-          zoom={13}
+          zoom={16}
           disableDefaultUI={true}
         >
 

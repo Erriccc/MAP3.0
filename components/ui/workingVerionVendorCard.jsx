@@ -23,7 +23,7 @@ export  function VendorCollectionCard({ walletAddress, name, vendorsToken, imgUr
 
     return (
     <div className={cn('group relative overflow-hidden rounded-lg transition-transform hover:-translate-y-1', className)}>
-      <div className="relative flex aspect-[10/11] w-full justify-center overflow-hidden rounded-lg">
+      <div className="relative flex aspect-[6/4] w-full justify-center overflow-hidden rounded-lg">
         <Image 
         src={`/api/imagefetcher?url=${encodeURIComponent(
           imgUrl

@@ -5,7 +5,12 @@ import { Dialog } from '/components/ui/dialog';
 import { Transition } from '/components/ui/transition';
 import { useDrawer } from '/components/drawer-views/context';
 import { DrawerFilters } from 'pages/search';
+const MobileSidebar = dynamic(() => import('layouts/_mobileViewDashboard-sidebar'));
 const Sidebar = dynamic(() => import('layouts/_dashboard-sidebar'));
+
+
+// _mobileViewDashboard-sidebar MobileSidebar
+
 const DrawerMenu = dynamic(() => import('layouts/_layout-menu'));
 // const DrawerFilters = dynamic(() =>
 //   import('pages/search').then((module) => module.DrawerFilters)
@@ -13,7 +18,8 @@ const DrawerMenu = dynamic(() => import('layouts/_layout-menu'));
 function renderDrawerContent(view) {
     switch (view) {
         case 'DASHBOARD_SIDEBAR':
-            return <Sidebar />;
+            return <MobileSidebar />;
+            // return <Sidebar />;
         case 'DRAWER_SEARCH':
             return <DrawerFilters />;
         default:

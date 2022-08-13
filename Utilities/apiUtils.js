@@ -241,6 +241,65 @@ const map3PayExecutor = async (returnOfFunctionBytesEncoder, txValue) => {
     }
 
 
+    
+ const OxErc20ToEthPayTxData = (
+  sellTokenAddress,
+  // buyTokenAddress, // no buyTokenAddress
+  allowanceTargetquote,
+  OxDelegateAddress,
+  allowanceBalance,
+  buyAmount,
+  reciversAddress,
+  data
+) => {
+   
+    const fillSwapData =  [
+          sellTokenAddress, // sellToken
+          // buyTokenAddress, // buyToken
+          allowanceTargetquote,// spender
+          OxDelegateAddress,// swapTarget
+          allowanceBalance,// _tokenamount
+          buyAmount, // _sendAmount
+          reciversAddress,// _toAddress
+          data // swapCallData
+    ]
+    console.log("last stop before details are encoded.....", fillSwapData)
+
+    console.log("constructing Map3SwapData from oxPay api.....")
+    const Map3SwapData =    functionBytesEncoder(Map3Abi,"fillErc20ToEthQuote",fillSwapData)
+  console.log("typeOf Map3SwapData: ", typeof Map3SwapData)
+    console.log("completed Map3SwapData from oxPay : ", Map3SwapData)
+    return(Map3SwapData)
+
+}
+
+const OxErc20ToEthPayExecutor = async (Map3SwapData, txValue ) => {
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const oxPaySigner = provider.getSigner()
+
+  console.log("executing 0xPay......")
+  const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(oxPaySigner,Map3address, Map3SwapData, txValue)
+  const receipt= await returnOfFunctionBytesEncoderAndImplementor.wait()
+  console.log("completed 0xPay...!!")
+  console.log("payment successful!")
+  return(receipt)
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // USABLE ENCODER!
 // test1 READ parameters Map3address, Map3Abi, "checkIsVendor" [Map3address]
 // test2 WRITE parameters: Map3Abi,"SameTokenPay", [_tokenamount,_to,_tokenIn]
@@ -312,27 +371,8 @@ const getFunctionSignatureHash =  (contractAbi, functionName) => {
           
             let buyAmountWei = await WholeTOWeiDecimals(reciversToken ,amountToBeSent);
             console.log("recived this from the WholeToWeiDecimal call: ", buyAmountWei)
-          let feeOnVendor = 0;
-          // const isReciverVendor = await Map3.isVendor(reciversAddress)
-          // await isReciverVendor.wait()
-          // if(isReciverVendor ){feeOnVendor = 0} else{feeOnVendor =0.05
-
-          /////////////////////////////////////
-          // DO SOME MATH TO CALCULATE THE NEW AMOUNT TO SEND TO VENDOR SO THAT USER DOES NOT PAY THE FEES
-          ///////////////////////////////////////////////////////
-          // let tempBuyAmount = Number(buyAmountWei)
-          // const feeCut =  tempBuyAmount * feeOnVendor;
-          // console.log("feeCut:", feeCut);
+          let feeOnVendor = 0
           
-          // const newBuyAmount = tempBuyAmount-feeCut;
-          // console.log("newBuyAmount:", newBuyAmount);
-          
-          // console.log("newBuyAmount",newBuyAmount, typeof newBuyAmount)
-          // console.log("newBuyAmount.toString()",newBuyAmount.toString() , typeof newBuyAmount.toString())
-          
-          // buyAmountWei = newBuyAmount.toString();
-          
-          // }
               const qs = createQueryString({
               sellToken: sendersToken,
               buyToken: reciversToken,
@@ -355,8 +395,14 @@ const getFunctionSignatureHash =  (contractAbi, functionName) => {
           ////////////////////////////////////////////////////////////////////
               const AprovalTarget = quote.allowanceTarget
               const OxDelegateAddress = quote.to
-              const safetyAmountWithSlippage = (quote.sellAmount* userSetSlippage).toString()
+              // const safetyAmountWithSlippage = (quote.sellAmount* userSetSlippage).toString()
               // const allowanceBalance = await sendersTokenContract.allowance(sendersAddress,Map3address)
+
+            const aprovalAmountPlusSlippage = (quote.sellAmount *userSetSlippage).toFixed(0).toString() // change multiplier to come from Utils.slippage
+            console.log("this is just the  approval amount: testin.......", aprovalAmountPlusSlippage)
+            console.log("this is the approval amount with more calc: testin.......", UTILS.numberExponentToLarge(aprovalAmountPlusSlippage))
+            const safetyAmountWithSlippage = UTILS.numberExponentToLarge(aprovalAmountPlusSlippage)
+
               
             console.log('just aproved spender:',safetyAmountWithSlippage)
             console.log('just aproved spender:',safetyAmountWithSlippage)
@@ -476,6 +522,8 @@ module.exports = {
     map3SameTokenTransferEndpoint,
     map3SwapAndTransferEndpoint,
     map3SwapAndTransferEndpoint,
+    OxErc20ToEthPayTxData,
+    OxErc20ToEthPayExecutor,
     OxPayExecutor,
     OxPayTxData,
     map3PayExecutor,

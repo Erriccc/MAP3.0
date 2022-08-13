@@ -12,7 +12,7 @@ const Map3CoinSelectView = dynamic(() => import('/components/ui/map3coinSelectVi
 
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
 export default function ReciversCoinInput({ label, getCoinValue, className, ...rest }) {
-    let [value, setValue] = useState(1);
+    let [value, setValue] = useState(0.01);
     let [selectedCoin, setSelectedCoin] = useState(sendersCoinList[0]);
     let [visibleCoinList, setVisibleCoinList] = useState(false);
     const modalContainerRef = useRef(null);//

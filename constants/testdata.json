@@ -10,7 +10,9 @@
         "long": "-73.999005",
         "walletAddress":"0xBb2cB98982Ed6547aA7E39707807253a999796b7",
         "distance": "3",
-        "vendorsToken":"0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"
+        "vendorsToken":"0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+        "email": "vendorsEmail@Email.com",
+        "websiteUrl":"testUrl.io"
 
       
     },
@@ -25,7 +27,10 @@
         "long": "-60.999005",
         "walletAddress":"0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f",
         "distance": "4",
-        "vendorsToken":"0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"
+        "vendorsToken":"0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+        "email": "vendorsEmail@Email.com",
+        "websiteUrl":"testUrl.io"
+
 
     },
     {
@@ -38,7 +43,10 @@
         "long": "-70.999005",
         "walletAddress":"0xC1FbB4C2F4CE9eF87d42A0ea49683E0Cfb003f2F",
         "distance": "5",
-        "vendorsToken":"0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"
+        "vendorsToken":"0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+        "email": "vendorsEmail@Email.com",
+        "websiteUrl":"testUrl.io"
+
     },
     {
       "name": "Bakery in NYC",
@@ -50,7 +58,10 @@
       "long": "-70.999005",
       "walletAddress":"0x7B20363fECAD5F391Cc8838BF1D893dAC98B24Fd",
       "distance": "5",
-      "vendorsToken":"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
+      "vendorsToken":"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    "email": "vendorsEmail@Email.com",
+    "websiteUrl":"testUrl.io"
+
     
   },
   {
@@ -64,7 +75,10 @@
     "long": "-70.999005",
     "walletAddress":"0x93183e906CBc2DeE2e8bBA74b85935169521e1A1",
     "distance": "5",
-    "vendorsToken":"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
+    "vendorsToken":"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    "email": "vendorsEmail@Email.com",
+    "websiteUrl":"testUrl.io"
+
   
 },
 {
@@ -78,7 +92,29 @@
   "long": "-70.999005",
   "walletAddress":"0xD7265213980F3DB50ACa57634De6e4125985f4A5",
   "distance": "5",
-  "vendorsToken":"0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6"
+  "vendorsToken":"0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+  "email": "vendorsEmail@Email.com",
+  "websiteUrl":"testUrl.io"
+
+  
+
+},
+{
+      
+  "name": "Do Not Send Testing Values",
+  "city": "Chicago",
+  "description": "fries wings burgers burrito fast food",
+  "imgUrl":
+    "https://cdn.pixabay.com/photo/2019/03/12/09/18/tomatoes-4050245__480.jpg",
+  "lat": "40.716862",
+  "long": "-70.999005",
+  "walletAddress":"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+  "distance": "5",
+  "vendorsToken":"0x5559Edb74751A0edE9DeA4DC23aeE72cCA6bE3D5",
+  "email": "vendorsEmail@Email.com",
+  "websiteUrl":"testUrl.io"
+
+  
 
 }
 ]
