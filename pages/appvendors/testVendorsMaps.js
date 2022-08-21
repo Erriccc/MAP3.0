@@ -80,10 +80,16 @@ export default function Rentals () {
 
 
                   {/*  NOTE DO NOT CHANGE THIS LINE OR MAP UI WILL CHANGE  */}
-                  <div className="flex justify-center sm:w-4/5 sm:ltr:pr-6 sm:rtl:pl-6  rounded-lg  bg-white p-6 shadow-card dark:bg-light-dark sm:p-8 ">
+
+                  <section className="hidden xl:inline-flex xl:min-w-[600px]">
+          {/* <Map searchResults={searchResults} /> */}
+          <VendorsMap locations={coOrdinates} setHighLight={setHighLight} /> 
+
+        </section>
+                  {/* <div className="flex justify-center sm:w-4/5 sm:ltr:pr-6 sm:rtl:pl-6  rounded-lg  bg-white p-6 shadow-card dark:bg-light-dark sm:p-8 "> */}
                     {/* Note this is where the map3Querrys variable comes from */}
-                    <VendorsMap locations={coOrdinates} setHighLight={setHighLight} /> 
-                  </div>
+                    {/* <VendorsMap locations={coOrdinates} setHighLight={setHighLight} />  */}
+                  {/* </div> */}
                 </div>
           }
      {/* </div> */}

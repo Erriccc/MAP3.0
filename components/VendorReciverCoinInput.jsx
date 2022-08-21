@@ -9,94 +9,101 @@ import Utils from '/Utilities/utils'
 
 
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
-export default function VendorReciverCoinInput({ tokenAddress, label, getCoinValue, className, ...rest }) {
+// export default function VendorReciverCoinInput({ tokenAddress, label, getCoinValue, className, ...rest }) {
+  export default function VendorReciverCoinInput({tokenInfo, label, getCoinValue, className, ...rest }) {
 
 
     let [value, setValue] = useState(0.01);
-    let [selectedCoin, setSelectedCoin] = useState();
-    let [tempCustomCustomCurrencyInfo, setTempCustomCustomCurrencyInfo] = useState();
+    // let [selectedCoin, setSelectedCoin] = useState();
+    // let [tempCustomCustomCurrencyInfo, setTempCustomCustomCurrencyInfo] = useState();
 
 useLayoutEffect(() => {
   let isMounted = true;
+console.log(tokenInfo,"..tokenInfo yooooooooooooooooo")
 
-          let coinListData;
 
-          (async function() {
+          // let coinListData;
 
-              coinListData = sendersCoinList.find(function (item) {
-                  const walletAddress = item.address;
-                  return(
-                      walletAddress.match(tokenAddress) ||
-                      (walletAddress.toLowerCase().match(tokenAddress) && walletAddress) 
-                    )
-              }
-              );
-            })();
+          // (async function() {
 
-          if(coinListData == null){
-                    (async function() {
-                      console.log("searching blockchain")
-                      let newfoundCurrencyInfo = await Utils.ValidateIfAddressIsErc20(tokenAddress)
-                      console.log("done searching blockchain")
+          //     coinListData = sendersCoinList.find(function (item) {
+          //         const walletAddress = item.address;
+          //         return(
+          //             walletAddress.match(tokenAddress) ||
+          //             (walletAddress.toLowerCase().match(tokenAddress) && walletAddress) 
+          //           )
+          //     }
+          //     );
+          //   })();
+
+          // if(coinListData == null){
+          //           (async function() {
+          //             console.log("searching blockchain")
+          //             let newfoundCurrencyInfo = await Utils.ValidateIfAddressIsErc20(tokenAddress)
+          //             console.log("done searching blockchain")
               
-                        if(newfoundCurrencyInfo[0] ==true ){
-                          console.log(newfoundCurrencyInfo, "newfoundCurrencyInfo")
-                          coinListData=  {
-                            icon:<DefaultCoinIcon symbol={newfoundCurrencyInfo[1]} />,
-                            address: tokenAddress,
-                            code: newfoundCurrencyInfo[1],
-                            name: newfoundCurrencyInfo[1],
-                          }
-                            console.log("newfoundCurrencyInfo...", coinListData)
-                            setTempCustomCustomCurrencyInfo(coinListData)
-                        }
-                        else{
-                        }
-                      })();
-                      console.log("pushed result to newCustomCustomCurrencyInfo...")
+          //               if(newfoundCurrencyInfo[0] ==true ){
+          //                 console.log(newfoundCurrencyInfo, "newfoundCurrencyInfo")
+          //                 coinListData=  {
+          //                   icon:<DefaultCoinIcon symbol={newfoundCurrencyInfo[1]} />,
+          //                   address: tokenAddress,
+          //                   code: newfoundCurrencyInfo[1],
+          //                   name: newfoundCurrencyInfo[1],
+          //                 }
+          //                   console.log("newfoundCurrencyInfo...", coinListData)
+          //                   setTempCustomCustomCurrencyInfo(coinListData)
+          //               }
+          //               else{
+          //               }
+          //             })();
+          //             console.log("pushed result to newCustomCustomCurrencyInfo...")
 
-          }else{
-            console.log("pre setTempCustomCustomCurrencyInfo", tempCustomCustomCurrencyInfo)
-            setTempCustomCustomCurrencyInfo(coinListData)
-            console.log("result of coinlist data", coinListData)
-            console.log("setTempCustomCustomCurrencyInfo", tempCustomCustomCurrencyInfo)
+          // }else{
+          //   console.log("pre setTempCustomCustomCurrencyInfo", tempCustomCustomCurrencyInfo)
+          //   setTempCustomCustomCurrencyInfo(coinListData)
+          //   console.log("result of coinlist data", coinListData)
+          //   console.log("setTempCustomCustomCurrencyInfo", tempCustomCustomCurrencyInfo)
 
 
-          }
+          // }
 return () => { isMounted = false };
 
-}, [tokenAddress])
+// }, [tokenAddress])
+}, [tokenInfo])
 
 
-useLayoutEffect(() => {
-  let isMounted = true;
+// useLayoutEffect(() => {
+//   let isMounted = true;
 
-      console.log("post setTempCustomCustomCurrencyInfo", tempCustomCustomCurrencyInfo)
+//       console.log("post setTempCustomCustomCurrencyInfo", tempCustomCustomCurrencyInfo)
 
-      if(tempCustomCustomCurrencyInfo?.address == null){
+//       if(tempCustomCustomCurrencyInfo?.address == null){
 
-      }else{
-        setSelectedCoin(tempCustomCustomCurrencyInfo)
-        console.log("got here and set selected con")
+//       }else{
+//         setSelectedCoin(tempCustomCustomCurrencyInfo)
+//         console.log("got here and set selected con")
 
-      }
-      return () => { isMounted = false };
+//       }
+//       return () => { isMounted = false };
 
-    }, [tempCustomCustomCurrencyInfo])
+//     }, [tempCustomCustomCurrencyInfo])
     
 
-    useLayoutEffect(() => {
-  let isMounted = true;
+  //   useLayoutEffect(() => {
+  // let isMounted = true;
 
-      if(setSelectedCoin.address !== null){
-        console.log("post selectedCoin", selectedCoin)
-      }else{
-        console.log("ran unnesarily")
 
-      }
-      return () => { isMounted = false };
+  
+  //     // if(setSelectedCoin.address !== null){
+  //       if(tokenInfo.address !== null){
+  //       console.log("post selectedCoin", selectedCoin)
+  //     }else{
+  //       console.log("ran unnesarily")
 
-    }, [selectedCoin])
+  //     }
+  //     return () => { isMounted = false };
+
+  //   }, [selectedCoin])
 
 
     const handleOnChange = ( event) => {
@@ -110,11 +117,10 @@ useLayoutEffect(() => {
           <span className="mb-1.5 block text-xs uppercase text-gray-600 dark:text-gray-400">
             {label}
           </span>
-          
             <div className=" relative flex h-10 w-full items-center justify-center bg-white/80 text-gray-600 shadow-large backdrop-blur ltr:rounded-l-lg rtl:rounded-r-lg dark:bg-brand/80 dark:text-gray-200" >
                 <button className="flex items-center font-medium outline-none dark:text-gray-100">
-                    {selectedCoin?.icon}{' '}
-                        <span className="ltr:ml-2 rtl:mr-2">{selectedCoin?.code} </span>
+                    {/* ({tokenInfo?.icon}){' '} */}
+                        <span className="ltr:ml-2 rtl:mr-2">{tokenInfo?.code} </span>
               </button>
 
           </div>

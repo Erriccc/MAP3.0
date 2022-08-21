@@ -141,8 +141,8 @@ useEffect(()  => {
                             Currency Not Found
                         </div>
           )}
-              <div   onClick={() => dispatch({type:"LOAD"})} className="flex justify-start cursor-pointer items-center gap-3 py-3 px-6 outline-none hover:bg-gray-200 focus:bg-gray-400 dark:hover:bg-gray-700 dark:focus:bg-gray-600">
-            <span className="text-sm tracking-tight text-gray-600 dark:text-white">
+              <div   onClick={() => dispatch({type:"LOAD"})} className="flex justify-start cursor-pointer items-center gap-3 py-3 bg-gray-200 px-6 outline-none hover:bg-brand  focus:bg-gray-400 dark:hover:bg-gray-700 dark:focus:bg-gray-600">
+            <span className="text-sm tracking-tight text-white ">
               Find  Custom Currency ?
             </span>
                               {customTokenState.loadingInfo && (

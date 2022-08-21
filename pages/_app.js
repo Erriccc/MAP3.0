@@ -5,6 +5,7 @@ import Head from "next/head";
 // import "pages/profile/profile.css"
 // import "pages/appvendors/vendors.css"
 import "components/hero.css"
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 import Router from "next/router";
 import ProgressBar from "@badrap/bar-of-progress";
@@ -27,7 +28,7 @@ import SettingsButton from '/components/settings/settings-button';
 import PageDrawer from '/components/settings/page-drawer';
 import SettingsDrawer from '/components/settings/settings-drawer';
 import { WalletProvider } from 'lib/hooks/use-connect';
-
+import{UrlProvider} from 'Utilities/FrontEndUtilities/FEUrlContext'
 
 
 // page progress bar
@@ -71,6 +72,7 @@ export default function MyApp({ Component, pageProps }) {
     >
         <NotificationProvider>
         <WalletProvider>
+          <UrlProvider>
         <ThemeProvider attribute="class" enableSystem={false} defaultTheme="light">
           {/* <Appnav /> */}
 
@@ -83,6 +85,7 @@ export default function MyApp({ Component, pageProps }) {
           {/* <Partners/> */}
           {/* <Appfooter/> */}
           </ThemeProvider>
+          </UrlProvider>
         </WalletProvider>
 
         </NotificationProvider>

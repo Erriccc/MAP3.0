@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { SearchIcon } from '/components/icons/search';
 import { Transition } from '/components/ui/transition';
 import AnchorLink from '/components/ui/links/anchor-link';
@@ -61,6 +61,14 @@ const tags = [
 export function SearchFrom({ placeholder = 'Search...' }) {
     const { closeModal } = useModal();
     
+    const inputElement = useRef(null);
+    useEffect(() => {
+      if (inputElement.current) {
+        inputElement.current.focus();
+      }
+    }, []);
+
+
     let [showSuggestion, setShowSuggestion] = useState(false);
     const ref = useRef(null);
     useClickAway(ref, () => {
@@ -91,7 +99,7 @@ console.log("this got here")
     return (<div className="relative" ref={ref} onFocus={() => setShowSuggestion(true)}>
       {/* <form className="relative flex w-full rounded-full" noValidate role="search" > */}
         <label className="flex w-full items-center">
-          <input className="h-12 w-full appearance-none rounded-full border-2 border-gray-200 py-1 text-sm tracking-tighter text-gray-900 outline-none transition-all placeholder:text-gray-600 focus:border-gray-900 ltr:pr-5 ltr:pl-11 rtl:pl-5 rtl:pr-11 dark:border-gray-600 dark:bg-light-dark dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 sm:ltr:pl-14 sm:rtl:pr-14 xl:ltr:pl-16 xl:rtl:pr-16" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && search()} placeholder={placeholder} autoComplete="off"/>
+          <input ref={inputElement} className="h-12 w-full appearance-none rounded-full border-2 border-gray-200 py-1 text-sm tracking-tighter text-gray-900 outline-none transition-all placeholder:text-gray-600 focus:border-gray-900 ltr:pr-5 ltr:pl-11 rtl:pl-5 rtl:pr-11 dark:border-gray-600 dark:bg-light-dark dark:text-white dark:placeholder:text-gray-500 dark:focus:border-gray-500 sm:ltr:pl-14 sm:rtl:pr-14 xl:ltr:pl-16 xl:rtl:pr-16" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && search()} placeholder={placeholder} autoFocus={true}  autoComplete="on"/>
           <span className="pointer-events-none absolute flex h-full w-10 cursor-pointer items-center justify-center text-gray-600 hover:text-gray-900 ltr:left-0 ltr:pl-2 rtl:right-0 rtl:pr-2 dark:text-white sm:w-14 sm:ltr:pl-3 sm:rtl:pr-3 xl:w-16" onClick={search} >
             <SearchIcon className="h-4 w-4"/> 
             {/* search */}

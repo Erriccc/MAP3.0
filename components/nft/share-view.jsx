@@ -6,8 +6,15 @@ import { Instagram } from '../icons/brands/instagram';
 import { Twitter } from '../icons/brands/twitter';
 import { Facebook } from '../icons/brands/facebook';
 import { Telegram } from '../icons/brands/telegram';
+import { useUrlContext } from "/Utilities/FrontEndUtilities/FEUrlContext";
+
 export default function ShareView({ nftSlug = '#' }) {
-    const nftUrl = `${process.env.NEXT_PUBLIC_WEBSITE_URL}`;
+
+  const { currentUrl, setCurrentUrl } = useUrlContext();
+
+
+    // const nftUrl = `${process.env.NEXT_PUBLIC_WEBSITE_URL}`;
+    const nftUrl = currentUrl && currentUrl;
     let [copyButtonStatus, setCopyButtonStatus] = useState('Copy');
     let [_, copyToClipboard] = useCopyToClipboard();
     const handleCopyToClipboard = () => {
@@ -19,7 +26,7 @@ export default function ShareView({ nftSlug = '#' }) {
     };
     return (<div className="rounded-2xl border border-gray-200 bg-white px-5 pt-5 pb-7 dark:border-gray-700 dark:bg-light-dark sm:px-7 sm:pb-8 sm:pt-6">
       <div className="text-lg font-medium uppercase -tracking-wide text-gray-900 ltr:text-left rtl:text-right dark:text-white lg:text-xl">
-        Share this NFT
+        Share this profile
       </div>
       <div className="flex flex-wrap gap-2 pt-4 md:gap-2.5 xl:pt-5">
         <div className="product-share flex flex-shrink-0 flex-wrap items-center gap-2 md:gap-2.5">

@@ -2,8 +2,11 @@ import Button from '/components/ui/button';
 import AnchorLink from '/components/ui/links/anchor-link';
 import { InfoIcon } from '/components/icons/info-icon';
 import ProfileQrCode from 'components/ProfileQrCode';
+import { useModal } from '/components/modal-views/context';
 
 export default function AuthorInformation({ className = 'md:hidden', data, map3Url, userPath }) {
+  const { openModal } = useModal();
+
     return (<div className={`${className}`}>
       {/* Bio */}
       <div className="border-y border-dashed border-gray-200 py-5 dark:border-gray-700 xl:py-6">
@@ -28,14 +31,12 @@ export default function AuthorInformation({ className = 'md:hidden', data, map3U
       </div>
 
       {/* Links */}
-      {/* <div className="border-y border-dashed border-gray-200 py-5 dark:border-gray-700 xl:py-6">
-        <div className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
-          Links
-        </div>
-        {data?.links?.map((item) => (<AnchorLink href={item?.link} className="mb-2 flex items-center text-sm tracking-tight text-gray-600 transition last:mb-0 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-white" key={item?.id}>
-            {item?.link}
-          </AnchorLink>))}
-      </div> */}
+      {/* <div className="border-y border-dashed border-gray-200 py-5 dark:border-gray-700 xl:py-6"> */}
+          {/* <Button shape="rounded" variant="solid" color="gray" className="dark:bg-gray-800" onClick={() => openModal('SHARE_VIEW')}>
+            SHARE
+          </Button> */}
+        
+      {/* </div> */}
 
       {/* Join date */}
       <div className="border-y border-dashed border-gray-200 py-5 dark:border-gray-700 xl:py-6">

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useReducer, useContext } from 'react';
+
 import Link from "next/link";
 import { useMoralis} from 'react-moralis'
 import Apphero from 'components/Apphero'
-import { useNotification, CreditCard } from "web3uikit";
+import { useNotification} from "web3uikit";
 import { useRouter } from "next/dist/client/router";
 import { NextSeo } from 'next-seo';
 import { useCopyToClipboard } from 'lib/hooks/use-copy-to-clipboard';
@@ -12,8 +13,15 @@ import Image from '/components/ui/image';
 import { Copy } from '/components/icons/copy';
 import { Check } from '/components/icons/check';
 import AuthorInformation from '/components/author/author-information';
+import { useUrlContext } from "/Utilities/FrontEndUtilities/FEUrlContext";
+import { UrlContext } from "/Utilities/FrontEndUtilities/FEUrlContext";
+import { useModal } from '/components/modal-views/context';
+
+
+
 import vendorsData from "constants/testdata.json"
-import ProfileQrCode from 'components/ProfileQrCode';
+import LoadingView from '/components/ui/LoadingView';
+import {payProfileDataFetcherRelayer} from '/Utilities/FrontEndUtilities/FEpayProfileDataFetcherRelayer'
 
 const {oxPriceFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
 import Utils from'/Utilities/utils';
@@ -26,7 +34,6 @@ import PayVendorLayout from 'layouts/PayVendorLayout';
 import TransactionInfo from '/components/ui/transaction-info';
 import Slider from 'rc-slider';
 import dynamic from 'next/dynamic';
-import { number } from 'yup';
 
 const ProcessingView = dynamic(() => import('/components/ui/ProcessingView'));
 const VendorReciverCoinInput = dynamic(() => import('/components/VendorReciverCoinInput'));
@@ -37,6 +44,12 @@ const AuthorProfilePage = () => {
   let router = useRouter();
   const {walletAddress} = router.query;
   const { account } = useMoralis();
+  const { currentUrl,setCurrentUrl} = useUrlContext();
+  const { openModal } = useModal();
+  
+
+
+
 
     const address = account;
     let [copyButtonStatus, setCopyButtonStatus] = useState(false);
@@ -127,15 +140,15 @@ const handleNoAccount= () => {
 
 
     const [userData, setUserData] = useState({});
-    
+    const [addressIsVendor, setAddressIsVendor] = useState(false)
     const [sendersTokenBalance, setSendersTokenBalance] = React.useState("0");
     const [rate, setRate] = React.useState(1); // Echange rate .. gotten from 0x api
     const [quote, setQuote] = React.useState("select tokens"); //  Quote is the current rate multiplied by the amount of cryptocurrency to be bouth
     const [totalQuoteWithSlippage, setTotalQuoteWithSlippage] = React.useState("select tokens"); //  estimate that includes slippage
     const [sendersToken, setSendersToken] = React.useState(Utils.EthAddress);
     const [reciversToken, setReciversToken] = React.useState(); 
+    const [reciversTokenInfo, setReciversTokenIfo] = React.useState(); 
     const [amountToBeSent, setamountToBeSent] = React.useState(0.01);
-    let [toggleCoin, setToggleCoin] = useState(false);
     let [reciver, setReciver] = useState(Utils.EthAddress);
     let [tempSlippage, setTempSlippage] = useState(Utils.slippage);
     let [userSlippage, setUserSlippage] = useState(Utils.slippage);
@@ -144,29 +157,92 @@ const handleNoAccount= () => {
     let [transacting, setTransacting] = useState(false);
 
 
+    // let [tempDataInfo, setTempDataInfo] = useState([]);
+    const [vendorDataState, dispatchather] = useReducer(reducer,{dataFromServer:{},showDataFromServer: false, loadingInfo: true, FoundInfo: false });
+      // const [displayData, setDisplayData] = useState([]);
+    
+    function reducer(vendorDataState, action){
+      
+        switch (action.type) {
+          case "SHOW":
+            return {dataFromServer: userData, showDataFromServer: true, loadingInfo: false, FoundInfo: false}
+          case "FOUND":
+            return {dataFromServer:userData, showDataFromServer: false, loadingInfo: false, FoundInfo: true}
+          case "HIDE":
+              return {dataFromServer: {}, showDataFromServer: false, loadingInfo: false, FoundInfo: false}
+          default:
+            return vendorDataState
+    
+        }
+    }
 
-useEffect(() => {
+
+    useEffect(()  => {
+      if(vendorDataState.FoundInfo){
+        console.log("testing values...", vendorDataState.dataFromServer)
+        console.log('testing value of userData', userData)
+        console.log('testing value of reciversTokenInfo', reciversTokenInfo)
+        // console.log('tempDataInfo.length', tempDataInfo.length)
+        if(setAddressIsVendor){
+        console.log('switching to show')
+        dispatchather({type:"SHOW"})
+           
+        }
+      }else{
+        console.log('skipping SHOW state')
+        return
+      }
+        }, [addressIsVendor, vendorDataState.FoundInfo])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  useEffect(() => {
   let isMounted = true;
-
-    let fetchedUserData = vendorsData;
+  
+    // let fetchedUserData = vendorsData; 
     if (walletAddress) {
-      console.log("vendorsData", vendorsData)
-        fetchedUserData = vendorsData.find(function (item) {
-            // const name = item.name;
-            const userAddress = item.walletAddress;
-            return(
-                // name.match(walletAddress) ||
-                userAddress.match(walletAddress) ||
-                // (name.toLowerCase().match(walletAddress) && name) ||
-                (userAddress.toLowerCase().match(walletAddress) && userAddress)
-              )
-        });
-        setUserData(fetchedUserData);
-        setReciversToken(fetchedUserData.vendorsToken)
-        setReciver(fetchedUserData.walletAddress)
+      setCurrentUrl(`${Utils.Map3WebsiteUrl}${router.asPath}`);
+
+
+      (async function() {
+        const returnData = await payProfileDataFetcherRelayer(walletAddress);
+    
+        console.log( returnData, 'returnData from client')
+
+        if(returnData.isVendor == false){
+          console.log('invalid User, pushing to regular pay page')
+          router.push("/newPay")
+        }else{
+          // VendorsCurrencyInfo
+          // vendorsDetails
+        setReciversTokenIfo(returnData.vendorData.VendorsCurrencyInfo);
+        setReciversToken(returnData.vendorData.VendorsCurrencyInfo.address);
+        setReciver(walletAddress);
+        setUserData(returnData.vendorData.vendorsDetails[0]);
+        setAddressIsVendor(true)
+        dispatchather({type:"FOUND"})
+        console.log('.done dispensing data....')
+
+
+        }
+    
+      })();
+    
     }
     return () => { isMounted = false };
-}, [walletAddress])
+}, [walletAddress, router])
 
 
 
@@ -215,7 +291,7 @@ useEffect(() => {
         fetchPrice()
         loadUsersBalances()
         return () => { isMounted = false };
-      }, [sendersToken, reciversToken,amountToBeSent, userSlippage, quote]);
+      }, [sendersToken, reciversToken,amountToBeSent, account, userSlippage, quote, vendorDataState.FoundInfo]);
 
 
 
@@ -233,7 +309,7 @@ useEffect(() => {
   // }
     return (<>
       <NextSeo title="Profile" description="Map3 - React Next Web3 NFT Crypto Dashboard Template"/>
-      {walletAddress && (
+      {vendorDataState.showDataFromServer && (
       // {walletAddress && userData && (
 
       <DashboardLayout>
@@ -241,7 +317,7 @@ useEffect(() => {
         <div className="relative h-36 w-full overflow-hidden rounded-lg sm:h-44 md:h-64 xl:h-80 2xl:h-96 3xl:h-[448px]">
           <Image 
           src={`/api/imagefetcher?url=${encodeURIComponent(
-            userData?.imgUrl
+            vendorDataState.dataFromServer?.imgUrl
           )}`}
           layout="fill" objectFit="cover" alt="Cover Image"/>
         </div>
@@ -252,7 +328,7 @@ useEffect(() => {
           <div className="relative z-10 mx-auto -mt-12 h-24 w-24 shrink-0 overflow-hidden rounded-full border-[5px] border-white shadow-large dark:border-gray-500 sm:-mt-14 sm:h-28 sm:w-28 md:mx-0 md:-mt-16 md:h-32 md:w-32 xl:mx-0 3xl:-mt-20 3xl:h-40 3xl:w-40 3xl:border-8">
             <Image 
             src={`/api/imagefetcher?url=${encodeURIComponent(
-              userData?.imgUrl
+              vendorDataState.dataFromServer?.imgUrl
             )}`}
              layout="fill" objectFit="cover" className="rounded-full" alt="Author"/>
           </div>
@@ -262,39 +338,49 @@ useEffect(() => {
               <div className="text-center ltr:md:text-left rtl:md:text-right">
                 {/* Name */}
                 <h2 className="text-xl font-medium tracking-tighter text-gray-900 dark:text-white xl:text-2xl">
-                  {userData?.name}
+                  {vendorDataState.dataFromServer?.name}
                 </h2>
 
                 {/* Username */}
                 <div className="mt-1 text-sm font-medium tracking-tighter text-gray-600 dark:text-gray-400 xl:mt-3">
                   {/* @{authorData?.user_name} */}
-                  @{userData?.email}
-
-                  
+                  @{vendorDataState.dataFromServer?.email}
                 </div>
-
+                
                 {/* User ID and Address */}
                 <div className="mt-5 inline-flex h-9 items-center rounded-full bg-white shadow-card dark:bg-light-dark xl:mt-6">
                   <div className="inline-flex h-full shrink-0 grow-0 items-center rounded-full bg-gray-900 px-4 text-xs text-white sm:text-sm">
-                    {userData?.city}
+                    {vendorDataState.dataFromServer?.city}
                   </div>
                   <div className="text w-28 grow-0 truncate text-ellipsis bg-center text-xs text-gray-500 ltr:pl-4 rtl:pr-4 dark:text-gray-300 sm:w-32 sm:text-sm">
-                    {userData?.walletAddress}
+                    {vendorDataState.dataFromServer?.walletAddress}
                   </div>
                   <div className="flex cursor-pointer items-center px-4 text-gray-500 transition hover:text-gray-900 dark:text-gray-300 dark:hover:text-white" title="Copy Address" onClick={handleCopyToClipboard}>
                     {copyButtonStatus ? (<Check className="h-auto w-3.5 text-green-500"/>) : (<Copy className="h-auto w-3.5"/>)}
                   </div>
                 </div>
+
+
+                <div className="mt-10 flex flex-wrap items-center justify-center gap-6 border-y border-dashed border-gray-200 py-5 text-center dark:border-gray-700 ">
+                  <Button color="white" className="shadow-card dark:bg-light-dark md:h-10 md:px-5 xl:h-12 xl:px-7"  onClick={() => openModal('SHARE_VIEW')}>
+                    Share
+                  </Button>
+                </div>
+
+
               </div>
-              <AuthorInformation map3Url={Utils.Map3WebsiteUrl} userPath={router.asPath} className="hidden md:block" data={userData}/>
+              <AuthorInformation map3Url={Utils.Map3WebsiteUrl} userPath={router.asPath} className="hidden md:block" data={vendorDataState.dataFromServer}/>
             </div>
 
             <div className="grow pt-6 pb-9 md:-mt-2.5 md:pt-1.5 md:pb-0 md:ltr:pl-7 md:rtl:pr-7 lg:ltr:pl-10 lg:rtl:pr-10 xl:ltr:pl-14 xl:rtl:pr-14 3xl:ltr:pl-16 3xl:rtl:pr-16">
               <PayVendorLayout>
           <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
+           
+          reciversTokenInfo
             <VendorReciverCoinInput
             label={'Recivers Token'}
-            tokenAddress={reciversToken && reciversToken}
+            // tokenAddress={reciversToken && reciversToken}
+            tokenInfo={reciversTokenInfo && reciversTokenInfo}
             getCoinValue={(data) => {
               console.log('Recivers coin value:', data)
               setamountToBeSent(data.value)
@@ -357,17 +443,20 @@ useEffect(() => {
               {systemProcessing && (<ProcessingView status={"System Processing... "} arrayToDisplay={Utils.TypoEffectTexts.Processing}/>)}
               {transacting && (<ProcessingView status={"Transacting..."} arrayToDisplay={Utils.TypoEffectTexts.Transacting}/>)}
         </PayVendorLayout>
-
-        {/* <ProfileQrCode url={`${Utils.Map3WebsiteUrl}${router.asPath}`} /> */}
-
             </div>
-            <AuthorInformation map3Url={Utils.Map3WebsiteUrl} userPath={router.asPath}  data={userData}/>
+            <AuthorInformation map3Url={Utils.Map3WebsiteUrl} userPath={router.asPath}  data={vendorDataState.dataFromServer}/>
 
           </div>
         </div>
       </DashboardLayout>
 )}
+{vendorDataState.loadingInfo &&
+          <LoadingView/>
+
+          }
 
     </>);
 };
 export default AuthorProfilePage;
+
+

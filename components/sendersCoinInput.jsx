@@ -53,6 +53,8 @@ export default function SendersCoinInput({ label, getCoinValue, exchangeRate, cu
           </div>
         </div>
 
+        {currencybalance ?  (
+        
         <div className="flex flex-col flex-1 justify-evenly text-right">
           <span className="font-xs px-3 text-gray-400">
           price: {exchangeRate ? exchangeRate : '0.00'}
@@ -61,6 +63,18 @@ export default function SendersCoinInput({ label, getCoinValue, exchangeRate, cu
           bal: {currencybalance ? currencybalance : "0.00" }
           </span>
         </div>
+        ):
+        (
+          <div className="flex justify-center content-center ">
+          <span className="font-sm text-sm px-3 text-gray-400 mt-8">
+           {exchangeRate ? exchangeRate : 'currency is currently not supported'}
+          </span>
+          
+        </div>
+
+        )
+      
+      }
       </div>
 
 

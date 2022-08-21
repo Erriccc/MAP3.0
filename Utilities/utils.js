@@ -20,8 +20,11 @@ const PolygonCoinList = require('../constants/coinListPolygon')
 const ReciversCoinList = PolygonCoinList.reciversCoinList;
 const SendersCoinList = PolygonCoinList.sendersCoinList;
 
+const vendorsData= require("constants/testdata.json") ;
+const  { DefaultCoinIcon } = require( '/components/icons/defaultCoinIcon');
 
-
+const MAPSTYLE="mapbox://styles/nfa123/cl6rrjgjc000614ny98twbt98"
+const MAPBOXACCESSTOKEN="pk.eyJ1IjoibmZhMTIzIiwiYSI6ImNsNmtsMWxjeTAyNzUza296dTZybDBvNTcifQ.eh9aAeqXhP3X99pdnPr17A"
 
 
 const API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
@@ -35,7 +38,9 @@ const PaymentHandlerEndpoint = '/api/oxQuoteHandler'
 const map3SameTokenTransferEndpoint = '/api/map3pay/map3sametokentransfer' 
 const map3SwapAndTransferEndpoint = '/api/map3pay/map3swapandtransfer' 
 const map3OxMap3SwapERC20ToEthEndpoint = '/api/map3pay/oxmap3SwapERC20ToEth' 
-
+const mapDataFetcherEndpoint = '/api/map3Profiles/mapDataFetcher' 
+const findProfilesDataFetcherEndpoint = '/api/map3Profiles/findProfilesDataFetcher' 
+const payProfileDataFetcherEndpoint = '/api/map3Profiles/payProfileDataFetcher' 
 
 const map3SignUpEndpoint = '/api/map3signup' 
 const map3ApproveEndpoint = '/api/map3pay/map3approve' 
@@ -53,15 +58,19 @@ const  Map3PolygonTEST8="0x0158345e52522C57ce34773c89D0214c2d10edd1" // with pla
 
 const Map3P2PContractTest1 ="0x11F15ad3D1f8Ab61b86FC2Bd2247Cf2EB96F3ddF"
 const Map3P2PContractTest2 ="0x5416c30970a66B041Df941e2A28711E1c7f8e0Ce"
+const Map3P2PContractTest3 ="0x8b637c32B61b838a574a6a1834361758E5610eC8"
+
+
 
 const  Map3VendorPlansPolgonTest1="0xfdD4e6BFC94a402bC40161067fC29860518159Ca" // with plans and sending eth transactions
 const  Map3VendorPlansPolgonTest2="0x3095d04AdC87dF6C50A9de0A5106602DB6fc902e" // with plans and sending eth transactions
 const  VendorAccountsManagerContractTest1 = "0xfdF123c9E8BD78a50bdD41aaEe069d89e8B4BE57"
+const  VendorAccountsManagerContractTest2 = "0x2C6792dB0b81678a784F34C916546A5b292fbeA1"
 
-// 0xfdF123c9E8BD78a50bdD41aaEe069d89e8B4BE57 // VendorAccountsManagerContract
-//0x11F15ad3D1f8Ab61b86FC2Bd2247Cf2EB96F3ddF //Map3P2PContract
-const  Map3address=Map3P2PContractTest2;
-const  Map3VendorAddress=VendorAccountsManagerContractTest1;
+
+
+const  Map3address=Map3P2PContractTest3;
+const  Map3VendorAddress=VendorAccountsManagerContractTest2;
 
 const EthAddress = "0x0000000000000000000000000000000000000000";
 const _wethAddresses = {
@@ -251,6 +260,20 @@ const getUserNativeBalanceInWei = async (owner) => {
     return tx1
   }
 
+  const ValidateIfStringIsAddress = async (address) => {
+    let addressBalance;
+    try{
+        addressBalance = await provider.getBalance(address);
+        console.log("was able to fetch a balance for the address", await addressBalance)
+        return true;
+    }catch(e){
+        return false;
+    }
+ return true; 
+}
+
+
+
 
 
   const ValidateIfAddressIsErc20 = async (address) => {
@@ -276,8 +299,53 @@ const getUserNativeBalanceInWei = async (owner) => {
     }else{
         return [false, null]
     }
+}
+const GetCUrrencyDetails = async (address) => {
 
-    
+
+    let coinListData;
+
+    (async function() {
+
+        coinListData = SendersCoinList.find(function (item) {
+            const walletAddress = item.address;
+            return(
+                walletAddress.match(address) ||
+                (walletAddress.toLowerCase().match(address) && walletAddress) 
+              )
+        }
+        );
+      })();
+
+    if(coinListData == null){
+        // let newfoundCurrencyInfo; 
+            //   (async function() {
+                console.log("searching blockchain")
+                let newfoundCurrencyInfo = await ValidateIfAddressIsErc20(address)
+                console.log("done searching blockchain", newfoundCurrencyInfo)
+        
+                  if(newfoundCurrencyInfo[0] ==true ){
+                    console.log(newfoundCurrencyInfo, "newfoundCurrencyInfo")
+                    coinListData=  {
+                      icon:(<DefaultCoinIcon symbol={newfoundCurrencyInfo[1]} />),
+                      address: address,
+                      code: newfoundCurrencyInfo[1],
+                      name: newfoundCurrencyInfo[1],
+                    }
+                      console.log("newfoundCurrencyInfo...", coinListData)
+                        console.log("pushing result to newCustomCustomCurrencyInfo...")
+                      return(coinListData)
+
+                  }
+                  else{
+                    console.log('not a valid erc20 token')
+                  }
+                // })();
+
+    }else{
+      console.log("result of coinlist data", coinListData)
+      return(coinListData)
+    }
 }
 
   const WeiToWholeDecimals = async (_tokenAddress, _num) => {
@@ -549,6 +617,7 @@ module.exports = {
     WholeTOWeiDecimals,
     IERC20Abi,
     Map3address,
+    Map3VendorAddress,
     approveSendersToken,
     map3Pay,
     vendorSignUpFee,
@@ -559,6 +628,7 @@ module.exports = {
     API_PRICE_URL,
     provider,
     Map3Abi,
+    Map3VendorsABi,
     getSendersAllowanceBalance,
     getSendersAllowanceBalanceInWei,
     getUserErc20Balance,
@@ -574,6 +644,9 @@ module.exports = {
     map3SameTokenTransferEndpoint,
     map3SwapAndTransferEndpoint,
     map3ApproveEndpoint,
+    mapDataFetcherEndpoint,
+    findProfilesDataFetcherEndpoint,
+    payProfileDataFetcherEndpoint,
     map3SignUpEndpoint,
     EthAddress,
     WethAddress,
@@ -585,9 +658,14 @@ module.exports = {
     getUserNativeBalanceInWei,
     TypoEffectTexts,
     ValidateIfAddressIsErc20,
+    ValidateIfStringIsAddress,
+    GetCUrrencyDetails,
     U256MAXVALUE,
     ethers,
     dummyHexData,
+    vendorsData,
+    MAPSTYLE,
+    MAPBOXACCESSTOKEN,
 
 };
 

@@ -20,11 +20,13 @@
   } */
   
 @layer components {
+  
   .blinking-cursor:after {
     content: '|';
     @apply text-secondary-300;
     animation: blink 0.3s step-start infinite;
   }
+  
 
   @keyframes blink {
     50% {

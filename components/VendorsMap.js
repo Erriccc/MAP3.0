@@ -1,60 +1,118 @@
-import React from "react";
-import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
-import { useState, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
+import Map, { Marker, Popup, GeolocateControl } from "react-map-gl";
+import getCenter from "geolib/es/getCenter";
+import Utils from '/Utilities/utils'
 
-function VendorsMap({ locations, google, setHighLight }) {
 
-// Note @locations variable is different from location which is passed in from nav search bar
+// import 'mapbox-gl/dist/mapbox-gl.css';
 
-  const [center, setCenter] = useState(); // delete if you dont need a center
+const VendorsMap = ({ searchResults, setDisplayData }) => {
+  
+  // const [showPopup, setShowPopup] = useState(false);
+  //   Transform coordinates into required array of objects in the correct shape
+  const coordinates = searchResults.map((result) => ({
+    latitude: result.lat,
+    longitude: result.long,
+  }));
+
+  // The latitude and longitude of the center of locations coordinates
+  const center = getCenter(coordinates);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [mapCenter, setMapCenter] = useState(null)
+
+  const [viewport, setViewport] = useState({
+    width: "100vw",
+    height: "100vh",
+    latitude: searchResults.length > 0 ? mapCenter ? mapCenter.latitude             : center.latitude  : 41.881832,
+    longitude: searchResults.length > 0 ? mapCenter ? mapCenter.longitude           : center.longitude : -87.623177,
+    zoom: 14,
+  });
 
   useEffect(() => {
-    var arr = Object.keys(locations);
-    var getLat = (key) => locations[key]["lat"]; // These are the latitudes from the results
-    var avgLat = arr.reduce((a, c) => a + Number(getLat(c)), 0) / arr.length;
+   if(mapCenter){
+    console.log(mapCenter,"....  mapCenter")
+   }
+   else{
+    console.log(" mapCenter is null!")
 
-    var getLng = (key) => locations[key]["lng"]; // These are the longitudes from the results
-    var avgLng = arr.reduce((a, c) => a + Number(getLng(c)), 0) / arr.length;
-
-    setCenter({ lat: avgLat, lng: avgLng }); // Here you can set the long and lat to users current location
-  }, [locations]);
-
+   }
+   return
+  }, [mapCenter])
+  
+  
   return (
-    <>
-    {center && (
-      // NOTE DO NOT CHANGE THIS LINE OR MAP UI WILL CHANGE 
-      // <div className="flex justify-center" style={{width: '70%', height: '70vh'}}> 
-      <div className="flex justify-center"> 
-        <Map
-          google={google}
-          
-          containerStyle={{
-            width: "100%",
-            height: "100%",
-            position:"absolute",
-            top: 0,
-            left: 0,
-          }}
-          center={center}
-          initialCenter={locations[0]}
-          zoom={16}
-          disableDefaultUI={true}
-        >
+    <Map
+      mapStyle= {Utils.MAPSTYLE}
+      mapboxAccessToken={Utils.MAPBOXACCESSTOKEN}
+      // {...viewport}
+      onViewportChange={(nextViewport) => setViewport(nextViewport)}
 
-          {/* This is where we can represent each location on the map with their cordinates */}
-          {/* {locations.map((coords, i) => (
-            <Marker position={coords} onClick={() => setHighLight(i)} />
-          ))} */}
+      initialViewState={{
+        latitude: searchResults.length > 0 ?center.latitude : 41.881832,
+        longitude: searchResults.length > 0 ? center.longitude : -87.623177,
+      // latitude: searchResults.length > 0 ? mapCenter ? mapCenter.latitude             : center.latitude  : 41.881832,
+      // longitude: searchResults.length > 0 ? mapCenter ? mapCenter.longitude           : center.longitude : -87.623177,
+        zoom: 8
+      }}
+      style={{width: "100vw", height: "100vh"}}
 
-          
-        </Map>
-        </div>
-      )}
-      {/* <div>Map</div> */}
+    >
+      {/* <GeolocateControl position="top-right" showAccuracyCircle={false}
+      onGeolocate={(e)=>{
+        setMapCenter({latitude:e.coords.latitude , longitude:e.coords.longitude })
+      }}
+      /> */}
+      {searchResults.length > 0 &&  searchResults.map((result) => (
+          <Marker
+            key={result.long}
+            latitude={result.lat}
+            longitude={result.long}
+            // offsetLeft={-20}
+            // offsetTop={-10}
+            color="gray"
+            onClick={(e) => {
+              e.originalEvent.stopPropagation();
+              setDisplayData([result])
+              setSelectedLocation(result);
+              console.log(result)
+            }}
+            // className='animate-bounce'
+          >
+                {/* 📌 */}
+                <p
+                role="img"
+                className="cursor-pointer text-2xl animate-bounce"
+                aria-label="push-pin"
+              >
+                📌
+              </p>
+          </Marker>
+          ))}
 
-    </>
+
+                  
+        {/* {selectedLocation && (
+          <Popup longitude={selectedLocation.long} latitude={selectedLocation.lat}
+            anchor="top"
+            onClose={() => 
+              {
+              console.log("popUp Was Closed")
+              console.log(selectedLocation)
+              setSelectedLocation(null)
+              }
+            }
+            closeOnClick={true}
+            
+            >
+            {selectedLocation.name}
+          </Popup>)} */}
+
+
+
+
+        
+    </Map>
   );
-}
-export default GoogleApiWrapper({
-  apiKey: "",
-})(VendorsMap);
+};
+
+export default VendorsMap;

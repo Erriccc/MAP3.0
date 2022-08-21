@@ -20,7 +20,7 @@ export default function ProcessingView({status, arrayToDisplay, className, ...re
         setVisibleCoinList(false);
     });
     // useLockBodyScroll(visibleCoinList);
-    let TypedStaus = useTypedPhrases([status],0);
+    // let TypedStaus = useTypedPhrases([status],0);
     let displayedTypedPhrase = useTypedPhrases(arrayToDisplay);
 
     
@@ -33,7 +33,10 @@ export default function ProcessingView({status, arrayToDisplay, className, ...re
             </span>
             <div className='h-1/5 align-middle '>
 
-                                                        <h2 className='text-gray-300 font-bold text-2xl italic' > {TypedStaus}</h2>
+                                                        {/* <h2 className='text-gray-300 font-bold text-2xl italic' > {TypedStaus}</h2> */}
+                                                        <h2 className='text-gray-300 font-bold text-2xl italic' > {status}</h2>
+
+                                                        
              </div>
             <div >
              

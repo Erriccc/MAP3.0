@@ -8,3 +8,8 @@ export default function Hamburger({ isOpen, ...props }) {
       </svg>
     </Button>);
 }
+
+
+// <div className="m-2 cursor-pointer rounded-full shadow-card backdrop-blur">
+//                             <CompassIcon onClick={() => openDrawer('PROFILES_DRAWER')} variant="transparent" className="dark:text-white  h-2/3 w-full"/>
+//                         </div>

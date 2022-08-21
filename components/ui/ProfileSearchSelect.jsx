@@ -4,7 +4,7 @@ import { SearchIcon } from '/components/icons/search';
 import vendorsData from "../../constants/testdata.json";
 import CollectionImage1 from 'assets/images/collection/collection-1.jpg';
 
-export default function ProfileSearchSelect({ onSelect }) {
+export default function ProfileSearchSelect({ onSelect, tittle }) {
     let [searchKeyword, setSearchKeyword] = useState('');
     let searchData = vendorsData;
 
@@ -14,10 +14,10 @@ export default function ProfileSearchSelect({ onSelect }) {
             const walletAddress = item.walletAddress;
             console.log("raw data.., ",
             
-            name.match(searchKeyword) ||
-                walletAddress.match(searchKeyword) ||
-                (name.toLowerCase().match(searchKeyword) && name) ||
-                (walletAddress.toLowerCase().match(searchKeyword) && walletAddress)
+            name.match(searchKeyword.toLowerCase()) ||
+                walletAddress.match(searchKeyword.toLowerCase()) ||
+                (name.toLowerCase().match(searchKeyword.toLowerCase()) && name) ||
+                (walletAddress.toLowerCase().match(searchKeyword.toLowerCase()) && walletAddress)
             )
             return (
                 name.match(searchKeyword) ||
@@ -32,7 +32,7 @@ export default function ProfileSearchSelect({ onSelect }) {
     }
     return (<div className="w-full rounded-lg bg-white text-sm shadow-large dark:bg-light-dark xs:w-[400px]">
       <h2 className="p-6 text-lg font-medium uppercase text-gray-900 dark:text-white">
-        Reciver
+        {tittle}
       </h2>
       <div className="relative">
         <SearchIcon className="absolute left-6 h-full text-gray-700 dark:text-white"/>
