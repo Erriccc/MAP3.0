@@ -23,35 +23,16 @@ import SettingsButton from '/components/settings/settings-button';
 import AuthorImage from 'assets/images/author.jpg';//
 const menuItems = [
     {
-        name: 'Home',
+        name: 'Map3 PAY',
         icon: <HomeIcon />,
         href: routes.home,
     },
+   
     // {
-    //     name: 'Farm',
-    //     icon: <FarmIcon />,
-    //     href: routes.farms,
+    //     name: 'Map3 PAY',
+    //     icon: <DiskIcon />,
+    //     href: routes.pay,
     // },
-    // {
-    //     name: 'Swap',
-    //     icon: <ExchangeIcon />,
-    //     href: routes.swap,
-    // },
-    // {
-    //     name: 'Liquidity',
-    //     icon: <PoolIcon />,
-    //     href: routes.liquidity,
-    // },
-    // {
-    //     name: 'Explore NFTs',
-    //     icon: <CompassIcon />,
-    //     href: routes.search,
-    // },
-    {
-        name: 'Map3 PAY',
-        icon: <DiskIcon />,
-        href: routes.pay,
-    },
     {
         name: 'MAP3 Vendors',
         icon: <CompassIcon />,
@@ -72,11 +53,11 @@ const menuItems = [
     //     icon: <DiskIcon />,
     //     href: routes.nftDetails,
     // },
-    {
-        name: 'Profile',
-        icon: <ProfileIcon />,
-        href: routes.profile,
-    },
+    // {
+    //     name: 'Profile',
+    //     icon: <ProfileIcon />,
+    //     href: routes.profile,
+    // },
     // {
     //     name: 'Vote',
     //     icon: <VoteIcon />,

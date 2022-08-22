@@ -3,7 +3,7 @@
 //providers.JsonRpcProvider()
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const BigNumber = require('bignumber.js');
-const process = require('process');
+// const process = require('process');
 const Web3 = require('web3');
 const Map3AbiPlaceHolder = require( '../artifacts/contracts/Map3Pay.sol/Map3Pay.json')
 // const Map3Abi = Map3AbiPlaceHolder.abi;
@@ -23,8 +23,9 @@ const SendersCoinList = PolygonCoinList.sendersCoinList;
 const vendorsData= require("constants/testdata.json") ;
 const  { DefaultCoinIcon } = require( '/components/icons/defaultCoinIcon');
 
-const MAPSTYLE="mapbox://styles/nfa123/cl6rrjgjc000614ny98twbt98"
-const MAPBOXACCESSTOKEN="pk.eyJ1IjoibmZhMTIzIiwiYSI6ImNsNmtsMWxjeTAyNzUza296dTZybDBvNTcifQ.eh9aAeqXhP3X99pdnPr17A"
+const MAPBOXACCESSTOKEN = process.env.NEXT_PUBLIC_MAP_BOX_ACCESS_TOKEN
+const MAPSTYLE = process.env.NEXT_PUBLIC_MAP_STYLE
+const web3StorageToken = process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN;
 
 
 const API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
@@ -42,7 +43,7 @@ const mapDataFetcherEndpoint = '/api/map3Profiles/mapDataFetcher'
 const findProfilesDataFetcherEndpoint = '/api/map3Profiles/findProfilesDataFetcher' 
 const payProfileDataFetcherEndpoint = '/api/map3Profiles/payProfileDataFetcher' 
 
-const map3SignUpEndpoint = '/api/map3signup' 
+const map3SignUpEndpoint = '/api/map3signup/signUp' 
 const map3ApproveEndpoint = '/api/map3pay/map3approve' 
 
 const  { ethers }=require( "ethers"); // from hardhat throws error "Can't resolve 'console'"
@@ -121,7 +122,7 @@ return web3Address
 
 
 
-const { MNEMONIC, RPC_URL } = process.env;
+// const { MNEMONIC, RPC_URL } = process.env;
 
 function createQueryString(params) {
     return Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
@@ -139,19 +140,19 @@ function waitForTxSuccess(tx) {
     });
 }
 
-function createProvider() {
-    const provider = /^ws?:\/\//.test(RPC_URL)
-        ? new Web3.providers.WebsocketProvider(RPC_URL)
-        : new Web3.providers.HttpProvider(RPC_URL);
-    if (!MNEMONIC) {
-        return provider;
-    }
-    return new HDWalletProvider({ mnemonic: MNEMONIC, providerOrUrl: provider });
-}
+// function createProvider() {
+//     const provider = /^ws?:\/\//.test(RPC_URL)
+//         ? new Web3.providers.WebsocketProvider(RPC_URL)
+//         : new Web3.providers.HttpProvider(RPC_URL);
+//     if (!MNEMONIC) {
+//         return provider;
+//     }
+//     return new HDWalletProvider({ mnemonic: MNEMONIC, providerOrUrl: provider });
+// }
 
-function createWeb3() {
-    return new Web3(createProvider());
-}
+// function createWeb3() {
+//     return new Web3(createProvider());
+// }
 
 function etherToWei(etherAmount) {
     return new BigNumber(etherAmount)
@@ -273,6 +274,15 @@ const getUserNativeBalanceInWei = async (owner) => {
 }
 
 
+function getKeyWordArray (UserInput){
+    if (!UserInput.vendorKeywords){
+        return ['']
+    }else if (UserInput.vendorKeywords.legnth > 1){
+        return UserInput.vendorKeywords.split(/[, ]+/)
+    }else {
+        return UserInput.vendorKeywords
+    }
+}
 
 
 
@@ -607,10 +617,10 @@ module.exports = {
     testAccount,
     etherToWei,
     weiToEther,
-    createWeb3,
+    // createWeb3,
     createQueryString,
     waitForTxSuccess,
-    createProvider,
+    // createProvider,
     getTokenDecimal,
     numberExponentToLarge,
     WeiToWholeDecimals,
@@ -666,8 +676,10 @@ module.exports = {
     vendorsData,
     MAPSTYLE,
     MAPBOXACCESSTOKEN,
+    web3StorageToken,
+    getKeyWordArray,
 
 };
 
 //enableSlippageProtection
-//tx hash 0xb8f6de1f679c80396acbe38527fa52a0c5f1fe98f022d093ae77f3ee052a14f9
+//tx hash 0xb8f6de1f679c80396acbe38527fa52a0c5f1fe98f022d093ae77f3ee052a14f9 

@@ -45,7 +45,7 @@ export  function VendorCollectionCard({ walletAddress, name, vendorsToken, imgUr
         // }}
 
         href = {{
-          pathname: '/newPay/[walletAddress]',
+          pathname: '/pay/[walletAddress]',
           query: {
               walletAddress: walletAddress
               // vendorsToken: vendorsToken,
@@ -91,7 +91,7 @@ export  function VendorCollectionCard({ walletAddress, name, vendorsToken, imgUr
         // }}
 
         href = {{
-          pathname: '/newPay/[walletAddress]',
+          pathname: '/pay/[walletAddress]',
           query: {
               walletAddress: walletAddress
               // vendorsToken: vendorsToken,

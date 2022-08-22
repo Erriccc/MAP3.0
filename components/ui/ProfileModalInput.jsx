@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import cn from 'classnames';
 import { ChevronDown } from '/components/icons/chevron-down';
 import { useClickAway } from 'lib/hooks/use-click-away';
-import { useLockBodyScroll } from 'lib/hooks/use-lock-body-scroll';
+// import { useLockBodyScroll } from 'lib/hooks/use-lock-body-scroll';
 import { coinList } from 'data/static/coin-list'; //
 import { Plus } from '../icons/plus';
 

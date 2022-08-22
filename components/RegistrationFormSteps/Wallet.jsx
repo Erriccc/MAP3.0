@@ -20,18 +20,17 @@ const UsefulResources = [
 
 
 export default function Wallet({ ...props }) {
-  const { userData, setUserData } = useStepperContext();
+  const { userData, setUserData, finalData, setFinalData } = useStepperContext();
   let [needsHelp, setNeedsHelp] = useState(false);
 
   const { address, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
-    const { closeModal } = useModal();
     const {account} = useMoralis()
     const dispatch = useNotification();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setUserData({ ...userData, [name]: value });
+  // };
 
 
   useEffect(() => {

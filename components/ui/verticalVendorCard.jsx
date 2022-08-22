@@ -36,7 +36,7 @@ export  function VendorCollectionCard({ walletAddress, name, vendorsToken, imgUr
       <div className="absolute top-0 left-0 z-[5] flex h-full w-full flex-col justify-between bg-gradient-to-t from-black p-5 md:p-6">
         <AnchorLink 
         href = {{
-          pathname: '/newPay/[walletAddress]',
+          pathname: '/pay/[walletAddress]',
           query: {
               walletAddress: walletAddress
           },
@@ -58,13 +58,11 @@ export  function VendorCollectionCard({ walletAddress, name, vendorsToken, imgUr
             {name}
           </div>
           <AnchorLink 
-
         href = {{
-          pathname: '/newPay/[walletAddress]',
+          pathname: '/pay/[walletAddress]',
           query: {
               walletAddress: walletAddress
           },
-
         }}
           className="relative z-10 mt-3.5 inline-flex items-center rounded-3xl bg-white/20 p-2 backdrop-blur-[40px]">
              <div className="truncate text-sm -tracking-wide text-white ltr:ml-2 ltr:pr-2 rtl:mr-2 rtl:pl-2">

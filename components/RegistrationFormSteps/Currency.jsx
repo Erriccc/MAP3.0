@@ -77,8 +77,8 @@ export default function Currency() {
                     setIsValidCurrency(true)
                     handleSuccess("Valid Currency")
               setQuote("Valid Currency")
-              setUserData({ ...userData, ["userCurrency"]: sendersToken,  });
-              setUserData({ ...userData, ["currencySymbol"]: senderstokenCode });
+              setUserData({ ...userData, ["userCurrency"]: sendersToken, ["currencySymbol"]: senderstokenCode});
+            //   setUserData({ ...userData, ["currencySymbol"]: senderstokenCode });
 
               
             }
@@ -99,7 +99,7 @@ export default function Currency() {
 
   return (
     <div className="flex flex-col ">
-            <InputLabel title="Currrency" subTitle="find your currency" />
+            <InputLabel title="Currrency" important subTitle="find your currency" />
             <SendersCoinInput label={'Senders Token'}  exchangeRate={quote}
                 getCoinValue={(data) => {
                 setSendersToken(data.address)

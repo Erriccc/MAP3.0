@@ -24,7 +24,7 @@ export default function StepperControl({ handleClick, currentStep, steps }) {
         >
             {/* Back */}
             <span className='text-white'>
-            {currentStep === steps.length - 1 ? "Confirm" : "Next"}
+            {currentStep === steps.length - 1 ? "Confirm Details" : "Next"}
             </span>
           </Button>
           {/* } */}

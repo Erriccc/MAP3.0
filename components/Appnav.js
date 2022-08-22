@@ -64,7 +64,7 @@ export default function Appnav() { // Note we are imporing a prop from wherever 
 
   return (
 
-    <header className="sticky shadow-sm md:relative bg-sky-300/30 top-0 z-50 grid grid-cols-1 md:bg-transparent py-4 px-5 md:px-10 md:grid-cols-3">
+    <header className="sticky shadow-sm md:relative bg-sky-300/30 top-0 z-30 grid grid-cols-1 md:bg-transparent py-4 px-5 md:px-10 md:grid-cols-3">
       <div
         onClick={() => router.push("/")}
         className="relative flex items-center justify-center py-1 cursor-pointer"

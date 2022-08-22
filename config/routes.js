@@ -1,8 +1,7 @@
 const routes = {
     home: '/',
-    // pay:'/pay',
-    pay:'/newPay',
-    registerVendor:'/registerVendor',
+    pay:'/pay',
+    registerVendor:'/registerVendor/',
     profile: '/profile',
     swap: '/swap',
     liquidity: '/liquidity',

@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useClickAway } from 'lib/hooks/use-click-away';
 import { useTypedPhrases } from 'lib/hooks/useTypedPhrases';
-import { useLockBodyScroll } from 'lib/hooks/use-lock-body-scroll';
+// import { useLockBodyScroll } from 'lib/hooks/use-lock-body-scroll';
 
 
 // dynamic import

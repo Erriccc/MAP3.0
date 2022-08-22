@@ -31,9 +31,19 @@ const VendorsMap = ({ searchResults, setDisplayData }) => {
   useEffect(() => {
    if(mapCenter){
     console.log(mapCenter,"....  mapCenter")
+
+    console.log("Utils.MAPBOXACCESSTOKEN.. ", Utils.MAPBOXACCESSTOKEN)
+    console.log("type of Utils.MAPBOXACCESSTOKEN.. ", typeof Utils.MAPBOXACCESSTOKEN)
+    console.log("Utils.MAPSTYLE.. ", Utils.MAPSTYLE)
+    console.log("type of Utils.MAPSTYLE.. ", typeof Utils.MAPSTYLE)
    }
    else{
     console.log(" mapCenter is null!")
+
+    console.log("Utils.MAPBOXACCESSTOKEN.. ", Utils.MAPBOXACCESSTOKEN)
+    console.log("type of Utils.MAPBOXACCESSTOKEN.. ", typeof Utils.MAPBOXACCESSTOKEN)
+    console.log("Utils.MAPSTYLE.. ", Utils.MAPSTYLE)
+    console.log("type of Utils.MAPSTYLE.. ", typeof Utils.MAPSTYLE)
 
    }
    return

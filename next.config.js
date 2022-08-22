@@ -34,8 +34,8 @@ module.exports = withPWA({
     images: {
       domains: ["links.tailus.io"],
     },
-    env: {
-      mapbox_key: "pk.eyJ1IjoibmZhMTIzIiwiYSI6ImNsNmtsMWxjeTAyNzUza296dTZybDBvNTcifQ.eh9aAeqXhP3X99pdnPr17A",
-    },
+    // env: {
+    //   mapbox_key: "pk.eyJ1IjoibmZhMTIzIiwiYSI6ImNsNmtsMWxjeTAyNzUza296dTZybDBvNTcifQ.eh9aAeqXhP3X99pdnPr17A",
+    // },
   }),
 });

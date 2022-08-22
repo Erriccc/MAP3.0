@@ -58,7 +58,7 @@ export default function ProfileSearchFilters() {
 
         </div>
       </Scrollbar>
-      <div className="absolute left-0 bottom-4 z-10 w-full px-6">
+      <div className="absolute left-0 bottom-4 z-5 w-full px-6">
         <Button fullWidth onClick={closeDrawer}>
           DONE
         </Button>

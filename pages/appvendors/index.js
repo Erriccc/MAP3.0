@@ -75,7 +75,10 @@ function reducer(mapDataState, action){
 
 
 
-useLayoutEffect(() => {
+useEffect(() => {
+  // useLayoutEffect(() => {
+
+
 {map3Querry &&
     console.log("running useeffect to fetch search data",)
   //  if(mapDataState.loadingInfo){
@@ -138,7 +141,7 @@ useLayoutEffect(() => {
                             <SearchButton variant="transparent" className="dark:text-white"/>
                           </div>
                           <div className="m-2 rounded-full bg-gradient-to-b from-gray-50 to-gray-100 shadow-card backdrop-blur dark:from-dark dark:to-dark/80">
-                            <Hamburger isOpen={isOpen} onClick={() => openDrawer('DASHBOARD_SIDEBAR')} variant="transparent" className="dark:text-white "/>
+                            <Hamburger isOpen={isOpen} onClick={() => openDrawer('MOBILE_DASHBOARD_SIDEBAR')} variant="transparent" className="dark:text-white "/>
                         </div>
 
                         <div className="mx-auto my-3 cursor-pointer rounded-full shadow-card backdrop-blur ">

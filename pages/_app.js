@@ -1,5 +1,4 @@
 import React from 'react';
-// import ReactDOM from 'react-dom';
 import Head from "next/head";
 // import "/tailwind.css";
 // import "pages/profile/profile.css"
@@ -11,21 +10,15 @@ import Router from "next/router";
 import ProgressBar from "@badrap/bar-of-progress";
 import { MoralisProvider } from "react-moralis";
 import {NotificationProvider} from "web3uikit";
-import Appfooter from 'components/Appfooter'
-import Appnav from 'components/Appnav'
-import Partners from 'components/Partners';
 
-//cryptic
+//cptc
 import 'swiper/css';
 import 'assets/css/scrollbar.css';
 import 'assets/css/globals.css';
 import 'assets/css/range-slider.css';
-import { QueryClient } from 'react-query';
 import { ThemeProvider } from 'next-themes';
 import ModalsContainer from '/components/modal-views/container';
 import DrawersContainer from '/components/drawer-views/container';
-import SettingsButton from '/components/settings/settings-button';
-import PageDrawer from '/components/settings/page-drawer';
 import SettingsDrawer from '/components/settings/settings-drawer';
 import { WalletProvider } from 'lib/hooks/use-connect';
 import{UrlProvider} from 'Utilities/FrontEndUtilities/FEUrlContext'
@@ -47,11 +40,9 @@ Router.events.on("routeChangeError", progress.finish);
 
 // Note that these keys are currently exposed to the browser and could be accessed by hackers
 // take out the next public to keep it in the node envitonment
-const MoralisAppId = "h8ifmoTkY0X7KYU7AQsyIefDFah4JKqWDxCGEpTZ";
-const MoralisAppUrl = "https://8lyygoh4vp0d.usemoralis.com:2053/server";
 
-// const MoralisAppId = process.env.NEXT_PUBLIC_MORALIS_API_ID;
-// const MoralisAppUrl = process.env.NEXT_PUBLIC_MORALIS_APP_URL;
+const MoralisAppId = process.env.NEXT_PUBLIC_MORALIS_API_ID;
+const MoralisAppUrl = process.env.NEXT_PUBLIC_MORALIS_APP_URL;
 
 
 

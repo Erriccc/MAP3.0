@@ -23,7 +23,7 @@ import SettingsButton from '/components/settings/settings-button';
 import AuthorImage from 'assets/images/author.jpg';//
 const menuItems = [
     {
-        name: 'Home',
+        name: 'Map3 PAY',
         icon: <HomeIcon />,
         href: routes.home,
     },
@@ -47,11 +47,11 @@ const menuItems = [
     //     icon: <CompassIcon />,
     //     href: routes.search,
     // },
-    {
-        name: 'Map3 PAY',
-        icon: <DiskIcon />,
-        href: routes.pay,
-    },
+    // {
+    //     name: 'Map3 PAY',
+    //     icon: <DiskIcon />,
+    //     href: routes.pay,
+    // },
     {
         name: 'MAP3 Vendors',
         icon: <CompassIcon />,
@@ -72,11 +72,11 @@ const menuItems = [
     //     icon: <DiskIcon />,
     //     href: routes.nftDetails,
     // },
-    {
-        name: 'Profile',
-        icon: <ProfileIcon />,
-        href: routes.profile,
-    },
+    // {
+    //     name: 'Profile',
+    //     icon: <ProfileIcon />,
+    //     href: routes.profile,
+    // },
     // {
     //     name: 'Vote',
     //     icon: <VoteIcon />,

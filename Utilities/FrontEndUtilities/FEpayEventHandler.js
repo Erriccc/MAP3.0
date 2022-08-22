@@ -254,7 +254,8 @@ return
         console.log("ethers utils does not always UsertransactionInput.amountToBeSent", UsertransactionInput.amountToBeSent)
         console.log(" UsertransactionInput.amountToBeSent*(10^18)", UsertransactionInput.amountToBeSent*Math.pow(10, 18))
 
-        let tempAmount = Utils.ethers.utils.parseEther(UsertransactionInput.amountToBeSent)//.toFixed(0).toString() // change multiplier to come from Utils.slippage
+        // let tempAmount = Utils.ethers.utils.parseEther(UsertransactionInput.amountToBeSent)//.toFixed(0).toString() // change multiplier to come from Utils.slippage
+        let tempAmount = UsertransactionInput.amountToBeSent*Math.pow(10, 18)//.toFixed(0).toString() // change multiplier to come from Utils.slippage
         console.log("tempAmount", tempAmount)
    
         
@@ -321,7 +322,7 @@ return
     try{
 
         if (UsertransactionInput.sendersToken == Utils.WethAddress){
-
+         
             oxQuoteResult={
               sellTokenAddress:Utils.WethAddress, // sellToken // Wrapped token
               buyTokenAddress: Utils.WethAddress, // buyToken // we dont need this in this case. but we send it to maintain compactibility
@@ -329,7 +330,11 @@ return
               OxDelegateAddress: Utils.Map3address,// swapTarget // we dont need this in this case. but we send it to maintain compactibility
               data: Utils.dummyHexData, // swapCallData // we dont need this in this case. but we send it to maintain compactibility
               allowanceBalance: aprovalAmount,// _tokenamount
-              buyAmount:  Utils.ethers.utils.parseEther(UsertransactionInput.amountToBeSent).toString(),//.toFixed(0).toString(), //(,18), // _sendAmount
+              // buyAmount:  Utils.ethers.utils.parseEther(UsertransactionInput.amountToBeSent).toString(),//.toFixed(0).toString(), //(,18), // _sendAmount
+              buyAmount:  String(UsertransactionInput.amountToBeSent*Math.pow(10, 18)),//.toFixed(0).toString(), //(,18), // _sendAmount
+              
+              // UsertransactionInput.amountToBeSent*Math.pow(10, 18)
+              
               reciversAddress: UsertransactionInput.reciver// _toAddress
               }
         }else{

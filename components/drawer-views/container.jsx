@@ -7,7 +7,7 @@ import { useDrawer } from '/components/drawer-views/context';
 import { DrawerFilters } from 'pages/search';
 const MobileSidebar = dynamic(() => import('layouts/_mobileViewDashboard-sidebar'));
 const Sidebar = dynamic(() => import('layouts/_dashboard-sidebar'));
-const ProfileSearchFilters = dynamic(() => import('pages/ProfileSearchFilters'));
+const ProfileSearchFilters = dynamic(() => import('pages/appvendors/ProfileSearchFilters'));
 
 
 
@@ -16,14 +16,15 @@ const DrawerMenu = dynamic(() => import('layouts/_layout-menu'));
 function renderDrawerContent(view) {
     switch (view) {
         case 'DASHBOARD_SIDEBAR':
-            return <MobileSidebar />;
-            // return <Sidebar />;
+            return <Sidebar />;
+        case 'MOBILE_DASHBOARD_SIDEBAR':
+              return <MobileSidebar />;
         case 'DRAWER_SEARCH':
             return <DrawerFilters />;
         case 'PROFILES_DRAWER':
               return <ProfileSearchFilters />;
         default:
-            return <DrawerMenu />;
+            // return <DrawerMenu />;
     }
 }
 export default function DrawersContainer() {
@@ -36,9 +37,10 @@ export default function DrawersContainer() {
             router.events.off('routeChangeStart', closeDrawer);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [router]);
     return (<Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="fixed inset-0 z-20 overflow-hidden" onClose={closeDrawer}>
+      {/* <Dialog as="div" className="fixed inset-0 z-40 overflow-hidden" onClose={closeDrawer}> */}
         <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-300" leaveFrom="opacity-100" leaveTo="opacity-0">
           <Dialog.Overlay className="fixed inset-0 bg-gray-700 bg-opacity-60 backdrop-blur"/>
         </Transition.Child>

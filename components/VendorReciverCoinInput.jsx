@@ -17,7 +17,8 @@ const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
     // let [selectedCoin, setSelectedCoin] = useState();
     // let [tempCustomCustomCurrencyInfo, setTempCustomCustomCurrencyInfo] = useState();
 
-useLayoutEffect(() => {
+// useLayoutEffect(() => {
+  useEffect(() => {
   let isMounted = true;
 console.log(tokenInfo,"..tokenInfo yooooooooooooooooo")
 

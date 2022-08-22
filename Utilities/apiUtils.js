@@ -15,6 +15,7 @@ const {
     API_QUOTE_URL,
     provider,
     Map3Abi,
+    Map3VendorsABi,
     getSendersAllowanceBalance,
     getSendersAllowanceBalanceInWei,
     getUserErc20Balance,
@@ -172,6 +173,40 @@ const {
           console.log("completed Map3SameTokenPayData from oxPay : ", Map3SameTokenPayData)
           return(Map3SameTokenPayData)
       }
+
+
+      const map3SignUpData = (_tupple) => {
+        const signUpData =  [_tupple]
+        console.log("last stop before signUpData details are encoded.....", signUpData)
+        console.log("constructing signUpData from oxPay api.....")
+        const Map3SignUpData =    functionBytesEncoder(Map3VendorsABi,"addVendor",signUpData)
+      console.log("typeOf Map3SignUpData: ", typeof Map3SignUpData)
+        console.log("completed Map3SignUpData from oxPay : ", Map3SignUpData)
+        return(Map3SignUpData)
+    }
+
+
+
+    const map3SignUpExecutor = async (returnOfFunctionBytesEncoder, txValue) => {
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+       const PaySigner = provider.getSigner()
+      const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(PaySigner,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue)
+      // const returnOfFunctionBytesEncoderAndImplementorReciept = await returnOfFunctionBytesEncoderAndImplementor.wait()
+      await returnOfFunctionBytesEncoderAndImplementor.wait()
+      console.log("returnOfFunctionBytesEncoderAndImplementor: ", returnOfFunctionBytesEncoderAndImplementor)
+      console.log("completed signUp Execution...!!")
+  
+       console.log("signUp successful!")
+       return returnOfFunctionBytesEncoderAndImplementor
+   }
+  
+
+
+
+
+
+
 
 
 
@@ -528,6 +563,8 @@ module.exports = {
     OxPayTxData,
     map3PayExecutor,
     map3PayData,
+    map3SignUpData,
+    map3SignUpExecutor,
     approveSendersTokenExecutor,
     approveSendersTokenData,
     map3ApproveEndpoint,

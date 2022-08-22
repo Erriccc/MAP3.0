@@ -2,7 +2,6 @@ import { useState } from 'react';
 import cn from 'classnames';
 
 
-// import { useStepperContext } from "../../contexts/StepperContext";
 import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext";
 import InputLabel from '/components/ui/input-label';
 import Input from '/components/ui/forms/input';
@@ -39,7 +38,7 @@ export default function Details() {
 
 
           <div className="mb-8">
-            <InputLabel title="Email" important subTitle="notifications on your account will  be sent here"/>
+            <InputLabel title="Email" subTitle="notifications on your account will  be sent here"/>
             <Input  placeholder="email address" inputClassName="spin-button-hidden"
             value={userData["email"] || ""}
             onChange={(e)=>{
