@@ -38,7 +38,7 @@ import Slider from 'rc-slider';
 
 import ProcessingView from '/components/ui/ProcessingView';
 import VendorReciverCoinInput from '/components/VendorReciverCoinInput';
-import SendersCoinInput from '/components/SendersCoinInput';
+import SendersCoinInput from '/components/sendersCoinInput';
 
 
 const PayVendorPage = () => {

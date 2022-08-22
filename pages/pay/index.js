@@ -20,8 +20,8 @@ import LoadingView from '/components/ui/LoadingView';
 
 import  ProfileModalInput from  '/components/ui/ProfileModalInput';
 import  ProcessingView from  '/components/ui/ProcessingView';
-import  ReciversCoinInput from  '/components/ReciversCoinInput';
-import  SendersCoinInput from  '/components/SendersCoinInput';
+import  ReciversCoinInput from  '/components/reciversCoinInput';
+import  SendersCoinInput from  '/components/sendersCoinInput';
 
 
 

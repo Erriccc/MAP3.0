@@ -12,7 +12,7 @@ import cn from 'classnames';
 import InputLabel from '/components/ui/input-label';
 
 import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext";
-import SendersCoinInput from '/components/SendersCoinInput';
+import SendersCoinInput from '/components/sendersCoinInput';
 
 
 export default function Currency() {
