@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useMoralis, useWeb3ExecuteFunction  } from 'react-moralis';
 import Apphero from 'components/Apphero';
-import PayVendor from 'components/PayVendor';
+import PayVendor from 'components/payVendor';
 import VendorQrCode from 'components/VendorQrCode';
 import DashboardLayout from 'layouts/_dashboard';
 

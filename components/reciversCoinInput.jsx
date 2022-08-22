@@ -8,7 +8,7 @@ import { useClickAway } from 'lib/hooks/use-click-away';
 import { sendersCoinList } from '../constants/coinListPolygon'; //
 
 // dynamic import
-import Map3CoinSelectView from '/components/ui/map3coinSelectView';
+import Map3CoinSelectView from '/components/ui/map3CoinSelectView';
 
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
 export default function ReciversCoinInput({ label, getCoinValue, className, ...rest }) {

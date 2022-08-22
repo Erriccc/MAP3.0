@@ -9,7 +9,7 @@ import { coinList } from 'data/static/coin-list';
 import { sendersCoinList,reciversCoinList } from '../constants/coinListPolygon'; //
 
 // dynamic import
-import Map3CoinSelectView from '/components/ui/map3coinSelectView';
+import Map3CoinSelectView from '/components/ui/map3CoinSelectView';
 
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
 export default function SendersCoinInput({ label, getCoinValue, exchangeRate, currencybalance, className, ...rest }) {
