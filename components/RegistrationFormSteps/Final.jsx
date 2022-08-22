@@ -14,12 +14,12 @@ import { useNotification } from "web3uikit";
 import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext";
 import { useDropzone } from 'react-dropzone';
 import Image from '/components/ui/image';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import{signUpEventHandler,ValidateUserSignUpInput} from '/Utilities/FrontEndUtilities/FEsignUpHandler';
 
 
 
-const ProcessingView = dynamic(() => import('/components/ui/ProcessingView'));
+import ProcessingView from '/components/ui/ProcessingView';
 
 
 

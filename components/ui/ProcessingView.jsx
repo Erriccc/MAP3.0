@@ -1,5 +1,4 @@
 import { useState, useRef,useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useClickAway } from 'lib/hooks/use-click-away';
 import { useTypedPhrases } from 'lib/hooks/useTypedPhrases';
@@ -7,7 +6,6 @@ import { useTypedPhrases } from 'lib/hooks/useTypedPhrases';
 
 
 // dynamic import
-// const CoinSelectView = dynamic(() => import('/components/ui/coin-select-view'));
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
 
 

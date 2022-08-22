@@ -34,11 +34,11 @@ import Collapse from '/components/ui/collapse';
 import PayVendorLayout from 'layouts/PayVendorLayout';
 import TransactionInfo from '/components/ui/transaction-info';
 import Slider from 'rc-slider';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 
-const ProcessingView = dynamic(() => import('/components/ui/ProcessingView'));
-const VendorReciverCoinInput = dynamic(() => import('/components/VendorReciverCoinInput'));
-const SendersCoinInput = dynamic(() => import('/components/SendersCoinInput'));
+import ProcessingView from '/components/ui/ProcessingView';
+import VendorReciverCoinInput from '/components/VendorReciverCoinInput';
+import SendersCoinInput from '/components/SendersCoinInput';
 
 
 const PayVendorPage = () => {

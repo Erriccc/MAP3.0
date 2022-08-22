@@ -1,5 +1,5 @@
 import { Fragment, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { Dialog } from '/components/ui/dialog';
 import { Transition } from '/components/ui/transition';
@@ -7,10 +7,10 @@ import Button from '/components/ui/button';
 import { Close } from '/components/icons/close';
 import { useModal } from '/components/modal-views/context';
 // dynamic imports
-const SearchView = dynamic(() => import('/components/search/view'));
-const ShareView = dynamic(() => import('/components/nft/share-view'));
-const SelectWallet = dynamic(() => import('/components/nft/select-wallet'));
-const BetaModeAcknowledgement = dynamic(() => import('/components/nft/beta-mode-acknowledgement'));
+import SearchView from '/components/search/view';
+import ShareView from '/components/nft/share-view';
+import SelectWallet from '/components/nft/select-wallet';
+import BetaModeAcknowledgement from '/components/nft/beta-mode-acknowledgement';
 function renderModalContent(view) {
     switch (view) {
         case 'SEARCH_VIEW':

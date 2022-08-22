@@ -6,10 +6,10 @@ import { useDrawer } from '/components/drawer-views/context';
 import Scrollbar from '/components/ui/scrollbar';
 import Button from '/components/ui/button';
 import { Close } from '/components/icons/close';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import { useRouter } from "next/dist/client/router";
 
-const ProfileSearchSelect = dynamic(() => import('/components/ui/ProfileSearchSelect'));
+import ProfileSearchSelect from '/components/ui/ProfileSearchSelect';
 
 export default function ProfileSearchFilters() {
     const { closeDrawer } = useDrawer();

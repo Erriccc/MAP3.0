@@ -1,22 +1,13 @@
 import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
-import cn from 'classnames';
-import routes from 'config/routes';
-import DashboardLayout from 'layouts/_dashboard';
-import Button from '/components/ui/button';
-import ActiveLink from '/components/ui/links/active-link';
-import AnchorLink from '/components/ui/links/anchor-link';
-import { RangeIcon } from '/components/icons/range-icon';
-import { ExportIcon } from '/components/icons/export-icon';
+
+
 import { useBreakpoint } from 'lib/hooks/use-breakpoint';
 import { useIsMounted } from 'lib/hooks/use-is-mounted';
 import { fadeInBottom } from 'lib/framer-motion/fade-in-bottom';
-import Collapse from '../components/ui/collapse';
-import ProfileSearchSelect from '../components/ui/ProfileSearchSelect';
+
 // dynamic import
-const Listbox = dynamic(() => import('/components/ui/list-box'));
 
 export default function PayVendorLayout({ children }) {
     const router = useRouter();

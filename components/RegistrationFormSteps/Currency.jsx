@@ -6,13 +6,13 @@ import{PaymentInputValidator} from '/Utilities/FrontEndUtilities/FEpaymentUserIn
 import{oxSwapEventHandler, sameTokenEventHandler, oxSwapERC20ToEth} from '/Utilities/FrontEndUtilities/FEpayEventHandler';
 import { useMoralis, } from 'react-moralis';
 import { useRouter } from "next/dist/client/router"; // use to reroute after transaction is processed
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import Spinner from '/components/spinner';
 import cn from 'classnames';
 import InputLabel from '/components/ui/input-label';
 
 import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext";
-const SendersCoinInput = dynamic(() => import('/components/SendersCoinInput'));
+import SendersCoinInput from '/components/SendersCoinInput';
 
 
 export default function Currency() {

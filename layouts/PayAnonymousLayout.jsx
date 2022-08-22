@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import cn from 'classnames';
@@ -16,7 +16,7 @@ import { fadeInBottom } from 'lib/framer-motion/fade-in-bottom';
 import Collapse from '../components/ui/collapse';
 import ProfileSearchSelect from '../components/ui/ProfileSearchSelect';
 // dynamic import
-const Listbox = dynamic(() => import('/components/ui/list-box'));
+import Listbox from'/components/ui/list-box';
 
 export default function PayAnonymousLayout({ children }) {
     const router = useRouter();

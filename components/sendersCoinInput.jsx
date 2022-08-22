@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import cn from 'classnames';
 import { ChevronDown } from '/components/icons/chevron-down';//
@@ -9,7 +9,7 @@ import { coinList } from 'data/static/coin-list';
 import { sendersCoinList,reciversCoinList } from '../constants/coinListPolygon'; //
 
 // dynamic import
-const Map3CoinSelectView = dynamic(() => import('/components/ui/map3coinSelectView'));
+import Map3CoinSelectView from '/components/ui/map3coinSelectView';
 
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
 export default function SendersCoinInput({ label, getCoinValue, exchangeRate, currencybalance, className, ...rest }) {

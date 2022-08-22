@@ -1,5 +1,5 @@
 import { Fragment, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { Dialog } from '/components/ui/dialog';
 import { Transition } from '/components/ui/transition';
@@ -11,7 +11,7 @@ const ProfileSearchFilters = dynamic(() => import('pages/appvendors/ProfileSearc
 
 
 
-const DrawerMenu = dynamic(() => import('layouts/_layout-menu'));
+import DrawerMenu from 'layouts/_layout-menu';
 
 function renderDrawerContent(view) {
     switch (view) {

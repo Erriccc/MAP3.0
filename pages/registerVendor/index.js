@@ -7,16 +7,16 @@ import DashboardLayout from 'layouts/_dashboard';
 import { NextSeo } from 'next-seo';
 import Button from '/components/ui/button';
 import { useModal } from '/components/modal-views/context';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import { useNotification } from "web3uikit";
 import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext";
 
-const Details = dynamic(() => import('/components/RegistrationFormSteps/Details'));
-const UploadImage = dynamic(() => import('/components/RegistrationFormSteps/UploadImage'));
-const GeoAddress = dynamic(() => import('/components/RegistrationFormSteps/GeoAddress'));
-const Currency = dynamic(() => import('/components/RegistrationFormSteps/Currency'));
-const Wallet = dynamic(() => import('/components/RegistrationFormSteps/Wallet'));
-const Final = dynamic(() => import('/components/RegistrationFormSteps/Final'));
+import Details from '/components/RegistrationFormSteps/Details';
+import UploadImage from '/components/RegistrationFormSteps/UploadImage';
+import GeoAddress from '/components/RegistrationFormSteps/GeoAddress';
+import Currency from '/components/RegistrationFormSteps/Currency';
+import Wallet from '/components/RegistrationFormSteps/Wallet';
+import Final from '/components/RegistrationFormSteps/Final';
 
 
 

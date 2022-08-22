@@ -6,7 +6,7 @@ import{PaymentInputValidator} from '/Utilities/FrontEndUtilities/FEpaymentUserIn
 import{oxSwapEventHandler, sameTokenEventHandler, oxSwapERC20ToEth} from '/Utilities/FrontEndUtilities/FEpayEventHandler';
 import { useMoralis, } from 'react-moralis';
 import { useRouter } from "next/dist/client/router"; // use to reroute after transaction is processed
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import Spinner from '/components/spinner';
 import cn from 'classnames';
 import { NextSeo } from 'next-seo';
@@ -18,10 +18,10 @@ import { SwapIcon } from '/components/icons/swap-icon';
 import Collapse from '/components/ui/collapse';
 import LoadingView from '/components/ui/LoadingView';
 
-const ProfileModalInput = dynamic(() => import('/components/ui/ProfileModalInput'));
-const ProcessingView = dynamic(() => import('/components/ui/ProcessingView'));
-const ReciversCoinInput = dynamic(() => import('/components/ReciversCoinInput'));
-const SendersCoinInput = dynamic(() => import('/components/SendersCoinInput'));
+import  ProfileModalInput from  '/components/ui/ProfileModalInput';
+import  ProcessingView from  '/components/ui/ProcessingView';
+import  ReciversCoinInput from  '/components/ReciversCoinInput';
+import  SendersCoinInput from  '/components/SendersCoinInput';
 
 
 

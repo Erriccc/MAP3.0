@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import cn from 'classnames';
@@ -14,7 +14,7 @@ import { useBreakpoint } from 'lib/hooks/use-breakpoint';
 import { useIsMounted } from 'lib/hooks/use-is-mounted';
 import { fadeInBottom } from 'lib/framer-motion/fade-in-bottom';
 // dynamic import
-const Listbox = dynamic(() => import('/components/ui/list-box'));
+import Listbox from '/components/ui/list-box';
 const tradeMenu = [
     {
         name: 'Swap',

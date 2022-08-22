@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import cn from 'classnames';
 import { ChevronDown } from '/components/icons/chevron-down';
@@ -8,7 +7,6 @@ import { useClickAway } from 'lib/hooks/use-click-away';
 import { coinList } from 'data/static/coin-list'; //
 
 // dynamic import
-// const CoinSelectView = dynamic(() => import('/components/ui/coin-select-view'));
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
 export default function LoadingView({className, ...rest }) {
     let [visibleCoinList, setVisibleCoinList] = useState(true);
