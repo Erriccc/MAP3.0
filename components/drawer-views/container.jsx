@@ -5,9 +5,9 @@ import { Dialog } from '/components/ui/dialog';
 import { Transition } from '/components/ui/transition';
 import { useDrawer } from '/components/drawer-views/context';
 import { DrawerFilters } from 'pages/search';
-const MobileSidebar = dynamic(() => import('layouts/_mobileViewDashboard-sidebar'));
-const Sidebar = dynamic(() => import('layouts/_dashboard-sidebar'));
-const ProfileSearchFilters = dynamic(() => import('pages/appvendors/ProfileSearchFilters'));
+import MobileSidebar from 'layouts/_mobileViewDashboard-sidebar';
+import Sidebar from 'layouts/_dashboard-sidebar';
+import ProfileSearchFilters from 'pages/appvendors/ProfileSearchFilters';
 
 
 

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import cn from 'classnames';
 import { ChevronDown } from '/components/icons/chevron-down';
@@ -9,7 +9,7 @@ import { coinList } from 'data/static/coin-list'; //
 import { Plus } from '../icons/plus';
 
 // dynamic import
-const ProfileSearchSelect = dynamic(() => import('/components/ui/ProfileSearchSelect'));
+import ProfileSearchSelect from '/components/ui/ProfileSearchSelect';
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
 export default function ProfileModalInput({ label, getCoinValue,  className, ...rest }) {
     // let [value, setValue] = useState('');
