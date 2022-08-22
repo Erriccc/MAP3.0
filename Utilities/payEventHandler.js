@@ -17,7 +17,7 @@ const sameTokenEventHandler = async (event, User, dispatch ) => {
           type: "success",
           message: msg,
           title: "Done",
-          position: "topL",
+          position: "bottomR",
         });
       };
       const handleError= (msg) => {
@@ -25,7 +25,7 @@ const sameTokenEventHandler = async (event, User, dispatch ) => {
           type: "error",
           message: `${msg}`,
           title: "failed",
-          position: "topL",
+          position: "bottomR",
         });
       };
       const handleNoAccount= () => {
@@ -33,7 +33,7 @@ const sameTokenEventHandler = async (event, User, dispatch ) => {
           type: "error",
           message: `You need to connect your wallet to book a rental`,
           title: "Not Connected",
-          position: "topL",
+          position: "bottomR",
         });
       };
 
@@ -146,7 +146,7 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
           type: "success",
           message: msg,
           title: "Done",
-          position: "topL",
+          position: "bottomR",
         });
       };
       const handleError= (msg) => {
@@ -154,7 +154,7 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
           type: "error",
           message: `${msg}`,
           title: "failed",
-          position: "topL",
+          position: "bottomR",
         });
       };
       // new inputed code

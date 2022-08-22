@@ -23,7 +23,7 @@ export default function PayAnonymous({User}) {
           type: "error",
           message: `${msg}`,
           title: "failed",
-          position: "topR",
+          position: "bottomR",
         });
       };
 

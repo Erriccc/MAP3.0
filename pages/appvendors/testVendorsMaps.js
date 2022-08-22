@@ -41,7 +41,7 @@ export default function Rentals () {
       // message: `Nice! Your Transaction was succesful ${map3Querry.destination}!!`,
       message: `Nice! Your Transaction was succesful!!`,
       title: "Booking Succesful",
-      position: "topL",
+      position: "bottomR",
     });
   };
 
@@ -50,7 +50,7 @@ export default function Rentals () {
       type: "error",
       message: `${msg}`,
       title: "Booking Failed",
-      position: "topL",
+      position: "bottomR",
     });
   };
 
@@ -59,7 +59,7 @@ export default function Rentals () {
       type: "error",
       message: `You need to connect your wallet to book a rental`,
       title: "Not Connected",
-      position: "topL",
+      position: "bottomR",
     });
   };
 

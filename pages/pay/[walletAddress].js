@@ -86,7 +86,7 @@ const handleNoAccount= () => {
     type: "error",
     message: `You need to connect your wallet to book a rental`,
     title: "Not Connected",
-    position: "topR",
+    position: "bottomR",
   });
 };
 

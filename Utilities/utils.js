@@ -14,7 +14,9 @@ const Map3Abi = require( './Map3P2PContract.json')
 const Map3VendorsABi = require( './VendorAccountsManagerContract.json')
 const uniVoteAbi = require( './univotetoken.json')
 // const Map3WebsiteUrl = "https://www.map3.com"
-const Map3WebsiteUrl = "http://10.0.0.232:3000"
+const Map3WebsiteUrl = "https://map3.vercel.app/"
+// const Map3WebsiteUrl = "http://10.0.0.232:3000"
+
 const TypoEffectTexts = require('../constants/TypoEffectTexts')
 const PolygonCoinList = require('../constants/coinListPolygon')
 const ReciversCoinList = PolygonCoinList.reciversCoinList;

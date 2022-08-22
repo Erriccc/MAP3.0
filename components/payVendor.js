@@ -37,7 +37,7 @@ export default function PayVendor({walletAddress,vendorsToken,User,vendorsName,v
           type: "error",
           message: `${msg}`,
           title: "failed",
-          position: "topR",
+          position: "bottomR",
         });
       };
     console.log('testing values from paVendor:',walletAddress,vendorsToken,User,vendorsName,vendorsTokenSymbol)

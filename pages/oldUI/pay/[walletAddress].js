@@ -44,7 +44,7 @@ export default function PAY () {
 //       type: "success",
 //       message: `Nice! You are going to ${searchFilters.destination}!!`,
 //       title: "Booking Succesful",
-//       position: "topL",
+//       position: "bottomR",
 //     });
 //   };
 
@@ -53,7 +53,7 @@ export default function PAY () {
 //       type: "error",
 //       message: `${msg}`,
 //       title: "Booking Failed",
-//       position: "topL",
+//       position: "bottomR",
 //     });
 //   };
 
@@ -62,7 +62,7 @@ export default function PAY () {
 //       type: "error",
 //       message: `You need to connect your wallet to book a rental`,
 //       title: "Not Connected",
-//       position: "topL",
+//       position: "bottomR",
 //     });
 //   };
 

@@ -37,7 +37,7 @@ export default function RegisterVendor() {
           type: "success",
           message: msg,
           title: "Done",
-          position: "topL",
+          position: "bottomR",
         });
       };
       const handleError= (msg) => {
@@ -45,7 +45,7 @@ export default function RegisterVendor() {
           type: "error",
           message: `${msg}`,
           title: "failed",
-          position: "topL",
+          position: "bottomR",
         });
       };
       const handleNoAccount= () => {
@@ -53,7 +53,7 @@ export default function RegisterVendor() {
           type: "error",
           message: `You need to connect your wallet to book a rental`,
           title: "Not Connected",
-          position: "topL",
+          position: "bottomR",
         });
       };
 
