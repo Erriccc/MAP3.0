@@ -61,11 +61,11 @@ export default function MyApp({ Component, pageProps }) {
       // serverUrl={MoralisAppUrl}
       initializeOnMount={false}
     >
-        <NotificationProvider>
         <WalletProvider>
           <UrlProvider>
         <ThemeProvider attribute="class" enableSystem={false} defaultTheme="light">
           {/* <Appnav /> */}
+          <NotificationProvider>
 
           <Component {...pageProps} />
           {/* <SettingsButton /> */}
@@ -75,11 +75,12 @@ export default function MyApp({ Component, pageProps }) {
                     <DrawersContainer />
           {/* <Partners/> */}
           {/* <Appfooter/> */}
+        </NotificationProvider>
+
           </ThemeProvider>
           </UrlProvider>
         </WalletProvider>
 
-        </NotificationProvider>
       </MoralisProvider>
      </>
 )
