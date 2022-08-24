@@ -1,0 +1,129 @@
+[
+    {
+      
+        "name": "devMode wallet Jollof Shop on broadway",
+        "city": "New York",
+        "description": "fade trims lineup tapper dreads",
+        "imgUrl":
+          "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/42788e49474248dba75fdfd47114024a/BFV43575_PartyRiceAroundAfrica-FB-V2.jpg",
+        "lat": "41.9177310",
+        "long": "-87.6600848",
+        "walletAddress":"0xBb2cB98982Ed6547aA7E39707807253a999796b7",
+        "distance": "3",
+        "vendorsToken":"0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+        "email": "vendorsEmail@Email.com",
+        "websiteUrl":"testUrl.io",
+        "keyWords": ["developer dao", "Chicago", "usa", "map3", "Jollof"]
+
+      
+    }
+    ,
+    {
+      
+        "name": "main wallet coffee shop on divission",
+        "city": "Chicago",
+        "description": "cofee latte expresso iced cofee",
+        "imgUrl":
+          "https://cdn.pixabay.com/photo/2017/07/31/11/22/man-2557408_1280.jpg",
+        "lat": "41.899110",
+        "long": "-87.691230",
+        "walletAddress":"0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f",
+        "distance": "4",
+        "vendorsToken":"0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+        "email": "vendorsEmail@Email.com",
+        "websiteUrl":"testUrl.io",
+        "keyWords": ["main wallet sports", "Chicago cafe", "usa dao", "divission", "coffee"]
+
+
+
+    },
+    {
+        "name": "Restaurant on Georgia Avenue",
+        "city": "DC",
+        "description": "fries wings burgers burrito fast food",
+        "imgUrl":
+          "https://cdn.pixabay.com/photo/2015/09/21/14/24/supermarket-949913__340.jpg",
+        "lat": "42.011390",
+        "long": "-87.762960",
+        "walletAddress":"0xC1FbB4C2F4CE9eF87d42A0ea49683E0Cfb003f2F",
+        "distance": "5",
+        "vendorsToken":"0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+        "email": "vendorsEmail@Email.com",
+        "websiteUrl":"testUrl.io",
+        "keyWords": ["Restaurant", "DC", "digital", "GeorgiaAvenue", "food"]
+
+    },
+    {
+      "name": "Bakery in NYC",
+      "city": "NYC",
+      "description": "fries wings burgers burrito fast food",
+      "imgUrl":
+        "https://cdn.pixabay.com/photo/2016/11/29/05/07/breads-1867459__480.jpg",
+      "lat": "41.946360",
+      "long": "-87.708790",
+      "walletAddress":"0x7B20363fECAD5F391Cc8838BF1D893dAC98B24Fd",
+      "distance": "5",
+      "vendorsToken":"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    "email": "vendorsEmail@Email.com",
+    "websiteUrl":"testUrl.io",
+    "keyWords": ["Bakery", "NYC", "usa", "GeorgiaAvenue", "bread"]
+
+    
+  },
+  {
+      
+    "name": "Second Restaurant on Georgia Avenue",
+    "city": "DC",
+    "description": "fries wings burgers burrito fast food",
+    "imgUrl":
+      "https://cdn.pixabay.com/photo/2015/09/21/14/24/supermarket-949913__340.jpg",
+    "lat": "41.9042515",
+    "long": "-87.6965529",
+    "walletAddress":"0x93183e906CBc2DeE2e8bBA74b85935169521e1A1",
+    "distance": "5",
+    "vendorsToken":"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    "email": "vendorsEmail@Email.com",
+    "websiteUrl":"testUrl.io",
+    "keyWords": ["Second", "animation", "usa", "GeorgiaAvenue", "Restaurant"]
+
+  
+},
+{
+      
+  "name": "Fresh Fruit Market at fullerton",
+  "city": "Chicago",
+  "description": "fries wings burgers burrito fast food",
+  "imgUrl":
+    "https://cdn.pixabay.com/photo/2019/03/12/09/18/tomatoes-4050245__480.jpg",
+  "lat": "41.9057185",
+  "long": "-87.7114069",
+  "walletAddress":"0xD7265213980F3DB50ACa57634De6e4125985f4A5",
+  "distance": "5",
+  "vendorsToken":"0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+  "email": "vendorsEmail@Email.com",
+  "websiteUrl":"testUrl.io",
+  "keyWords": ["Fresh 3d", "Chicago", "Market grocery", "fullerton", "watermellon"]
+
+  
+
+},
+{
+      
+  "name": "Do Not Send Testing Values",
+  "city": "Chicago",
+  "description": "fries wings burgers burrito fast food",
+  "imgUrl":
+    "https://cdn.pixabay.com/photo/2019/03/12/09/18/tomatoes-4050245__480.jpg",
+  "lat": "41.8425896",
+  "long": "-87.9114069",
+  "walletAddress":"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+  "distance": "5",
+  "vendorsToken":"0x5559Edb74751A0edE9DeA4DC23aeE72cCA6bE3D5",
+  "email": "vendorsEmail@Email.com",
+  "websiteUrl":"testUrl.io",
+  "keyWords": ["Testing", "illustration hotel", "NFTs", "fullerton", "Do Not Send"]
+
+  
+
+}
+]

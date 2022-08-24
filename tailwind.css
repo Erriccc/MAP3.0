@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* 
+@layer components {
+    .end-cursor:after {
+      content: '|';
+      @apply text-secondary-300;
+    }
+  
+    .end-cursor.blinking:after {
+      animation: blink 0.3s step-start infinite;
+    }
+  
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+  } */
+  
+@layer components {
+  
+  .blinking-cursor:after {
+    content: '|';
+    @apply text-secondary-300;
+    animation: blink 0.3s step-start infinite;
+  }
+  
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+}
