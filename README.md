@@ -33,14 +33,9 @@ review ranks will be used to reward the best vendors per /week/month when reward
 review ranks will be reset every week/moth with the hep of chainlink keepers
 ## Getting Started
 
-First, run
-
-```
-npm init
-
 ```
 
-then run the development server:
+first run the development server:
 
 ```bash
 npm install 
@@ -80,7 +75,11 @@ Tokens with fee or tax atached on sale will likely fail to swap from 0x..
 
 
 ## project  details
-current map3 address= "0xD38B508e98B092FA7baBefc30652F1AfFA8c857C"
+Polygon Minnet
+
+  Map3VendorPlansPolgonTest2="0x3095d04AdC87dF6C50A9de0A5106602DB6fc902e" 
+  VendorAccountsManagerContractTest2 = "0x2C6792dB0b81678a784F34C916546A5b292fbeA1"
+
 ##
 Map3 ABI cann be found under Utilities directory
 ##

@@ -2,6 +2,8 @@ import Image from '/components/ui/image';
 import ActiveLink from '/components/ui/links/active-link';
 import { FlashIcon } from '/components/icons/flash';
 import { useMoralis} from 'react-moralis'
+import { WalletContext } from 'lib/hooks/use-connect';
+import {useContext, useEffect } from 'react';
 
 
 function NotificationButton() {
@@ -16,6 +18,7 @@ function NotificationButton() {
 
 export default function AuthorCard({ image, name, role }) {
   const { account } = useMoralis();
+  const { address,error, balance, connectToWallet, disconnectWallet } = useContext(WalletContext);
   
     return (
       <ActiveLink href="/notifications">
@@ -24,23 +27,20 @@ export default function AuthorCard({ image, name, role }) {
       <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-3 bg-gradient-to-r from-green-300 to-gray-300 border-white drop-shadow-main dark:border-gray-400">
       </div>
       <div className="ltr:pl-3 rtl:pr-3">
-        {/* <h3 className="text-sm font-medium uppercase tracking-wide text-gray-900 dark:text-white">
-          {name}
-        </h3> */}
-        {/* <div className="text w-28 grow-0 truncate text-ellipsis bg-center text-xs text-gray-500 ltr:pl-4 rtl:pr-4 dark:text-gray-300 sm:w-32 sm:text-sm">
-                    {account}
-                  </div> */}
-        <span className="rounded-lg bg-gray-100 px-2 py-1 text-sm tracking-tighter dark:bg-gray-800">
-            {account?.slice(0, 6)}
-            {'...'}
-            {account?.slice(account.length - 6)}
-          </span>
-        {/* <span className="mt-1 block text-xs text-gray-600 dark:text-gray-400">
-          {role}
-        </span> */}
-
+        {account && (
+        <div className=''>
+              <span className="rounded-lg bg-gray-100 px-2 py-1 text-sm tracking-tighter dark:bg-gray-800">
+                  {account?.slice(0, 6)}
+                  {'...'}
+                  {account?.slice(account.length - 6)}
+                </span>
+                
+                    <div className="mt-3 font-medium uppercase tracking-wider text-gray-900 dark:text-white">
+                    {balance?.slice(0, 8)} ETH
+                  </div>
+          </div>
+                      )}
       </div>
-      {/* <NotificationButton /> */}
 
     </div>
     </ActiveLink>

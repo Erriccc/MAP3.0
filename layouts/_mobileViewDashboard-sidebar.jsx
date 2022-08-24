@@ -18,7 +18,8 @@ import { Close } from '/components/icons/close';
 import { PlusCircle } from '/components/icons/plus-circle';
 import { CompassIcon } from '/components/icons/compass';
 import SettingsButton from '/components/settings/settings-button';
-
+import { useMoralis } from "react-moralis";
+import { ConnectButton, Icon, Select, DatePicker, Input } from "web3uikit";
 //images
 import AuthorImage from 'assets/images/author.jpg';//
 const menuItems = [
@@ -97,10 +98,49 @@ const menuItems = [
     //     ],
     // },
 ];
+
+
+
+
+const d = new Date();
+let time = d.getTime();
+console.log(time)
+function getRandomNonce (_time){
+  let randomString1 = randomString(10);
+  let randomString2 = randomString(20);
+  let randomString13 = randomString(3);
+  let finalRandomString = Math.random()*10**3
+let stringifiedTime = _time.toString()
+  let salt = randomString1 + randomString2 + randomString13 +finalRandomString +stringifiedTime
+  return salt
+
+}
+
+// randomString(Math.random(time)*10**3)
+const randomString = function(length) {
+
+  var text = "fghjkl;po8765rfvbnmlp0987632qwsdfghu76tghjui876tgbnkjbvfrtyhjkl;';/'.,mjhgfvbnjhtred";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?><:}{|=-)(*#@!$%";
+  for(var i = 0; i < length; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
+
+
+
+
+
+
+
+
+
 // _mobileViewDashboard-sidebar MobileSidebar
 export default function MobileSidebar({ className }) {
     const { closeDrawer } = useDrawer();
-    const router = useRouter()
+    const router = useRouter();
+  const {isAuthenticated, account } = useMoralis();
+
     return (<aside className={cn('top-0 z-40 h-full w-full max-w-full border-dashed border-gray-200 bg-body ltr:left-0 ltr:border-r rtl:right-0 rtl:border-l dark:border-gray-700 dark:bg-dark xs:w-80   xl:w-72 2xl:w-80', className)}>
       <div className="relative flex h-24 items-center justify-between overflow-hidden px-6 py-4 2xl:px-8">
         {/* <Logo /> */}
@@ -122,7 +162,13 @@ export default function MobileSidebar({ className }) {
 
       <Scrollbar style={{ height: 'calc(100% - 96px)' }}>
         <div className="px-6 pb-5 2xl:px-8">
+          {/* <AuthorCard image={AuthorImage} name="Map3 User" role="admin"/> */}
+          {account ? (
+          
           <AuthorCard image={AuthorImage} name="Map3 User" role="admin"/>
+          ):(
+            <ConnectButton  signingMessage={getRandomNonce(time)}/> 
+          )}
           <div className="mt-12">
             {menuItems && menuItems.map((item, index) => (<MenuItem key={index} name={item.name} href={item.href} icon={item.icon} dropdownItems={item.dropdownItems}/>))}
           </div>

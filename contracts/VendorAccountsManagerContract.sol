@@ -91,16 +91,21 @@ bool internal locked;
         return true;
         }
 
+ function  setVendorKeyWords(string[] memory keyWords) public returns (bool){
+            require(isVendor[address(msg.sender)] , " not  a Vendor" );
+            VendorList[VendorId[address(msg.sender)]].keyWords = keyWords;
+        return true;
+        }
     function  setVendorName(string memory _newName) public returns (bool){
             require(isVendor[address(msg.sender)] , " not  a Vendor" );
             VendorList[VendorId[address(msg.sender)]].vendorsName = _newName;
         return true;
         }
-    function  setVendorBio(string memory _newBio) public returns (bool){
-            require(isVendor[address(msg.sender)] , " not  a Vendor" );
-            VendorList[VendorId[address(msg.sender)]].vendorsBio = _newBio;
-        return true;
-        }
+    // function  setVendorBio(string memory _newBio) public returns (bool){
+    //         require(isVendor[address(msg.sender)] , " not  a Vendor" );
+    //         VendorList[VendorId[address(msg.sender)]].vendorsBio = _newBio;
+    //     return true;
+    //     }
 
         function  setVendorEmail(string memory _newEmail) public returns (bool){
             require(isVendor[address(msg.sender)] , " not  a Vendor" );
@@ -118,22 +123,18 @@ bool internal locked;
                 VendorList[VendorId[address(msg.sender)]].vendorsImageUrl = _newImageUrl;
             return true;
             }
-    function  setVendorLatAndLong(string memory _newLat, string memory _newLong) public returns (bool){
+    function  setVendorsGeoLocation(string memory _newLat, string memory _newLong) public returns (bool){
         require(isVendor[address(msg.sender)] , " not  a Vendor" );
-        VendorList[VendorId[address(msg.sender)]].vendorsLat = _newLat;
-        VendorList[VendorId[address(msg.sender)]].vendorsLong = _newLong;
+        VendorList[VendorId[address(msg.sender)]].vendorsGeoLocation = [_newLat, _newLong];
     return true;
     }
 
 struct signUpVendor{
     address vendorsWalletAddress;
     string vendorsName;
-    string vendorsStreetAddress;// Note street city state and zip only goes to events when vendor is created
-    string vendorsCity;// Note city state and zip only goes to events when vendor is created
-    string vendorsState;// Note city state and zip only goes to events when vendor is created
-    string vendorsZip;// Note city state and zip only goes to events when vendor is created
     string vendorsEmail;
     string vendorsBio;
+    string[] keyWords;
     string vendorsLat;
     string vendorsLong;
     string vendorsImageUrl;
@@ -144,30 +145,20 @@ struct Vendor {
     address vendorsWalletAddress;
     string vendorsName;
     string vendorsEmail;
-    string vendorsBio;
-    string vendorsLat;
-    string vendorsLong;
+    // string vendorsBio;
+    string[] keyWords;
+    string[2] vendorsGeoLocation;
+    // string vendorsLong;
     string vendorsImageUrl;
     string vendorsWebsiteUrl;
     uint256 vendorsId;
     IERC20 vendorsToken;
  }
 
-event VendorCreated (
-    address vendorsWalletAddress,
-    string vendorsName,
-    string vendorsStreetAddress,
-    string vendorsCity,
-    string vendorsState,
-    string vendorsZip,
-    string vendorsEmail
-); //VendorCreated(address,string,string,string,string,string,string)
 event newVendorInfo(  
-    string vendorsBio,
-    string vendorsLat,
-    string vendorsLong,
-    string vendorsImageUrl,
-    string vendorsWebsiteUrl,
+    address vendorsWalletAddress,
+    string[7] vendorDetails,
+    string[] keyWords,
     uint256 vendorsId,
     IERC20 vendorsToken
 ); //newVendorInfo(string,string,string,string,string,uint256,IERC20)
@@ -184,13 +175,12 @@ event newVendorInfo(
     // VendorId[address(msg.sender)] = VendorIdCount;
     VendorId[_signUpVendor.vendorsWalletAddress] = VendorIdCount;
     VendorList.push(Vendor({
-        // vendorsWalletAddress: address(msg.sender),
         vendorsWalletAddress: _signUpVendor.vendorsWalletAddress,
         vendorsName: _signUpVendor.vendorsName,
         vendorsEmail: _signUpVendor.vendorsEmail,
-        vendorsBio: _signUpVendor.vendorsBio,
-        vendorsLat: _signUpVendor.vendorsLat,
-        vendorsLong: _signUpVendor.vendorsLong,
+        // vendorsBio: _signUpVendor.vendorsBio,
+        keyWords: _signUpVendor.keyWords,
+        vendorsGeoLocation: [_signUpVendor.vendorsLat,_signUpVendor.vendorsLong],        
         vendorsImageUrl: _signUpVendor.vendorsImageUrl,
         vendorsWebsiteUrl: _signUpVendor.vendorsWebsiteUrl,
         vendorsId: VendorId[address(msg.sender)],
@@ -200,21 +190,20 @@ event newVendorInfo(
     // give new vendors free trial for subscription
     freeTrialSubscribtion(_signUpVendor.vendorsWalletAddress);
 
-    emit VendorCreated(
-    _signUpVendor.vendorsWalletAddress,
+string[7] memory _vendorDetails = [
     _signUpVendor.vendorsName,
-    _signUpVendor.vendorsStreetAddress,
-    _signUpVendor.vendorsCity,
-    _signUpVendor.vendorsState,
-    _signUpVendor.vendorsZip,
-    _signUpVendor.vendorsEmail
-    );
-    emit newVendorInfo(
+    _signUpVendor.vendorsEmail,
     _signUpVendor.vendorsBio,
     _signUpVendor.vendorsLat,
     _signUpVendor.vendorsLong,
     _signUpVendor.vendorsImageUrl,
-    _signUpVendor.vendorsWebsiteUrl,
+    _signUpVendor.vendorsWebsiteUrl
+    ];
+    
+    emit newVendorInfo(
+    _signUpVendor.vendorsWalletAddress,
+    _vendorDetails,
+    _signUpVendor.keyWords,
     VendorId[address(msg.sender)],
     _signUpVendor.vendorsToken
         );
@@ -293,6 +282,12 @@ function checkIsVendorActive(address _account) external view returns (bool){
 function getVendorEmail(address _account) external view  returns (string memory){
         return VendorList[VendorId[_account]].vendorsEmail;
 }
+
+
+ function  getVendorKeyWords(address _vendorsAddress) public view returns (string[] memory){
+            require(isVendor[_vendorsAddress] , " not  a Vendor" );
+        return VendorList[VendorId[_vendorsAddress]].keyWords;
+        }
 
 function getVendorId(address _account) external view returns (uint){
         return VendorId[_account];
@@ -483,5 +478,23 @@ function deletePlan(uint planId) onlyOwner public  returns(bool){
 }
 
 // [    "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2",    "Testing tupple formart2",    "Living on cloud 9-2",    "chicago-2",    "IL",    "60622",    "123-456-7890",    "Connect vendors in map3.0-2",    "40.716862",    "-73.999005",    "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",    "https://github.com/Erriccc",    "0xd9145CCE52D386f254917e481eB44e9943F39138" ]
+// [    "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2",    "name Testing tupple formart2", "email 123-456-7890",    "bio Living on cloud 9-2",    ["keywords", "testing","testing 2","etc.."],"lat 40.716862",    "long -73.999005",    "image url https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",    "vendorsWebsiteUrl https://github.com/Erriccc",    "0xd9145CCE52D386f254917e481eB44e9943F39138" ]
 
+
+
+
+
+// struct signUpVendor{
+//     address vendorsWalletAddress;
+//     string vendorsName;
+//     string vendorsEmail;
+//     string vendorsBio;
+//     string[] keyWords;
+//     string vendorsLat;
+//     string vendorsLong;
+//     string vendorsImageUrl;
+//     string vendorsWebsiteUrl;
+//     IERC20 vendorsToken;
+// }
+//0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f
 //0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270 // POLYGON_WRAPPED_MATIC_ADDRESS
