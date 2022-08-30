@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNotification } from "web3uikit";
 const {oxPriceFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
 import Utils from'/Utilities/utils';
 import{PaymentInputValidator} from '/Utilities/FrontEndUtilities/FEpaymentUserInputValidator'
-import{oxSwapEventHandler, sameTokenEventHandler, oxSwapERC20ToEth} from '/Utilities/FrontEndUtilities/FEpayEventHandler';
+import{paymentTypeLogicServer} from '/Utilities/FrontEndUtilities/FEpaymentTypeLogicServer';
 import { useMoralis, } from 'react-moralis';
 import { useRouter } from "next/dist/client/router"; // use to reroute after transaction is processed
-// import dynamic from 'next/dynamic';
+import { WalletContext } from 'lib/hooks/use-connect';
+
 import Spinner from '/components/spinner';
 import cn from 'classnames';
 import { NextSeo } from 'next-seo';
@@ -23,10 +24,11 @@ import ProcessingView from '/components/ui/ProcessingView';
 import ReciversCoinInput from '/components/reciversCoinInput';
 import SendersCoinInput from '/components/sendersCoinInput';
 
-
+ 
 
 export default function PayAnonymous() {
     const { Moralis, account } = useMoralis();
+    const { address} = useContext(WalletContext);
 
     const dispatch = useNotification();
      const handleSuccess= (msg) => {
@@ -55,53 +57,8 @@ export default function PayAnonymous() {
     };
 // add input for expected slippage amount to complete swap!
     const submitPayment = async (UsertransactionInput) => {
-
-/////// SWAP From ERC20 To ETH or Native Token
-  if(UsertransactionInput.reciversToken == Utils.EthAddress && UsertransactionInput.sendersToken !== Utils.EthAddress){
-    try{
-      await oxSwapERC20ToEth(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing,setTransacting);
-
-    }catch(e){
-
-    }
-
-  }else if
-
-  // /// SWAP ETH TO WETH
-    (UsertransactionInput.sendersToken == Utils.EthAddress &&  UsertransactionInput.reciversToken == Utils.WethAddress ){
-
-            try{
-              await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting, true);
-
-            }catch(e){
-
-            }
-
-    } else{
-
-
-      // listenForMap3Events();
-          if (UsertransactionInput.sendersToken == UsertransactionInput.reciversToken) {
-              try{
-                    console.log("both tokens are the same", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
-                    await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting,false);
-
-              }catch(e){
-
-              }
-          } else {
-            try{
-                  console.log("different tokens", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
-                  await oxSwapEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing,setTransacting );
-                }catch(e){
-
-                }
-          }
-    }
-
+      await paymentTypeLogicServer(Moralis.connector.provider, UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing , setTransacting)
     };
-
-
     
     const [sendersTokenBalance, setSendersTokenBalance] = React.useState("0");
     const [rate, setRate] = React.useState(1); // Echange rate .. gotten from 0x api
@@ -164,7 +121,7 @@ export default function PayAnonymous() {
         loadUsersBalances()
         document.documentElement.style.removeProperty('overflow');
         return () => { isMounted = false };
-      }, [sendersToken, reciversToken,amountToBeSent, userSlippage, quote]);
+      }, [sendersToken, reciversToken,amountToBeSent, userSlippage, quote, account, address]);
 
 
       return (<>

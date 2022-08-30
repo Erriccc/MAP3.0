@@ -121,6 +121,12 @@ const getCurrentWalletAddress = async () => {
     }
 return web3Address
 }
+const getSigner = async (connection) => {
+    const _provider = new ethers.providers.Web3Provider(connection)
+    const signer = _provider.getSigner();
+        console.log("signer:", signer)
+return signer
+}
 
 
 
@@ -276,15 +282,7 @@ const getUserNativeBalanceInWei = async (owner) => {
 }
 
 
-function getKeyWordArray (UserInput){
-    if (!UserInput.vendorKeywords){
-        return ['']
-    }else if (UserInput.vendorKeywords.legnth > 1){
-        return UserInput.vendorKeywords.split(/[, ]+/)
-    }else {
-        return UserInput.vendorKeywords
-    }
-}
+
 
 
 
@@ -663,6 +661,7 @@ module.exports = {
     EthAddress,
     WethAddress,
     getCurrentWalletAddress,
+    getSigner,
     ReciversCoinList,
     SendersCoinList,
     PolygonCoinList,
@@ -679,7 +678,7 @@ module.exports = {
     MAPSTYLE,
     MAPBOXACCESSTOKEN,
     web3StorageToken,
-    getKeyWordArray,
+    // getKeyWordArray,
 
 };
 

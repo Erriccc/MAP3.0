@@ -28,7 +28,7 @@ const newSampleVendor = [
 
 
 
-const signUpTransactionRelayer = async (UserInput, txValue ) => {
+const signUpTransactionRelayer = async (signer, UserInput, txValue ) => {
 
     
 let testImageUrl;
@@ -47,7 +47,7 @@ const manp3SignUpUserInput = {
     vendorsName: UserInput.userName,
     vendorsEmail: UserInput.email,
     vendorsBio: UserInput.aboutVendor,
-    keyWords: Utils.getKeyWordArray(UserInput),// testing split function
+    keyWords:getKeyWordArray(UserInput),// testing split function
     // keyWords: UserInput.vendorKeywords.split(/[, ]+/),
     // vendorsLat: get(lat), // UserInput.geoAddress
     // vendorsLong: get(long), // UserInput.geoAddress
@@ -87,7 +87,7 @@ const manp3SignUpUserInput = {
             const result = await response.json()
             const txdata = result.txdata
             console.log("txdata..... from signUpTransactionRelayer: ", txdata)
-            const tx2 = await  map3SignUpExecutor(txdata, txValue) // New Implementation of backend transact    ions
+            const tx2 = await  map3SignUpExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
             // const tx2 = await  map3SignUpExecutor(txdata, 0) // New Implementation of backend transact    ions
             return (tx2)
         }
@@ -125,4 +125,15 @@ const getImageUrl = async (UserInput) => {
 
 }
 
-module.exports = {signUpTransactionRelayer,getImageUrl }//
+function getKeyWordArray (UserInput){
+  if (!UserInput.vendorKeywords){
+      return ['','']
+  }else if (UserInput.vendorKeywords.legnth < 1){
+        return UserInput.vendorKeywords
+  }else {
+        return UserInput.vendorKeywords.split(/[, ]+/)
+
+  }
+}
+
+module.exports = {signUpTransactionRelayer,getImageUrl, getKeyWordArray }//

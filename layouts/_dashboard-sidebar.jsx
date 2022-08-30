@@ -3,7 +3,7 @@ import AuthorCard from '/components/ui/author-card';
 import Logo from '/components/ui/logo';
 import { MenuItem } from '/components/ui/collapsible-menu';
 import Scrollbar from '/components/ui/scrollbar';
-import Button from '/components/ui/button';
+import Button from '/components/ui/button'; 
 import { useRouter } from "next/dist/client/router";
 import routes from 'config/routes';
 import { useDrawer } from '/components/drawer-views/context';
@@ -19,7 +19,7 @@ import { PlusCircle } from '/components/icons/plus-circle';
 import { CompassIcon } from '/components/icons/compass';
 import SettingsButton from '/components/settings/settings-button';
 import { useMoralis } from "react-moralis";
-import { ConnectButton, Icon, Select, DatePicker, Input } from "web3uikit";
+// import { ConnectButton, Icon, Select, DatePicker, Input } from "web3uikit";
 
 //images
 import AuthorImage from 'assets/images/author.jpg';//
@@ -83,31 +83,6 @@ const menuItems = [
 
 
 
-const d = new Date();
-let time = d.getTime();
-console.log(time)
-function getRandomNonce (_time){
-  let randomString1 = randomString(10);
-  let randomString2 = randomString(20);
-  let randomString13 = randomString(3);
-  let finalRandomString = Math.random()*10**3
-let stringifiedTime = _time.toString()
-  let salt = randomString1 + randomString2 + randomString13 +finalRandomString +stringifiedTime
-  return salt
-
-}
-
-// randomString(Math.random(time)*10**3)
-const randomString = function(length) {
-
-  var text = "fghjkl;po8765rfvbnmlp0987632qwsdfghu76tghjui876tgbnkjbvfrtyhjkl;';/'.,mjhgfvbnjhtred";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?><:}{|=-)(*#@!$%";
-  for(var i = 0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-}
-
 
 export default function Sidebar({ className }) {
     const { closeDrawer } = useDrawer();
@@ -141,13 +116,13 @@ export default function Sidebar({ className }) {
           
           <AuthorCard image={AuthorImage} name="Map3 User" role="admin"/>
           ):(
-            <ConnectButton  signingMessage={getRandomNonce(time)}/> 
+            // <ConnectButton  signingMessage={getRandomNonce(time)}/> 
+            <div>Connect Button Place Holder</div>
           )}
           <div className="mt-12">
             {menuItems && menuItems.map((item, index) => (<MenuItem key={index} name={item.name} href={item.href} icon={item.icon} dropdownItems={item.dropdownItems}/>))}
           </div>
         <div className="relative h-12 w-1/3 px-6 pb-5 2xl:px-8">
-          <SettingsButton />
           </div>
 
         </div>

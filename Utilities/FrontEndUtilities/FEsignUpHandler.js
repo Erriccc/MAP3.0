@@ -2,13 +2,13 @@ import Utils from'/Utilities/utils';
  import{signUpTransactionRelayer} from "./FEsignUpTransactionRelayer"
 
 
-const signUpEventHandler = async (UsertransactionInput, handleSuccess,handleError, setSystemProcessing , setTransacting) => {
+const signUpEventHandler = async (signer, UsertransactionInput, handleSuccess,handleError, setSystemProcessing , setTransacting) => {
     setSystemProcessing(true)
     try{
 
-        await signUpTransactionRelayer(UsertransactionInput,0 )
+        await signUpTransactionRelayer(signer, UsertransactionInput,0 )
         //alert("approval succesful")
-        handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
+        handleSuccess(`Success!`)
 
         } catch(err){
         //   setTransacting(false)
@@ -24,7 +24,7 @@ const signUpEventHandler = async (UsertransactionInput, handleSuccess,handleErro
             }
         }
         setSystemProcessing(false)
-        handleSuccess(`signUp succsesful..`)
+        handleSuccess(`Welcome, Thank you for joining Map3`)
 
 
 }

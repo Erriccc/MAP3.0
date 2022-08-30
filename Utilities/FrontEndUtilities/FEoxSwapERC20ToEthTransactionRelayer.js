@@ -3,7 +3,7 @@ import { map3OxMap3SwapERC20ToEthEndpoint} from'/Utilities/utils';
 import {OxErc20ToEthPayExecutor} from '/Utilities/apiUtils'
 
 
-const oxSwapERC20ToEthTransactionRelayer = async (oxQuoteResult, txValue ) => {
+const oxSwapERC20ToEthTransactionRelayer = async (signer, oxQuoteResult, txValue ) => {
 
      const map3OxPayTransferData = {
 
@@ -44,7 +44,7 @@ const oxSwapERC20ToEthTransactionRelayer = async (oxQuoteResult, txValue ) => {
 
 
 
-        const tx2 = await  OxErc20ToEthPayExecutor(txdata, txValue) // New Implementation of backend transact    ions
+        const tx2 = await  OxErc20ToEthPayExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
         return (tx2)
 
 }

@@ -16,6 +16,8 @@ import AuthorInformation from '/components/author/author-information';
 import { useUrlContext } from "/Utilities/FrontEndUtilities/FEUrlContext";
 import { UrlContext } from "/Utilities/FrontEndUtilities/FEUrlContext";
 import { useModal } from '/components/modal-views/context';
+import{paymentTypeLogicServer} from '/Utilities/FrontEndUtilities/FEpaymentTypeLogicServer';
+import { WalletContext } from 'lib/hooks/use-connect';
 
 // {vendorDataState.dataFromServer?.walletAddress}
 
@@ -44,15 +46,14 @@ import SendersCoinInput from '/components/sendersCoinInput';
 const PayVendorPage = () => {
   let router = useRouter();
   const {walletAddress} = router.query;
-  const { account } = useMoralis();
+  const { Moralis, account } = useMoralis();
+  const { address} = useContext(WalletContext);
+
   const { currentUrl,setCurrentUrl} = useUrlContext();
   const { openModal } = useModal();
   
 
-
-
-
-    const address = account;
+    // const address = account;
     let [copyButtonStatus, setCopyButtonStatus] = useState(false);
     let [_, copyToClipboard] = useCopyToClipboard();
     const handleCopyToClipboard = () => {
@@ -92,49 +93,7 @@ const handleNoAccount= () => {
 
 // add input for expected slippage amount to complete swap!
     const submitPayment = async (UsertransactionInput) => {
-
-/////// SWAP From ERC20 To ETH or Native Token
-  if(UsertransactionInput.reciversToken == Utils.EthAddress && UsertransactionInput.sendersToken !== Utils.EthAddress){
-    try{
-      await oxSwapERC20ToEth(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing,setTransacting);
-
-    }catch(e){
-
-    }
-
-  }else if
-
-  // /// SWAP ETH TO WETH
-    (UsertransactionInput.sendersToken == Utils.EthAddress &&  UsertransactionInput.reciversToken == Utils.WethAddress ){
-
-            try{
-              await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting, true);
-
-            }catch(e){
-
-            }
-
-    } else{
-
-
-      // listenForMap3Events();
-          if (UsertransactionInput.sendersToken == UsertransactionInput.reciversToken) {
-              try{
-                    console.log("both tokens are the same", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
-                    await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting,false);
-
-              }catch(e){
-
-              }
-          } else {
-            try{
-                  console.log("different tokens", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
-                  await oxSwapEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing,setTransacting );
-                }catch(e){
-
-                }
-          }
-    }
+      await paymentTypeLogicServer(Moralis.connector.provider, UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing , setTransacting)
 
     };
 
@@ -244,7 +203,7 @@ const handleNoAccount= () => {
     }
     document.documentElement.style.removeProperty('overflow');
     return () => { isMounted = false };
-}, [walletAddress, router])
+}, [walletAddress, router, address, account])
 
 
 

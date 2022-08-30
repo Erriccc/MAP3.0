@@ -5,7 +5,7 @@ import { WalletContext } from 'lib/hooks/use-connect';
 import { useModal } from '/components/modal-views/context';
 import { useMoralis } from 'react-moralis'
 import { useContext, useEffect, useState } from 'react';
-import { ConnectButton} from "web3uikit";
+// import { ConnectButton} from "web3uikit";
 import FeaturedCard from '/components/nft/featured-card';
 import InputLabel from '/components/ui/input-label';
 import { Switch } from '/components/ui/switch';
@@ -21,7 +21,7 @@ import{signUpEventHandler,ValidateUserSignUpInput} from '/Utilities/FrontEndUtil
 
 import ProcessingView from '/components/ui/ProcessingView';
 
-
+ 
 
 export default function Final() {
 
@@ -30,7 +30,8 @@ const  [files, setFiles] = useState({userData})
 let [systemProcessing, setSystemProcessing] = useState(false);
   let [validatingInput, setvalidatingInput] = useState(false);
   let [transacting, setTransacting] = useState(false);
-      const {account} = useMoralis()
+  const { Moralis, account } = useMoralis();
+
       const dispatch = useNotification();
 
       const handleSuccess= (msg) => {
@@ -58,9 +59,10 @@ let [systemProcessing, setSystemProcessing] = useState(false);
       }, [account])
 
       const submitPayment = async (UsertransactionInput) => {
-
+        const wrappedProvider = new Utils.ethers.providers.Web3Provider(Moralis.connector.provider);
+        const wrappedSigner = wrappedProvider.getSigner();
         try{
-          await signUpEventHandler(UsertransactionInput, handleSuccess,handleError, setSystemProcessing, setTransacting);
+          await signUpEventHandler(wrappedSigner, UsertransactionInput, handleSuccess,handleError, setSystemProcessing, setTransacting);
         }catch(e){
         }
       };
