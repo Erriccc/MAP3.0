@@ -8,16 +8,32 @@ import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext
 import InputLabel from '/components/ui/input-label';
 import Input from '/components/ui/forms/input';
 import { Switch } from '/components/ui/switch';
+import useInput from "/lib/hooks/useInput";
 
 export default function GeoAddress() {
+  const address = useInput("");
+
   const { userData, setUserData } = useStepperContext();
   let [hasGeoAddress, setHasGeoAddress] = useState(true);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
+  const handleGeoCode = (suggestion) => {
+        const addrressLong = suggestion.geometry.coordinates[0]
+        const addrressLat = suggestion.geometry.coordinates[1]
+        const addrressName = suggestion.place_name
+
+    setUserData({ ...userData, ["geoAddress"]: 
+    {
+      name:addrressName,
+      long: addrressLong,
+      lat: addrressLat
+    } });
+      console.log('long and lat', addrressLong, addrressLat)
+      address.setValue(suggestion.place_name);
+      address.setSuggestions([]);
+
+
   };
-  return (
+  return ( 
     <div className="flex flex-col ">
        <div className="flex items-center justify-between gap-4 mt-5">
                         <InputLabel  subTitle="Add physical address to your profile"/>
@@ -33,20 +49,29 @@ export default function GeoAddress() {
                         </div>
                     </div>
                     {hasGeoAddress && (
-                    
-                    //   <PriceType value={priceType} onChange={setPriceType}/>
                     <div className="mb-8">
                     <InputLabel title="address" />
-                    <Input  placeholder="123 street Avenue" inputClassName="spin-button-hidden"
-                    value={userData["geoAddress"] || ""}
-                    onChange={(e)=>{
-                        handleChange(e)
-                    }}
+                    <Input  autoComplete="off" placeholder="123 street Avenue" inputClassName="spin-button-hidden"
+                    value={userData.geoAddress ? userData.geoAddress?.name : ""}
+                    // value={address? address : ""}
+                    {...address}
                     name="geoAddress"
                     />
-                </div>
-                    )}
-
+        {address.suggestions?.length > 0 && (
+            <ul role="listbox" className="py-3">
+                {address.suggestions.map((suggestion, index) => {
+                  return (
+                    <li key={index} role="listitem" tabIndex={index} onClick={() => handleGeoCode(suggestion)} className="mb-1 flex cursor-pointer items-center gap-3 py-1.5 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-600">
+                        <span className="text-sm tracking-tight text-gray-600 dark:text-white">
+                          {suggestion.place_name}
+                        </span>
+                      </li>
+                    );
+                  })}
+            </ul>
+              )}
+        </div>
+      )}
     </div>
   );
 }

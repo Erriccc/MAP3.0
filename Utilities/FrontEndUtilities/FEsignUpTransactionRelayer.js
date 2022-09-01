@@ -51,8 +51,8 @@ const manp3SignUpUserInput = {
     // keyWords: UserInput.vendorKeywords.split(/[, ]+/),
     // vendorsLat: get(lat), // UserInput.geoAddress
     // vendorsLong: get(long), // UserInput.geoAddress
-    vendorsLat: "41.881832",
-    vendorsLong: "-87.623177",
+    vendorsLat: UserInput.geoAddress?.lat? UserInput.geoAddress.lat : "41.881832",
+    vendorsLong: UserInput.geoAddress?.long? UserInput.geoAddress.long : "-87.623177",
     // vendorsImageUrl: get(imageUrl), // UserInput.imageUrl || UserInput.userImage[0]
     vendorsImageUrl: testImageUrl ? testImageUrl :"https://pbs.twimg.com/profile_images/1461343110215225349/oxAN3Dve_400x400.jpg",
     vendorsWebsiteUrl: UserInput.websiteUrl,

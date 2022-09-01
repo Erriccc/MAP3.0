@@ -125,11 +125,11 @@ let [systemProcessing, setSystemProcessing] = useState(false);
                 <div className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
                     Wallet Address
                 </div>
-                { userData?.userWallet ? (<div className="text-sm leading-6 tracking-tighter text-gray-600 dark:text-gray-400">
-                    {userData.userWallet}
+                { account? (<div className="text-sm leading-6 tracking-tighter text-gray-600 dark:text-gray-400">
+                    {account}
                 </div>):(
                     <div className="text-sm leading-6 tracking-tighter text-red-600 dark:text-red-400">
-                        please enter a valid Wallet Address to proceed
+                        please sign in with your desired wallet to continue
                     </div>
                 )}
 
@@ -161,7 +161,7 @@ let [systemProcessing, setSystemProcessing] = useState(false);
          onClick={
           () => {
               let UsertransactionInput = {
-                userWallet: userData.userWallet,
+                userWallet: account,
                 userName: userData.userName,
                 email: userData.email ? userData.email: null,
                 aboutVendor: userData.aboutVendor ? userData.aboutVendor : null,

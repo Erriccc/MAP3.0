@@ -15,10 +15,9 @@ import Details from '/components/RegistrationFormSteps/Details';
 import UploadImage from '/components/RegistrationFormSteps/UploadImage';
 import GeoAddress from '/components/RegistrationFormSteps/GeoAddress';
 import Currency from '/components/RegistrationFormSteps/Currency';
-import Wallet from '/components/RegistrationFormSteps/Wallet';
 import Final from '/components/RegistrationFormSteps/Final';
 
-
+import ConfirmationModal from '/components/nft/ConfirmationModal.jsx'
 
 
 
@@ -45,7 +44,6 @@ function RegisterVendor() {
     "Upload Image",
     "Geographical Address",
     "Currency",
-    "Wallet address",
     "Complete"
   ];
 
@@ -60,8 +58,6 @@ function RegisterVendor() {
       case 4:
         return <Currency />;
       case 5:
-        return <Wallet />;
-      case 6:
         return <Final />;
       default:
     }
@@ -87,15 +83,16 @@ function RegisterVendor() {
     <>
     <NextSeo title="sign up" description="Map3 - sign up new vendor profiles"/>
     <DashboardLayout>
-      <div className="horizontal container mt-5 ">
+      {/* <div className="horizontal container mt-5 ">
         <Stepper steps={steps} currentStep={currentStep} handleClick={handleClick} />
 
         <div className="my-10 p-10 ">
           <UseContextProvider>{displayStep(currentStep)}</UseContextProvider>
         </div>
-      </div>
+      </div> */}
 
       {/* navigation button */}
+      <ConfirmationModal confirmationTitle = "Payment was successful"/>
       {currentStep !== steps.length && (
         <StepperControl
           handleClick={handleClick}
