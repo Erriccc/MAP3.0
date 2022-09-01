@@ -117,7 +117,8 @@ export default function Sidebar({ className }) {
           <AuthorCard image={AuthorImage} name="Map3 User" role="admin"/>
           ):(
             // <ConnectButton  signingMessage={getRandomNonce(time)}/> 
-            <div>Connect Button Place Holder</div>
+            // <div>Connect Button Place Holder</div>
+            <div></div>
           )}
           <div className="mt-12">
             {menuItems && menuItems.map((item, index) => (<MenuItem key={index} name={item.name} href={item.href} icon={item.icon} dropdownItems={item.dropdownItems}/>))}

@@ -55,7 +55,7 @@ export default function Wallet({ ...props }) {
       </p>
       <div className='mt-12 flex h-14 w-full cursor-pointer items-center justify-center rounded-lg '>
           {/* <ConnectButton />  */}
-          Connect Button Place Holder
+          {/* Connect Button Place Holder */}
     </div>
 
     <HelpSettingUpWallet/>

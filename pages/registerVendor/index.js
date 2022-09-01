@@ -83,16 +83,16 @@ function RegisterVendor() {
     <>
     <NextSeo title="sign up" description="Map3 - sign up new vendor profiles"/>
     <DashboardLayout>
-      {/* <div className="horizontal container mt-5 ">
+      <div className="horizontal container mt-5 ">
         <Stepper steps={steps} currentStep={currentStep} handleClick={handleClick} />
 
         <div className="my-10 p-10 ">
           <UseContextProvider>{displayStep(currentStep)}</UseContextProvider>
         </div>
-      </div> */}
+      </div>
 
       {/* navigation button */}
-      <ConfirmationModal confirmationTitle = "Payment was successful"/>
+      {/* <ConfirmationModal confirmationTitle = "Payment was successful"/> */}
       {currentStep !== steps.length && (
         <StepperControl
           handleClick={handleClick}
