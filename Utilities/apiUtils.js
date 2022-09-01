@@ -36,6 +36,13 @@ const {
 
 } = require('/Utilities/utils')
 
+
+
+const API_MoralisAppId = process.env.MORALIS_API_ID;
+const API_MoralisAppUrl = process.env.MORALIS_APP_URL;
+const API_web3StorageToken = process.env.WEB3_STORAGE_TOKEN;
+// const MoralisEndpoint = '/api/oxQuoteHandler'
+
 // 'use strict'
 
 // //providers.JsonRpcProvider()
@@ -150,12 +157,12 @@ const {
 
 
   // WRITE FUNCTION FOR FRONT END!!
-  const approveSendersTokenExecutor = async (spenderTokenAddress,approveTokenData) => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-    const aprovalSigner = provider.getSigner()
+  const approveSendersTokenExecutor = async (signer, spenderTokenAddress,approveTokenData) => {
+    // const provider = new ethers.providers.Web3Provider(window.ethereum)
+    // const aprovalSigner = provider.getSigner()
     
     console.log("executing approveSendersTokenExecutor......")
-    const approvedTokenTx = await bytesEncodedBytesImplementor(aprovalSigner,spenderTokenAddress, approveTokenData,0)
+    const approvedTokenTx = await bytesEncodedBytesImplementor(signer,spenderTokenAddress, approveTokenData,0)
     await approvedTokenTx.wait()
     console.log("approvedTokenTx: ", approvedTokenTx)
     console.log("completed approval...!!")
@@ -187,11 +194,11 @@ const {
 
 
 
-    const map3SignUpExecutor = async (returnOfFunctionBytesEncoder, txValue) => {
+    const map3SignUpExecutor = async (_signer, returnOfFunctionBytesEncoder, txValue) => {
 
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-       const PaySigner = provider.getSigner()
-      const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(PaySigner,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue)
+      // const provider = new ethers.providers.Web3Provider(window.ethereum)
+      //  const PaySigner = provider.getSigner()
+      const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(_signer,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue)
       // const returnOfFunctionBytesEncoderAndImplementorReciept = await returnOfFunctionBytesEncoderAndImplementor.wait()
       await returnOfFunctionBytesEncoderAndImplementor.wait()
       console.log("returnOfFunctionBytesEncoderAndImplementor: ", returnOfFunctionBytesEncoderAndImplementor)
@@ -212,11 +219,11 @@ const {
 
 
 // WRITE FUNCTION for FRONT END !!!!!
-const map3PayExecutor = async (returnOfFunctionBytesEncoder, txValue) => {
+const map3PayExecutor = async (signer, returnOfFunctionBytesEncoder, txValue) => {
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-     const PaySigner = provider.getSigner()
-    const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(PaySigner,Map3address, returnOfFunctionBytesEncoder, txValue)
+    // const provider = new ethers.providers.Web3Provider(window.ethereum)
+    //  const PaySigner = provider.getSigner()
+    const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(signer,Map3address, returnOfFunctionBytesEncoder, txValue)
     // const returnOfFunctionBytesEncoderAndImplementorReciept = await returnOfFunctionBytesEncoderAndImplementor.wait()
     await returnOfFunctionBytesEncoderAndImplementor.wait()
     console.log("returnOfFunctionBytesEncoderAndImplementor: ", returnOfFunctionBytesEncoderAndImplementor)
@@ -261,13 +268,13 @@ const map3PayExecutor = async (returnOfFunctionBytesEncoder, txValue) => {
 
 
 // WRITE FUNCTION for FRONT END !!!!!
-    const OxPayExecutor = async (Map3SwapData, txValue ) => {
+    const OxPayExecutor = async (signer, Map3SwapData, txValue ) => {
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        const oxPaySigner = provider.getSigner()
+        // const provider = new ethers.providers.Web3Provider(window.ethereum)
+        // const oxPaySigner = provider.getSigner()
 
         console.log("executing 0xPay......")
-        const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(oxPaySigner,Map3address, Map3SwapData, txValue)
+        const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(signer,Map3address, Map3SwapData, txValue)
         const receipt= await returnOfFunctionBytesEncoderAndImplementor.wait()
         console.log("completed 0xPay...!!")
         console.log("payment successful!")
@@ -308,13 +315,13 @@ const map3PayExecutor = async (returnOfFunctionBytesEncoder, txValue) => {
 
 }
 
-const OxErc20ToEthPayExecutor = async (Map3SwapData, txValue ) => {
+const OxErc20ToEthPayExecutor = async (signer, Map3SwapData, txValue ) => {
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum)
-  const oxPaySigner = provider.getSigner()
+  // const provider = new ethers.providers.Web3Provider(window.ethereum)
+  // const oxPaySigner = provider.getSigner()
 
   console.log("executing 0xPay......")
-  const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(oxPaySigner,Map3address, Map3SwapData, txValue)
+  const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(signer,Map3address, Map3SwapData, txValue)
   const receipt= await returnOfFunctionBytesEncoderAndImplementor.wait()
   console.log("completed 0xPay...!!")
   console.log("payment successful!")
@@ -574,6 +581,9 @@ module.exports = {
     getUserErc20BalanceInWei,
     getUserNativeBalanceInWei,
     ethers,
+    API_MoralisAppId,
+    API_MoralisAppUrl,
+    API_web3StorageToken
 
 
 };

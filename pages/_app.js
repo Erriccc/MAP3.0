@@ -23,7 +23,6 @@ import SettingsDrawer from '/components/settings/settings-drawer';
 import { WalletProvider } from 'lib/hooks/use-connect';
 import{UrlProvider} from 'Utilities/FrontEndUtilities/FEUrlContext'
 
-
 // page progress bar
 const progress = new ProgressBar({
   size: 3,
@@ -56,7 +55,9 @@ export default function MyApp({ Component, pageProps }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-    <MoralisProvider
+    
+       {/* <WagmiConfig client={client}> */}
+       <MoralisProvider
       // appId= {MoralisAppId}
       // serverUrl={MoralisAppUrl}
       initializeOnMount={false}
@@ -80,8 +81,9 @@ export default function MyApp({ Component, pageProps }) {
           </ThemeProvider>
           </UrlProvider>
         </WalletProvider>
-
       </MoralisProvider>
+
+        {/* </WagmiConfig> */}
      </>
 )
 }

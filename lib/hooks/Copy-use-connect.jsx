@@ -3,24 +3,15 @@ import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 import { useMoralis, useNFTBalances, useNativeBalance } from "react-moralis";
 import {getCurrentWalletAddress } from'../../Utilities/utils';
-import {provider} from'../../Utilities/utils';
-import { useConnect } from 'wagmi'
-import WalletConnectWeb3Connector from './WalletConnectWeb3Connector'
-import { useModal } from '/components/modal-views/context';
-
 const web3modalStorageKey = 'WEB3_CONNECT_CACHED_PROVIDER';
 const walletConnectStorageKey = 'walletconnect';
 const injectedProviderConnectStorageKey = 'injectedProvider';
-
+import {provider} from'../../Utilities/utils';
 
 export const WalletContext = createContext({});
  
 
 export const WalletProvider = ({ children }) => {
-    // const { connect, connectors,isLoading, pendingConnector } =
-    // useConnect()
-  const { openModal } = useModal();
-
     const { Moralis, enableWeb3, account, isWeb3Enabled, isAuthenticated, authenticate, logout, deactivateWeb3} = useMoralis();
     const [address, setAddress] = useState(undefined);
     const [balance, setBalance] = useState(undefined);
@@ -41,14 +32,13 @@ export const WalletProvider = ({ children }) => {
                         try {
 
                                     if(localStorage.getItem(walletConnectStorageKey)){
-                                        // await enableWeb3({provider: 'walletconnect'})  
-                                        await enableWeb3({connector: WalletConnectWeb3Connector}) 
+                                        await enableWeb3({provider: 'walletconnect'})  
                                          // const connection = await enableWeb3({
                                         //     provider: 'walletconnect'
                                         //     chainId: Utils.networkId
                                         // });
                                     }else{
-                                        // await enableWeb3()
+                                        await enableWeb3()
                                     }
                                 console.log(Moralis.connector, 'useEffect Moralis.connector')
                                 setIsConnected(true)
@@ -116,31 +106,25 @@ export const WalletProvider = ({ children }) => {
             }
             }
 
-    const connectToWallet = async (webInjectedWallet) => {
+    const connectToWallet = async () => {
 
             if(!account){
                     try {
-                        let connection;
-                        if(webInjectedWallet){
-                        connection = await enableWeb3();
-                        }else{
-                        // const connection = await enableWeb3({provider: 'walletconnect'});
-                        connection = await enableWeb3({connector: WalletConnectWeb3Connector}) 
-                        }
+                        const connection = await enableWeb3({provider: 'walletconnect'});
                         // const connection = await enableWeb3({
                         //     provider: 'walletconnect'
                         //     chainId: Utils.networkId
 
                         // });
-                        // console.log(connection.connection, 'connection.connection');
-                        // console.log(connection, 'connection..');
-                        // console.log(Moralis.connector, 'Moralis.connector')
-                        if(connection.connection){openModal('BETA_ACKNOWLEDGE_VIEW')}
+                        // const connection = await enableWeb3();
+                        console.log(connection.connection, 'connection.connection');
+                        console.log(connection, 'connection..');
+                        console.log(Moralis.connector, 'Moralis.connector')
                         if (connection.connection.url !== 'eip-1193:'){
                         localStorage.setItem(injectedProviderConnectStorageKey, connection.connection);
                         }
-                        setIsConnected(true)
                         await subscribeProvider(connection);
+                        setIsConnected(true)
                     }
                     catch (error) {
                         console.log(error, 'got this error on connectToWallet catch block while connecting the wallet');

@@ -19,7 +19,7 @@ import { PlusCircle } from '/components/icons/plus-circle';
 import { CompassIcon } from '/components/icons/compass';
 import SettingsButton from '/components/settings/settings-button';
 import { useMoralis } from "react-moralis";
-import { ConnectButton, Icon, Select, DatePicker, Input } from "web3uikit";
+// import { ConnectButton, Icon, Select, DatePicker, Input } from "web3uikit";
 //images
 import AuthorImage from 'assets/images/author.jpg';//
 const menuItems = [
@@ -167,13 +167,13 @@ export default function MobileSidebar({ className }) {
           
           <AuthorCard image={AuthorImage} name="Map3 User" role="admin"/>
           ):(
-            <ConnectButton  signingMessage={getRandomNonce(time)}/> 
+            // <ConnectButton  signingMessage={getRandomNonce(time)}/> 
+            <div>Connect Button Place Holder </div>
           )}
           <div className="mt-12">
             {menuItems && menuItems.map((item, index) => (<MenuItem key={index} name={item.name} href={item.href} icon={item.icon} dropdownItems={item.dropdownItems}/>))}
           </div>
         <div className="relative h-12 w-1/3 px-6 pb-5 2xl:px-8">
-          <SettingsButton />
           </div>
 
         </div>

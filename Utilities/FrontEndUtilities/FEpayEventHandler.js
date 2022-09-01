@@ -10,7 +10,7 @@ import Utils from'/Utilities/utils';
  import{oxSwapERC20ToEthTransactionRelayer} from "./FEoxSwapERC20ToEthTransactionRelayer"
 
 //  let UsertransactionInput = {
-//   sender: account,
+//   sender: account, 
 //   reciver: reciver,
 //   sendersToken: sendersToken,
 //   reciversToken: reciversToken,
@@ -22,8 +22,8 @@ import Utils from'/Utilities/utils';
 
 
 
-const sameTokenEventHandler = async (UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing , setTransacting, _sendAsWeth) => {
-
+const sameTokenEventHandler = async (signer, UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing , setTransacting, _sendAsWeth) => {
+alert('all new provider updates recieved... function 1')
         setSystemProcessing(true)
 
         console.log('payevent recieved')
@@ -61,7 +61,7 @@ const sameTokenEventHandler = async (UsertransactionInput, User, handleSuccess,h
             console.log("please approve more tokens")
             setTransacting(true)
             try{
-              await approveTransactionRelayer(UsertransactionInput,Utils.U256MAXVALUE)
+              await approveTransactionRelayer(signer,UsertransactionInput,Utils.U256MAXVALUE)
             } catch(err){ 
                 setTransacting(false)
                 if (err.reason){
@@ -84,10 +84,10 @@ const sameTokenEventHandler = async (UsertransactionInput, User, handleSuccess,h
 
           setTransacting(true)
           if ( UsertransactionInput.sendersToken == Utils.EthAddress){
-                await map3PayTransactionRelayer(UsertransactionInput,tokenammount,tokenammount,_sendAsWeth );
+                await map3PayTransactionRelayer(signer, UsertransactionInput,tokenammount,tokenammount,_sendAsWeth );
           setTransacting(false)
           }else{
-            await map3PayTransactionRelayer(UsertransactionInput,tokenammount,0,_sendAsWeth)
+            await map3PayTransactionRelayer(signer, UsertransactionInput,tokenammount,0,_sendAsWeth)
           }
           setTransacting(false)
           handleSuccess(`transfer succesfull Thank you!`)
@@ -111,8 +111,10 @@ const sameTokenEventHandler = async (UsertransactionInput, User, handleSuccess,h
 
 
 
-const oxSwapEventHandler = async (UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing, setTransacting ) => {
+const oxSwapEventHandler = async (signer, UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing, setTransacting ) => {
         // situation where Tokens do not match
+alert('all new provider updates recieved... function2')
+
         setSystemProcessing(true)
 
       // new inputed code
@@ -160,7 +162,7 @@ const oxSwapEventHandler = async (UsertransactionInput, User, handleSuccess,hand
         setTransacting(true)
         try{
 
-            await approveTransactionRelayer(UsertransactionInput,Utils.U256MAXVALUE, )
+            await approveTransactionRelayer(signer, UsertransactionInput,Utils.U256MAXVALUE, )
             //alert("approval succesful")
             handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
 
@@ -203,10 +205,10 @@ const oxSwapEventHandler = async (UsertransactionInput, User, handleSuccess,hand
         try{
 
           if ( UsertransactionInput.sendersToken == Utils.EthAddress){
-            await map3OxPayTransactionRelayer(oxQuoteResult,aprovalAmount)// tx value = buyamount
+            await map3OxPayTransactionRelayer(signer, oxQuoteResult,aprovalAmount)// tx value = buyamount
             //alert("NATIVE ETH Transaction Succesful")
           }else{
-            await map3OxPayTransactionRelayer(oxQuoteResult,0)// tx value = 0
+            await map3OxPayTransactionRelayer(signer, oxQuoteResult,0)// tx value = 0
             //alert("ERC20 Transaction Succesful")
 
 
@@ -232,8 +234,10 @@ return
 
 
 
-  const oxSwapERC20ToEth = async (UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing, setTransacting ) => {
+  const oxSwapERC20ToEth = async (signer, UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing, setTransacting ) => {
     // situation where Tokens do not match
+alert('all new provider updates recieved... function 3')
+
     setSystemProcessing(true)
   let reciversTokenAddress = UsertransactionInput.reciversToken;
   let sendersTokenAddress = UsertransactionInput.sendersToken;
@@ -299,7 +303,7 @@ return
 
       try{
 
-          await approveTransactionRelayer(UsertransactionInput,Utils.U256MAXVALUE, )
+          await approveTransactionRelayer(signer, UsertransactionInput,Utils.U256MAXVALUE, )
           //alert("approval succesful")
           handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
 
@@ -352,7 +356,7 @@ return
 
       try{
 
-          await oxSwapERC20ToEthTransactionRelayer(oxQuoteResult,0)// tx value = 0
+          await oxSwapERC20ToEthTransactionRelayer(signer, oxQuoteResult,0)// tx value = 0
 
           handleSuccess(`transfer succesfull Thank you!`)
       } catch(err){

@@ -27,18 +27,18 @@ const ColorPreset = [
         label: 'Green',
         value: '#009e60',
     },
-    {
-        label: 'Red',
-        value: '#e34234',
-    },
-    {
-        label: 'Purple',
-        value: '#9370DB',
-    },
-    {
-        label: 'Orange',
-        value: '#ffa500',
-    },
+    // {
+    //     label: 'Red',
+    //     value: '#e34234',
+    // },
+    // {
+    //     label: 'Purple',
+    //     value: '#9370DB',
+    // },
+    // {
+    //     label: 'Orange',
+    //     value: '#ffa500',
+    // },
 ];
 function ThemeSwitcher() {
     const { theme, setTheme } = useTheme();

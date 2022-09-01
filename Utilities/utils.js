@@ -37,7 +37,7 @@ const Ox_POLYGON_API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
 const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
 
 
-const PaymentHandlerEndpoint = '/api/oxQuoteHandler' 
+const PaymentHandlerEndpoint = '/api/oxQuoteHandler'
 const map3SameTokenTransferEndpoint = '/api/map3pay/map3sametokentransfer' 
 const map3SwapAndTransferEndpoint = '/api/map3pay/map3swapandtransfer' 
 const map3OxMap3SwapERC20ToEthEndpoint = '/api/map3pay/oxmap3SwapERC20ToEth' 
@@ -120,6 +120,12 @@ const getCurrentWalletAddress = async () => {
         // getBalance(provider, web3Address);
     }
 return web3Address
+}
+const getSigner = async (connection) => {
+    const _provider = new ethers.providers.Web3Provider(connection)
+    const signer = _provider.getSigner();
+        console.log("signer:", signer)
+return signer
 }
 
 
@@ -276,15 +282,7 @@ const getUserNativeBalanceInWei = async (owner) => {
 }
 
 
-function getKeyWordArray (UserInput){
-    if (!UserInput.vendorKeywords){
-        return ['']
-    }else if (UserInput.vendorKeywords.legnth > 1){
-        return UserInput.vendorKeywords.split(/[, ]+/)
-    }else {
-        return UserInput.vendorKeywords
-    }
-}
+
 
 
 
@@ -663,6 +661,7 @@ module.exports = {
     EthAddress,
     WethAddress,
     getCurrentWalletAddress,
+    getSigner,
     ReciversCoinList,
     SendersCoinList,
     PolygonCoinList,
@@ -679,7 +678,7 @@ module.exports = {
     MAPSTYLE,
     MAPBOXACCESSTOKEN,
     web3StorageToken,
-    getKeyWordArray,
+    // getKeyWordArray,
 
 };
 

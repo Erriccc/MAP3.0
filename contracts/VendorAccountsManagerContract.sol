@@ -5,20 +5,6 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-
-// BUG NOTE............
-
-// NOTE that default value for uint mapping is 0 so make sure to initialize...
-// ...ID mappings incase you have to delete an id . ID[undefined] = 0...
-
-
-// TODO
-
-// turn vendors into nft
-//  impliment vendor nft purchase by wrapping or staking nfts
-// make the nfts soul bound.
-
-
 interface IMap3Pay {}
 
 contract VendorAccountsManagerContract is Ownable{
@@ -101,12 +87,6 @@ bool internal locked;
             VendorList[VendorId[address(msg.sender)]].vendorsName = _newName;
         return true;
         }
-    // function  setVendorBio(string memory _newBio) public returns (bool){
-    //         require(isVendor[address(msg.sender)] , " not  a Vendor" );
-    //         VendorList[VendorId[address(msg.sender)]].vendorsBio = _newBio;
-    //     return true;
-    //     }
-
         function  setVendorEmail(string memory _newEmail) public returns (bool){
             require(isVendor[address(msg.sender)] , " not  a Vendor" );
             VendorList[VendorId[address(msg.sender)]].vendorsEmail = _newEmail;
@@ -371,7 +351,6 @@ function deletePlan(uint planId) onlyOwner public  returns(bool){
 
 // subscribes new vendors to a free plan
  function freeTrialSubscribtion(address _vendor) public returns(bool){
-    //   require(address(msg.sender) == address(Map3P2PContract),"out of bounds"); 
       require(address(msg.sender) == _vendor,"out of bounds"); 
 
     require(isVendor[_vendor], "not a Vendor");
@@ -383,11 +362,9 @@ function deletePlan(uint planId) onlyOwner public  returns(bool){
       subscriptions[_vendor] = Subscription(_vendor,freePlan._planTransactionLimit,block.timestamp + oneMonth // oneMonth = 30 days in seconds
       );
       isVendorActive[_vendor] = true;
-    //   Map3P2PContract.setIsVendorActive(_vendor, true); // this is responsible for active membership
       vendorFreeTrialUsed[_vendor] = true;
       // 100 is the plan id for free plan
       emit SubscriptionEvent(_vendor,
-    //   Map3P2PContract.getVendorEmail(_vendor),
       VendorList[VendorId[_vendor]].vendorsEmail,
       subscriptions[_vendor].nextPayment, subscriptions[_vendor].availableTransactionsLeft);
             return true;
@@ -477,13 +454,6 @@ function deletePlan(uint planId) onlyOwner public  returns(bool){
 
 }
 
-// [    "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2",    "Testing tupple formart2",    "Living on cloud 9-2",    "chicago-2",    "IL",    "60622",    "123-456-7890",    "Connect vendors in map3.0-2",    "40.716862",    "-73.999005",    "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",    "https://github.com/Erriccc",    "0xd9145CCE52D386f254917e481eB44e9943F39138" ]
-// [    "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2",    "name Testing tupple formart2", "email 123-456-7890",    "bio Living on cloud 9-2",    ["keywords", "testing","testing 2","etc.."],"lat 40.716862",    "long -73.999005",    "image url https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",    "vendorsWebsiteUrl https://github.com/Erriccc",    "0xd9145CCE52D386f254917e481eB44e9943F39138" ]
-
-
-
-
-
 // struct signUpVendor{
 //     address vendorsWalletAddress;
 //     string vendorsName;
@@ -496,5 +466,9 @@ function deletePlan(uint planId) onlyOwner public  returns(bool){
 //     string vendorsWebsiteUrl;
 //     IERC20 vendorsToken;
 // }
+
+// Sample Vendor Struct.
+// [    "0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f",    "OG Account", "Jozizuke@gmail.com",    "any tips will be much appreciated",    ["dev", "map3 Pay","map3","Chicago", "osborn"],"41.881832",    "-87.623177",    "https://pbs.twimg.com/profile_images/1461343110215225349/oxAN3Dve_400x400.jpg",    "https://github.com/Erriccc",    "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270" ]
+ 
 //0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f
 //0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270 // POLYGON_WRAPPED_MATIC_ADDRESS

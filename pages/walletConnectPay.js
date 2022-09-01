@@ -3,12 +3,13 @@ import { useNotification } from "web3uikit";
 const {oxPriceFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
 import Utils from'/Utilities/utils';
 import{PaymentInputValidator} from '/Utilities/FrontEndUtilities/FEpaymentUserInputValidator'
-import{paymentTypeLogicServer} from '/Utilities/FrontEndUtilities/FEpaymentTypeLogicServer';
+import{oxSwapEventHandler, sameTokenEventHandler, oxSwapERC20ToEth} from '/Utilities/FrontEndUtilities/FEpayEventHandler';
 import { useMoralis, } from 'react-moralis';
 import { useRouter } from "next/dist/client/router"; // use to reroute after transaction is processed
+import{paymentTypeLogicServer} from '/Utilities/FrontEndUtilities/FEpaymentTypeLogicServer';
+
 import { WalletContext } from 'lib/hooks/use-connect';
 
-import Spinner from '/components/spinner';
 import cn from 'classnames';
 import { NextSeo } from 'next-seo';
 import PayAnonymousLayout from 'layouts/PayAnonymousLayout';
@@ -19,16 +20,15 @@ import { SwapIcon } from '/components/icons/swap-icon';
 import Collapse from '/components/ui/collapse';
 import LoadingView from '/components/ui/LoadingView';
 
-import  ProfileModalInput from  '/components/ui/ProfileModalInput';
-import  ProcessingView from  '/components/ui/ProcessingView';
-import  ReciversCoinInput from  '/components/reciversCoinInput';
-import  SendersCoinInput from  '/components/sendersCoinInput';
+import ProfileModalInput from '/components/ui/ProfileModalInput';
+import ProcessingView from '/components/ui/ProcessingView';
+import ReciversCoinInput from '/components/reciversCoinInput';
+import SendersCoinInput from '/components/sendersCoinInput';
 
-
+ 
 
 export default function PayAnonymous() {
     const { Moralis, account } = useMoralis();
-    const { address} = useContext(WalletContext);
 
     const dispatch = useNotification();
      const handleSuccess= (msg) => {
@@ -57,10 +57,12 @@ export default function PayAnonymous() {
     };
 // add input for expected slippage amount to complete swap!
     const submitPayment = async (UsertransactionInput) => {
-    await paymentTypeLogicServer(Moralis.connector.provider, UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing , setTransacting)
+      await paymentTypeLogicServer(Moralis.connector.provider, UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing , setTransacting)
     };
 
 
+  const { address,error, balance, connectToWallet, disconnectWallet } = useContext(WalletContext);
+    
     const [sendersTokenBalance, setSendersTokenBalance] = React.useState("0");
     const [rate, setRate] = React.useState(1); // Echange rate .. gotten from 0x api
     const [quote, setQuote] = React.useState("select tokens"); //  Quote is the current rate multiplied by the amount of cryptocurrency to be bouth
@@ -99,6 +101,7 @@ export default function PayAnonymous() {
               setQuote(quotePrice*amountToBeSent)
               setTotalQuoteWithSlippage(quote*userSlippage)
             }
+            
         }catch(e){
           setQuote("quote Failed")
 

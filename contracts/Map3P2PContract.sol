@@ -370,11 +370,4 @@ function fillErc20ToEthQuote(
 }
 
 
-// [    "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2",    "Testing tupple formart2",    "Living on cloud 9-2",    "chicago-2",    "IL",    "60622",    "123-456-7890",    "Connect vendors in map3.0-2",    "40.716862",    "-73.999005",    "https://ipfs.moralis.io:2053/ipfs/QmS3gdXVcjM72JSGH82ZEvu4D7nS6sYhbi5YyCw8u8z4pE/media/3",    "https://github.com/Erriccc",    "0xd9145CCE52D386f254917e481eB44e9943F39138" ]
-// [    "0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f",    "OG Account", "Jozizuke@gmail.com",    "any tips will be much appreciated",    ["dev", "map3 Pay","map3","Chicago", "osborn"],"41.881832",    "-87.623177",    "https://pbs.twimg.com/profile_images/1461343110215225349/oxAN3Dve_400x400.jpg",    "https://github.com/Erriccc",    "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270" ]
-
 //0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270 // POLYGON_WRAPPED_MATIC_ADDRESS
-
-
-
-// 0xBb2cB98982Ed6547aA7E39707807253a999796b7

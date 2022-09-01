@@ -5,7 +5,7 @@ import { WalletContext } from 'lib/hooks/use-connect';
 import { useModal } from '/components/modal-views/context';
 import { useMoralis } from 'react-moralis'
 import { useContext, useEffect, useState } from 'react';
-import { ConnectButton} from "web3uikit";
+// import { ConnectButton} from "web3uikit";
 import FeaturedCard from '/components/nft/featured-card';
 import InputLabel from '/components/ui/input-label';
 import { Switch } from '/components/ui/switch';
@@ -21,7 +21,7 @@ import{signUpEventHandler,ValidateUserSignUpInput} from '/Utilities/FrontEndUtil
 
 import ProcessingView from '/components/ui/ProcessingView';
 
-
+ 
 
 export default function Final() {
 
@@ -30,7 +30,8 @@ const  [files, setFiles] = useState({userData})
 let [systemProcessing, setSystemProcessing] = useState(false);
   let [validatingInput, setvalidatingInput] = useState(false);
   let [transacting, setTransacting] = useState(false);
-      const {account} = useMoralis()
+  const { Moralis, account } = useMoralis();
+
       const dispatch = useNotification();
 
       const handleSuccess= (msg) => {
@@ -58,9 +59,10 @@ let [systemProcessing, setSystemProcessing] = useState(false);
       }, [account])
 
       const submitPayment = async (UsertransactionInput) => {
-
+        const wrappedProvider = new Utils.ethers.providers.Web3Provider(Moralis.connector.provider);
+        const wrappedSigner = wrappedProvider.getSigner();
         try{
-          await signUpEventHandler(UsertransactionInput, handleSuccess,handleError, setSystemProcessing, setTransacting);
+          await signUpEventHandler(wrappedSigner, UsertransactionInput, handleSuccess,handleError, setSystemProcessing, setTransacting);
         }catch(e){
         }
       };
@@ -123,11 +125,11 @@ let [systemProcessing, setSystemProcessing] = useState(false);
                 <div className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
                     Wallet Address
                 </div>
-                { userData?.userWallet ? (<div className="text-sm leading-6 tracking-tighter text-gray-600 dark:text-gray-400">
-                    {userData.userWallet}
+                { account? (<div className="text-sm leading-6 tracking-tighter text-gray-600 dark:text-gray-400">
+                    {account}
                 </div>):(
                     <div className="text-sm leading-6 tracking-tighter text-red-600 dark:text-red-400">
-                        please enter a valid Wallet Address to proceed
+                        please sign in with your desired wallet to continue
                     </div>
                 )}
 
@@ -159,7 +161,7 @@ let [systemProcessing, setSystemProcessing] = useState(false);
          onClick={
           () => {
               let UsertransactionInput = {
-                userWallet: userData.userWallet,
+                userWallet: account,
                 userName: userData.userName,
                 email: userData.email ? userData.email: null,
                 aboutVendor: userData.aboutVendor ? userData.aboutVendor : null,

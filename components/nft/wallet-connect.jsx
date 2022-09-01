@@ -8,94 +8,70 @@ import { PowerIcon } from '/components/icons/power';
 import { useModal } from '/components/modal-views/context';
 import {useContext, useEffect } from 'react';
 import { useMoralis } from "react-moralis";
-import { ConnectButton, Icon, Select, DatePicker, Input } from "web3uikit";
+import SettingsButton from '/components/settings/settings-button';
+
+// import { ConnectButton, Icon, Select, DatePicker, Input } from "web3uikit";
+import { useAccount,
+  useConnect,
+  useDisconnect,
+  useEnsAvatar,
+  useEnsName, } from 'wagmi'
+import { useNotification } from "web3uikit";
 
 import {getCurrentWalletAddress } from'../../Utilities/utils';
 const  { ethers }=require( "ethers"); // from hardhat throws error "Can't resolve 'console'"
 
 
-const d = new Date();
-let time = d.getTime();
-console.log(time)
-function getRandomNonce (_time){
-  let randomString1 = randomString(10);
-  let randomString2 = randomString(20);
-  let randomString13 = randomString(3);
-  let finalRandomString = Math.random()*10**3
-let stringifiedTime = _time.toString()
-  let salt = randomString1 + randomString2 + randomString13 +finalRandomString +stringifiedTime
-  return salt
-
-}
-
-// randomString(Math.random(time)*10**3)
-const randomString = function(length) {
-
-  var text = "fghjkl;po8765rfvbnmlp0987632qwsdfghu76tghjui876tgbnkjbvfrtyhjkl;';/'.,mjhgfvbnjhtred";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?><:}{|=-)(*#@!$%";
-  for(var i = 0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-}
-
 
 export default function WalletConnect() {
   const {isAuthenticated, account } = useMoralis();
-
-  const { address,error, balance, connectToWallet, disconnectWallet } = useContext(WalletContext);
+  const dispatch = useNotification();
+    const handleError= (msg) => {
+      dispatch({
+        type: "error",
+        message: `${msg}`,
+        title: "failed",
+        position: "bottomR",
+      });
+    };
+ 
+  const { address,balance, connectToWallet, disconnectWallet } = useContext(WalletContext);
+  // const { balance, connectToWallet, disconnectWallet } = useContext(WalletContext);
 
     const { openModal } = useModal();
 
     useEffect(() => {
-      openModal('BETA_ACKNOWLEDGE_VIEW')
+      // openModal('BETA_ACKNOWLEDGE_VIEW')
 
     }, []);//
 
     useEffect(() => {
-      async function checkConnection() {
 
-              if (window && window.ethereum) {
-        // const _provider = new ethers.providers.Web3Provider(window.ethereum)
-        // const signer = _provider.getSigner();
-
-        // console.log("signer is : ", signer)
-
-                  if (account) {
-                    // if (signer) { // use this if the signin logic
-                  // console.log(" isAuthenticated address bloc from wallet-connect pagek", signer)
-                      await connectToWallet();
-                  } else {
-              console.log('!isAuthenticated from wallet-connect.jxs');
-              disconnectWallet()
-                  }
-              }
-              else {
-                  alert('Please install A Blockchain Wallet to use App');
-              }
-      }
-      checkConnection();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account]);
-
-//
+  }, []);
 
     return (<>
-      {account && (<div className="flex items-center gap-3 sm:gap-6 lg:gap-8">
+          <SettingsButton />
+
+    {account ? (
           <div className="relative">
-          <ConnectButton /> 
-          </div>
-        </div>) 
-        
-        
-        
-        // : (
-        //   <>
-        // <Button onClick={() => openModal('WALLET_CONNECT_VIEW')} className="shadow-main hover:shadow-large">
-        //   LAUNCH APP
-        // </Button>
-        // </>
-        // )
+                      <div className="flex cursor-pointer items-center gap-3 rounded-lg py-2.5 px-3 text-sm font-medium bg-red-300  text-gray-900 transition hover:bg-red-100 dark:text-white dark:hover:bg-red-200" onClick={disconnectWallet}>
+                        <PowerIcon />
+                        <span className="grow uppercase">Sign Out</span>
+                      </div>
+                    </div>
+        ) 
+        : (
+          <div className="relative">
+
+        <Button onClick={async ()=>{
+          // await connectToWallet(false)
+          openModal('WALLET_CONNECT_VIEW')
+        }
+          } className="shadow-main hover:shadow-large">
+        Sign In
+        </Button>
+        </div>
+        )
         }
     </>);
 }

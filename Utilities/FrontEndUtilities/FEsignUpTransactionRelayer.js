@@ -28,7 +28,7 @@ const newSampleVendor = [
 
 
 
-const signUpTransactionRelayer = async (UserInput, txValue ) => {
+const signUpTransactionRelayer = async (signer, UserInput, txValue ) => {
 
     
 let testImageUrl;
@@ -47,12 +47,12 @@ const manp3SignUpUserInput = {
     vendorsName: UserInput.userName,
     vendorsEmail: UserInput.email,
     vendorsBio: UserInput.aboutVendor,
-    keyWords: Utils.getKeyWordArray(UserInput),// testing split function
+    keyWords:getKeyWordArray(UserInput),// testing split function
     // keyWords: UserInput.vendorKeywords.split(/[, ]+/),
     // vendorsLat: get(lat), // UserInput.geoAddress
     // vendorsLong: get(long), // UserInput.geoAddress
-    vendorsLat: "41.881832",
-    vendorsLong: "-87.623177",
+    vendorsLat: UserInput.geoAddress?.lat? UserInput.geoAddress.lat : "41.881832",
+    vendorsLong: UserInput.geoAddress?.long? UserInput.geoAddress.long : "-87.623177",
     // vendorsImageUrl: get(imageUrl), // UserInput.imageUrl || UserInput.userImage[0]
     vendorsImageUrl: testImageUrl ? testImageUrl :"https://pbs.twimg.com/profile_images/1461343110215225349/oxAN3Dve_400x400.jpg",
     vendorsWebsiteUrl: UserInput.websiteUrl,
@@ -87,7 +87,7 @@ const manp3SignUpUserInput = {
             const result = await response.json()
             const txdata = result.txdata
             console.log("txdata..... from signUpTransactionRelayer: ", txdata)
-            const tx2 = await  map3SignUpExecutor(txdata, txValue) // New Implementation of backend transact    ions
+            const tx2 = await  map3SignUpExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
             // const tx2 = await  map3SignUpExecutor(txdata, 0) // New Implementation of backend transact    ions
             return (tx2)
         }
@@ -125,4 +125,15 @@ const getImageUrl = async (UserInput) => {
 
 }
 
-module.exports = {signUpTransactionRelayer,getImageUrl }//
+function getKeyWordArray (UserInput){
+  if (!UserInput.vendorKeywords){
+      return ['','']
+  }else if (UserInput.vendorKeywords.legnth < 1){
+        return UserInput.vendorKeywords
+  }else {
+        return UserInput.vendorKeywords.split(/[, ]+/)
+
+  }
+}
+
+module.exports = {signUpTransactionRelayer,getImageUrl, getKeyWordArray }//
