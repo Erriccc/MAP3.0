@@ -271,7 +271,7 @@ const handleNoAccount= () => {
   //   )
   // }
     return (<>
-      <NextSeo title="Profile" description="Map3 - React Next Web3 NFT Crypto Dashboard Template"/>
+      <NextSeo title="Profile" description="Map3 Profiles - find crypto friendly businesses near you, and make crypto payments in your preferred currency."/>
       {vendorDataState.showDataFromServer && (
       // {walletAddress && userData && (
 

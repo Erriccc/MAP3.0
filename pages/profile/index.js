@@ -89,7 +89,7 @@ const AuthorProfilePage = () => {
   //   )
   // }
     return (<>
-      <NextSeo title="Profile" description="Map3 - React Next Web3 NFT Crypto Dashboard Template"/>
+      <NextSeo title="Profile" description="Map3 profiles - find crypto friendly businesses near you, and make crypto payments in your preferred currency."/>
       <DashboardLayout>
         {/* Profile Cover Image */}
         <div className="relative h-36 w-full overflow-hidden rounded-lg sm:h-44 md:h-64 xl:h-80 2xl:h-96 3xl:h-[448px]">

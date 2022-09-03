@@ -128,7 +128,7 @@ export default function PayAnonymous() {
 
 
       return (<>
-        <NextSeo title="Swap" description="Map3 - React Next Web3 NFT Crypto Dashboard Template"/>
+        <NextSeo title="map3Pay" description="Map3 - find crypto friendly businesses near you, and make crypto payments in your preferred currency."/>
         <PayAnonymousLayout>
           <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
                 <ProfileModalInput label={`Reciver: ${reciver}`}

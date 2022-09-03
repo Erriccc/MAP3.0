@@ -87,7 +87,7 @@ export const getStaticProps = async () => {
 };
 const HomePage = () => {
     return (<>
-      <NextSeo title="Map3 Home Page" description="Map3 - React Next Web3 NFT Crypto Dashboard Template"/>
+      <NextSeo title="Map3 Home Page" description="Map3 - find crypto friendly businesses near you, and make crypto payments in your preferred currency."/>
       <DashboardLayout>
         <div className="flex flex-wrap">
           <div className="mb-8 w-full sm:mb-0 sm:w-1/2 sm:ltr:pr-6 sm:rtl:pl-6 md:w-[calc(100%-256px)] lg:w-[calc(100%-288px)] 2xl:w-[calc(100%-320px)] 3xl:w-[calc(100%-358px)]">

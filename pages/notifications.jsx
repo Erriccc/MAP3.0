@@ -55,7 +55,7 @@ const notifications = [
 ];
 const NotificationPage = () => {
     return (<>
-      <NextSeo title="Notifications" description="Map3 - React Next Web3 NFT Crypto Dashboard Template"/>
+      <NextSeo title="Notifications" description="Map3 - find crypto friendly businesses near you, and make crypto payments in your preferred currency."/>
       <DashboardLayout>
         <div className="mx-auto w-[660px] max-w-full">
           <div className="mb-7 flex items-center justify-between gap-6">

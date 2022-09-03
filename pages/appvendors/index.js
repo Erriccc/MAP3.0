@@ -126,7 +126,7 @@ useEffect(() => {
 
   return (
     <>
-    <NextSeo title="Map of Vendors" description="Map3 - find vendors that accept crypto near you"/>
+    <NextSeo title="map of crypto friendly Vendors" description="Map3 - find vendors that accept crypto near you"/>
     
       {mapDataState.showDataFromServer && 
 

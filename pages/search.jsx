@@ -175,7 +175,7 @@ const SearchPage = () => {
     const { isGridCompact } = useGridSwitcher();
     const { openDrawer } = useDrawer();
     return (<>
-      <NextSeo title="Explore NTF" description="Map3 - React Next Web3 NFT Crypto Dashboard Template"/>
+      <NextSeo title="Explore NTF" description="Map3 - find crypto friendly businesses near you, and make crypto payments in your preferred currency."/>
       <DashboardLayout>
         <div className="grid sm:pt-5 2xl:grid-cols-[280px_minmax(auto,_1fr)] 4xl:grid-cols-[320px_minmax(auto,_1fr)]">
           <div className="hidden border-dashed border-gray-200 ltr:border-r ltr:pr-8 rtl:border-l rtl:pl-8 dark:border-gray-700 2xl:block">
