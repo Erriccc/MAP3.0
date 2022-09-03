@@ -1,5 +1,5 @@
 
-import Utils from'/Utilities/utils';
+import Utils from'/Utilities/utils'; 
 const {oxQuoteFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
 
 const PaymentInputValidator = async (UsertransactionInput, handleError,setvalidatingInput ) => {

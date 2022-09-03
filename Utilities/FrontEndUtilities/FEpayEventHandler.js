@@ -23,7 +23,7 @@ import Utils from'/Utilities/utils';
 
 
 const sameTokenEventHandler = async (signer, UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing , setTransacting, _sendAsWeth) => {
-alert('all new provider updates recieved... function 1')
+// alert('all new provider updates recieved... function 1')
         setSystemProcessing(true)
 
         console.log('payevent recieved')
@@ -113,7 +113,7 @@ alert('all new provider updates recieved... function 1')
 
 const oxSwapEventHandler = async (signer, UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing, setTransacting ) => {
         // situation where Tokens do not match
-alert('all new provider updates recieved... function2')
+// alert('all new provider updates recieved... function2')
 
         setSystemProcessing(true)
 
@@ -236,7 +236,7 @@ return
 
   const oxSwapERC20ToEth = async (signer, UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing, setTransacting ) => {
     // situation where Tokens do not match
-alert('all new provider updates recieved... function 3')
+// alert('all new provider updates recieved... function 3')
 
     setSystemProcessing(true)
   let reciversTokenAddress = UsertransactionInput.reciversToken;

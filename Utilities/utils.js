@@ -1,5 +1,5 @@
 'use strict'
-
+ 
 //providers.JsonRpcProvider()
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const BigNumber = require('bignumber.js');
@@ -240,7 +240,7 @@ const getSendersAllowanceBalanceInWei = async (ownersTokenAddress,owner) => {
     return tx1 // returns long number
 }
 const getUserErc20Balance = async (tokenAddress,owner) => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    // const provider = new ethers.providers.Web3Provider(window.ethereum)
     const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,provider)
     const tx0 = await tokenContract.balanceOf(owner)
     const tx1 = ethers.utils.formatUnits(
@@ -248,7 +248,7 @@ const getUserErc20Balance = async (tokenAddress,owner) => {
     return tx1
 }
 const getUserErc20BalanceInWei = async (tokenAddress,owner) => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    // const provider = new ethers.providers.Web3Provider(window.ethereum)
     const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,provider)
     const tx0 = await tokenContract.balanceOf(owner)
     // Number(tx0)
