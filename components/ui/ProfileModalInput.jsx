@@ -5,7 +5,6 @@ import cn from 'classnames';
 import { ChevronDown } from '/components/icons/chevron-down';
 import { useClickAway } from 'lib/hooks/use-click-away';
 // import { useLockBodyScroll } from 'lib/hooks/use-lock-body-scroll';
-import { coinList } from 'data/static/coin-list'; //
 import { Plus } from '../icons/plus';
 
 // dynamic import
@@ -61,7 +60,7 @@ export default function ProfileModalInput({ label, getCoinValue,  className, ...
             </span>
             <motion.div initial={{ scale: 1.05 }} animate={{ scale: 1 }} exit={{ scale: 1.05 }} transition={{ duration: 0.3 }} ref={modalContainerRef} className="inline-block text-left align-middle">
               {/* <CoinSelectView onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}/> */}
-              <ProfileSearchSelect tittle={'RECIVER'} onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}/>
+              <ProfileSearchSelect tittle={'RECEIVER'} onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}/>
               
             </motion.div>
           </motion.div>)}

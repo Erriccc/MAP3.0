@@ -11,6 +11,9 @@ import SearchView from '/components/search/view';
 import ShareView from '/components/nft/share-view';
 import SelectWallet from '/components/nft/select-wallet';
 import BetaModeAcknowledgement from '/components/nft/beta-mode-acknowledgement';
+import ConfirmationModal from '/components/nft/ConfirmationModal.jsx'
+import TransactionrecieptModal from '/components/nft/TransactionrecieptModal.jsx'
+ 
 function renderModalContent(view) {
     switch (view) {
         case 'SEARCH_VIEW':
@@ -21,6 +24,10 @@ function renderModalContent(view) {
             return <SelectWallet />;
         case 'BETA_ACKNOWLEDGE_VIEW':
             return <BetaModeAcknowledgement />;
+        case 'SIGN_UP_CONFIRMATION':
+              return <ConfirmationModal confirmationTitle = "CONGRATS! your profile has been created"/>;
+        case 'PAYMENT_CONFIRMATION':
+              return <TransactionrecieptModal confirmationTitle = "Payment was successful"/>;
         default:
             return null;
     }

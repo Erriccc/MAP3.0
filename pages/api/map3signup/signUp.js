@@ -1,7 +1,7 @@
 
 import {map3SignUpData} from '../../../Utilities/apiUtils'
 const apiUtils = require('../../../Utilities/apiUtils');
-
+ 
 export default function form(req, res) {
     // Get data submitted in request's body.
     const body = req.body
@@ -40,8 +40,8 @@ export default function form(req, res) {
       body.vendorsEmail ? body.vendorsEmail : 'user email not set',
       body.vendorsBio? body.vendorsBio : '',
       body.keyWords? body.keyWords : ['','','',''],
-      body.vendorsLat ? body.vendorsLat : "" ,
-      body.vendorsLong ? body.vendorsLong : "" ,
+      body.vendorsLat ? body.vendorsLat.toString() : "" ,
+      body.vendorsLong ? body.vendorsLong.toString() : "" ,
       body.vendorsImageUrl ? body.vendorsImageUrl : '',
       body.vendorsWebsiteUrl ? body.vendorsWebsiteUrl : '',
       body.vendorsToken,

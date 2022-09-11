@@ -2,10 +2,13 @@ const apiUtils = require('../../../Utilities/apiUtils');
 const Utils = require('../../../Utilities/utils');
 
 
+// const getVendors = async () => {
+//     const results = await apiUtils.fetchVendorsDataFromApi()
+//     return results;
+// }
 
 
-
-export default function form(req, res) {
+export default  function form(req, res) {
     const body  = req.body
      // Guard clause checks for first and last name,
     // and returns early if they are not found
@@ -14,7 +17,7 @@ export default function form(req, res) {
          // Sends a HTTP bad request error code
          return res.status(100).json({ data: 'please pass in all required parameters' })
        }
-
+ 
     console.log("running server function for map data" )
 
             const vendorsData = Utils.vendorsData;

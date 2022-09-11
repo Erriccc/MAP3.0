@@ -98,26 +98,32 @@ const getImageUrl = async (UserInput) => {
  
     if (UserInput.imageUrl){
         return(UserInput.imageUrl)
-    }else if (UserInput.userImage){
+    }else if (UserInput.userImage){ 
         console.log('> 📦 creating web3.storage client')
-    let token = Utils.web3StorageToken
-    console.log('token...', token)
-    const client = new Web3Storage({token})
+        const imageLocalName =  encodeURIComponent(UserInput.userImage[0].name.trim()) 
+        const imageLocalPath =  encodeURIComponent(UserInput.userImage[0].path.trim()) 
+        console.log('imageLocalName...', imageLocalName)
+        
+        let token = Utils.web3StorageToken
+        console.log('token...', token)
+        const client = new Web3Storage({token})
 
-    console.log('> 🤖 chunking and hashing the files (in your browser!) to calculate the Content ID')
-    const cid = await client.put(UserInput.userImage, {
-      onRootCidReady: localCid =>{},
-      onStoredChunk: bytes =>{}
-    })
-    console.log(`> ✅ web3.storage now hosting ${cid}`)
-    console.log(`https://dweb.link/ipfs/${cid}`)
-
-    let totalBytes = 0
-    for await (const upload of client.list()) {
-      totalBytes += upload.dagSize || 0
-    }
-    console.log(`> ⁂ ${totalBytes.toLocaleString()} bytes stored!`)
-    return (`https://dweb.link/ipfs/${cid}`)
+        console.log('> 🤖 chunking and hashing the files (in your browser!) to calculate the Content ID')
+        const cid = await client.put(UserInput.userImage, {
+          onRootCidReady: localCid =>{},
+          onStoredChunk: bytes =>{}
+        })
+        console.log(`> ✅ web3.storage now hosting ${cid}`)
+        // console.log(`https://dweb.link/ipfs/${cid}`)
+        console.log(`https://dweb.link/ipfs/${cid}/${imageLocalName}`)
+       
+        let totalBytes = 0
+        for await (const upload of client.list()) {
+          totalBytes += upload.dagSize || 0
+        }
+        console.log(`> ⁂ ${totalBytes.toLocaleString()} bytes stored!`)
+        // return (`https://dweb.link/ipfs/${cid}`)
+        return (`https://dweb.link/ipfs/${cid}/${imageLocalName}`)
     }else{
         return("https://pbs.twimg.com/profile_images/1461343110215225349/oxAN3Dve_400x400.jpg")
     }

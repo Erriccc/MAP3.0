@@ -95,14 +95,14 @@ export default function PayAnonymous({User}) {
                         </div>
                         <div className="mb-4 bg-white">
                             <label className="block text-gray-700 text-sm font-bold mb-2" >
-                            Recivers Wallet Address
+                            Receivers Wallet Address
                             </label>
                             <input className="shadow appearance-none border border-blue-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="reciver" name='reciver' type="text" placeholder="0x**************"/>
                             {/* <h4 className="text-red-500 text-xs italic">Please Add a wallet Address</h4> */}
                         </div>
                         <div className="mb-4 bg-white">
                             <label className="block text-gray-700 text-sm font-bold mb-2" >
-                                Recivers token
+                                Receivers token
                             </label>
                             {/* <input className="shadow appearance-none border border-blue-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
                             id="reciversChoiceToken" name='reciversChoiceToken' value={reciversToken} type="text" placeholder="0x**************"

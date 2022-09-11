@@ -1,4 +1,9 @@
-const UTILS = require('/Utilities/utils')
+
+// const Moralis = require('moralis/node');
+const UTILS = require('/Utilities/utils');
+const Moralis = require('moralis');
+
+
 const {
     etherToWei,
     weiToEther,
@@ -38,12 +43,224 @@ const {
 
 
 
-const API_MoralisAppId = process.env.MORALIS_API_ID;
-const API_MoralisAppUrl = process.env.MORALIS_APP_URL;
+// const API_MoralisAppId = process.env.MORALIS_API_ID;
+// const API_MoralisAppUrl = process.env.MORALIS_APP_URL;
+// const API_MoralisMasterKey = process.env.MORALIS_MASTER_KEY;
 const API_web3StorageToken = process.env.WEB3_STORAGE_TOKEN;
 // const MoralisEndpoint = '/api/oxQuoteHandler'
 
+const API_MoralisAppId = process.env.NEXT_PUBLIC_MORALIS_API_ID;
+const API_MoralisAppUrl = process.env.NEXT_PUBLIC_MORALIS_APP_URL;
+const API_MoralisMasterKey = process.env.NEXT_PUBLIC_MORALIS_MASTER_KEY;
+// const API_web3StorageToken = process.env.WEB3_STORAGE_TOKEN;
+
 // 'use strict'
+
+
+
+const searchVendorProfiles = async (searchedString) => {
+
+       //  const vendorsData = Utils.vendorsData;
+       const vendorsData = await fetchVendorsDataFromApi();
+       const searchKeyword = searchedString.trim().toLowerCase();
+       console.log("searchKeyword in lowercase", searchKeyword);
+
+       let map3Vendors ;
+       if(searchedString.toLowerCase() == '*'){
+           console.log('every data was requested')
+           map3Vendors = vendorsData;
+
+       }else{
+       map3Vendors = vendorsData.filter(function (item) {
+           const name = item.name;
+           const walletAddress = item.walletAddress;
+          //  const KeyWords = item.keyWords
+          //  const websiteUrl = item.websiteUrl
+          //  const bio = item.description;
+
+           return(
+               (name.toLowerCase().includes(searchKeyword) && item) ||
+               (walletAddress.toLowerCase().includes(searchKeyword) && item)
+              //  ||
+              //  (websiteUrl.toLowerCase().includes(searchKeyword) && item)||
+              //  (bio.toLowerCase().includes(searchKeyword) && item)
+              //  ||(KeyWords.some((keyWord) => {
+              //      return keyWord.toLowerCase().includes(searchKeyword);
+              //  }
+              //  ) && item)
+             )
+       })
+
+
+}
+
+return({map3Vendors:map3Vendors})
+
+}
+
+
+const fetchVendorProfileData = async (_vendorAddress) => {
+
+  const vendorsData = await fetchVendorsDataFromApi();
+  const VendorsAddress = _vendorAddress.trim().toLowerCase();
+
+  let mapProfileData = vendorsData.filter(function (item) {
+  const walletAddress = item.walletAddress;
+
+  return( 
+          (walletAddress.toLowerCase().includes(VendorsAddress) && item))
+  })
+console.log(mapProfileData.length ,'(mapProfileData.legnth?')
+console.log(mapProfileData.length == 0 ,'(mapProfileData.legnth ==0)')
+  if (mapProfileData.length == 0){
+    return({vendorData:{}, isVendor:false})
+  }else{
+
+      console.log(mapProfileData, '.. mapProfileData...')
+      
+      let VendorsCurrencyInfo = await  UTILS.GetCUrrencyDetails(mapProfileData[0].vendorsToken)
+      console.log("VendorsCurrencyInfo..... from api", VendorsCurrencyInfo)
+
+      let vendorData = {
+          // reciver: mapProfileData[0].walletAddress,
+          // reciversToken: mapProfileData[0].vendorsToken,
+          vendorsDetails: mapProfileData,
+          VendorsCurrencyInfo: VendorsCurrencyInfo,
+      };
+      console.log("vendorData.......................", vendorData)
+      return({vendorData:vendorData, isVendor:true})
+
+
+  }
+
+}
+
+
+
+
+
+
+
+
+
+const fetchDataForMap = async (searchedString) => {
+
+            //  const vendorsData = Utils.vendorsData;
+            const vendorsData = await fetchVendorsDataFromApi();
+            const searchKeyword = searchedString.trim().toLowerCase();
+            console.log("searchKeyword in lowercase", searchKeyword);
+   
+            let map3Vendors ;
+            if(searchedString.toLowerCase() == '*'){
+                console.log('every data was requested')
+                map3Vendors = vendorsData;
+
+            }else{
+            map3Vendors = vendorsData.filter(function (item) {
+                const name = item.name;
+                const walletAddress = item.walletAddress;
+                const KeyWords = item.keyWords
+                const websiteUrl = item.websiteUrl
+                const bio = item.description;
+
+                return(
+                    (name.toLowerCase().includes(searchKeyword) && item) ||
+                    (walletAddress.toLowerCase().includes(searchKeyword) && item)||
+                    (websiteUrl.toLowerCase().includes(searchKeyword) && item)||
+                    (bio.toLowerCase().includes(searchKeyword) && item)
+                    ||(KeyWords.some((keyWord) => {
+                        return keyWord.toLowerCase().includes(searchKeyword);
+                    }
+                    ) && item)
+                  )
+            })
+
+
+}
+
+return({map3Vendors:map3Vendors})
+}
+
+
+
+
+
+
+
+
+
+
+
+const fetchVendorsDataFromApi = async () => {
+
+  console.log('trying to get data from moralis')
+  const serverUrl = API_MoralisAppUrl;
+const appId = API_MoralisAppId;
+const masterKey = API_MoralisMasterKey;
+
+await Moralis.start({ serverUrl, appId, masterKey });
+
+const MapVendors = Moralis.Object.extend("MapVendors");
+const query = new Moralis.Query(MapVendors);
+
+const results = await query.find();
+console.log('results! from moralis api database..', results)
+
+
+
+// string[7] memory _vendorDetails = [
+//   _signUpVendor.vendorsName,0
+//   _signUpVendor.vendorsEmail,1
+//   _signUpVendor.vendorsBio,2
+//   _signUpVendor.vendorsLat,3
+//   _signUpVendor.vendorsLong,4
+//   _signUpVendor.vendorsImageUrl,5
+//   _signUpVendor.vendorsWebsiteUrl,6
+//   ];
+  
+//   emit newVendorInfo(
+//   _signUpVendor.vendorsWalletAddress,
+//   _vendorDetails,
+//   _signUpVendor.keyWords,
+//   VendorId[address(msg.sender)],
+//   _signUpVendor.vendorsToken
+//       );
+
+
+const finalResults = results.map((item) =>{
+  let name = item.attributes.vendorDetails[0];
+  let description = item.attributes.vendorDetails[2];
+  let imgUrl = item.attributes.vendorDetails[5];
+  let lat = item.attributes.vendorDetails[3];
+  let long = item.attributes.vendorDetails[4];
+  let walletAddress = item.attributes.vendorsWalletAddress;
+  let vendorsToken = item.attributes.vendorsToken;
+  let email = item.attributes.vendorDetails[1];
+  let websiteUrl = item.attributes.vendorDetails[6];
+  let keyWords = item.attributes.keyWords;
+
+  return{
+    name,
+description,
+imgUrl,
+lat,
+long,
+walletAddress,
+vendorsToken,
+email,
+websiteUrl,
+keyWords
+  }
+})
+
+return(finalResults)
+
+} 
+
+
+
+
+
 
 // //providers.JsonRpcProvider()
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
@@ -144,6 +361,8 @@ const API_web3StorageToken = process.env.WEB3_STORAGE_TOKEN;
 //   return tx1
 // }
 
+
+
   const approveSendersTokenData = (spenderAddress,approveAmount) => {
     const approveAnyTokenData =  [spenderAddress,approveAmount]
     console.log("constructing approveTokenData from oxPay api.....")
@@ -208,14 +427,6 @@ const API_web3StorageToken = process.env.WEB3_STORAGE_TOKEN;
        return returnOfFunctionBytesEncoderAndImplementor
    }
   
-
-
-
-
-
-
-
-
 
 
 // WRITE FUNCTION for FRONT END !!!!!
@@ -313,7 +524,7 @@ const map3PayExecutor = async (signer, returnOfFunctionBytesEncoder, txValue) =>
     console.log("completed Map3SwapData from oxPay : ", Map3SwapData)
     return(Map3SwapData)
 
-}
+} 
 
 const OxErc20ToEthPayExecutor = async (signer, Map3SwapData, txValue ) => {
 
@@ -583,7 +794,11 @@ module.exports = {
     ethers,
     API_MoralisAppId,
     API_MoralisAppUrl,
-    API_web3StorageToken
+    API_web3StorageToken,
+    fetchVendorsDataFromApi,
+    fetchDataForMap,
+    fetchVendorProfileData,
+    searchVendorProfiles
 
 
 };

@@ -339,13 +339,13 @@ const handleNoAccount= () => {
               <PayVendorLayout>
           <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
            
-          reciversTokenInfo
+          {/* reciversTokenInfo */}
             <VendorReciverCoinInput
-            label={'Recivers Token'}
+            label={'Receivers Token'}
             // tokenAddress={reciversToken && reciversToken}
             tokenInfo={reciversTokenInfo && reciversTokenInfo}
             getCoinValue={(data) => {
-              console.log('Recivers coin value:', data)
+              console.log('Receivers coin value:', data)
               setamountToBeSent(data.value)
           }}
             />

@@ -2,13 +2,17 @@ import Utils from'/Utilities/utils';
  import{signUpTransactionRelayer} from "./FEsignUpTransactionRelayer"
 
 
-const signUpEventHandler = async (signer, UsertransactionInput, handleSuccess,handleError, setSystemProcessing , setTransacting) => {
+// const signUpEventHandler = async (signer, UsertransactionInput, handleSuccess,handleError, setSystemProcessing) => {
+    const signUpEventHandler = async (signer, UsertransactionInput, handleSuccess,handleError, setSystemProcessing, openModal) => {
     setSystemProcessing(true)
     try{
-
-        await signUpTransactionRelayer(signer, UsertransactionInput,0 )
+ 
+        const txReciept = await signUpTransactionRelayer(signer, UsertransactionInput,0 )
+             await txReciept.wait()
         //alert("approval succesful")
-        handleSuccess(`Success!`)
+        txReciept &&  openModal('SIGN_UP_CONFIRMATION')
+        txReciept &&  console.log('txReciept for sign up transaction...', txReciept)
+        // handleSuccess(`Success!`)
 
         } catch(err){
         //   setTransacting(false)

@@ -124,27 +124,3 @@ export default RegisterVendor;
 // userImage: Array(1)
 // 0: File {path: 'benefit-two.png', preview: 'blob:http://localhost:3000/f609e4cd-5d1d-4794-9a80-3c4688a5b3af', name: 'benefit-two.png', lastModified: 1655080987124, lastModifiedDate: Sun Jun 12 2022 19:43:07 GMT-0500 (Central Daylight Time), …}
 // length: 1
-
-
-
-// async function handleSubmit (files) {
-//     // don't reload the page!
-//     console.log('> 📦 creating web3.storage client')
-//     const client = new Web3Storage({ token })
-
-//     console.log('> 🤖 chunking and hashing the files (in your browser!) to calculate the Content ID')
-//     const cid = await client.put(files, {
-//       onRootCidReady: localCid =>{},
-//       onStoredChunk: bytes =>{}
-//     })
-//     // console.log(`> ✅ web3.storage now hosting ${cid}`)
-//     showLink(`https://dweb.link/ipfs/${cid}`)
-
-//     // console.log('> 📡 fetching the list of all unique uploads on this account')
-//     let totalBytes = 0
-//     for await (const upload of client.list()) {
-//       // console.log(`> 📄 ${upload.cid}  ${upload.name}`)
-//       totalBytes += upload.dagSize || 0
-//     }
-//     console.log(`> ⁂ ${totalBytes.toLocaleString()} bytes stored!`)
-//   }

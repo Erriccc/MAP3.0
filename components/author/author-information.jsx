@@ -21,13 +21,18 @@ export default function AuthorInformation({ className = 'md:hidden', data, map3U
       {/* Social */}
       <div className="border-y border-dashed border-gray-200 py-5 dark:border-gray-700 xl:py-6">
         <div className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
-          Social
+          Website
         </div>
-        {/* {data?.socials?.map((social) => (<AnchorLink href={social?.link} className="mb-2 flex items-center gap-x-2 text-sm tracking-tight text-gray-600 transition last:mb-0 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-white" key={social?.id}>
-            {social?.icon}
-            {social?.title}
-          </AnchorLink>))} */}
-          {data.email}
+        {data.websiteUrl && (
+          // <AnchorLink href= {data.websiteUrl && data.websiteUrl} className="mb-2 flex items-center gap-x-2 text-sm tracking-tight text-gray-600 transition last:mb-0 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-white" >
+          //   visit Website
+          // </AnchorLink>
+          <div>{data.websiteUrl}</div>
+          
+          )}
+          
+         
+          {/* {data.websiteUrl && data.websiteUrl} */}
       </div>
 
       {/* Links */}

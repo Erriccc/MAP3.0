@@ -1,32 +1,71 @@
-import { useState } from 'react';
+import { useState,useReducer,useEffect } from 'react';
 import Image from '/components/ui/image';
 import { SearchIcon } from '/components/icons/search';
 import vendorsData from "../../constants/testdata.json";
 import CollectionImage1 from 'assets/images/collection/collection-1.jpg';
+import {findProfilesDataFetcherRelayer} from '/Utilities/FrontEndUtilities/FEfindProfilesDataFetcherRelayer'
 
 export default function ProfileSearchSelect({ onSelect, tittle }) {
     let [searchKeyword, setSearchKeyword] = useState('');
-    let searchData = vendorsData;
+
+    let [tempDataInfo, setTempDataInfo] = useState([]);
+  const [mapDataState, dispatchather] = useReducer(reducer,{dataFromServer:[],showDataFromServer: false, loadingInfo: true, FoundInfo: false });
+  // const [displayData, setDisplayData] = useState([]);
+
+function reducer(mapDataState, action){
+  
+    switch (action.type) {
+      case "SHOW":
+        return {dataFromServer: tempDataInfo, showDataFromServer: true, loadingInfo: false, FoundInfo: false}
+      case "FOUND":
+        return {dataFromServer:tempDataInfo, showDataFromServer: false, loadingInfo: false, FoundInfo: true}
+      case "HIDE":
+          return {dataFromServer: {}, showDataFromServer: false, loadingInfo: false, FoundInfo: false}
+      default:
+        return mapDataState
+
+    }
+}
+    
+    // let searchData = vendorsData;
+    let searchData;
+    useEffect(() => {
 
     if (searchKeyword.length > 0) {
-        searchData = vendorsData.filter(function (item) {
-            const name = item.name;
-            const walletAddress = item.walletAddress;
-            console.log("raw data.., ",
-            
-            name.match(searchKeyword.toLowerCase()) ||
-                walletAddress.match(searchKeyword.toLowerCase()) ||
-                (name.toLowerCase().match(searchKeyword.toLowerCase()) && name) ||
-                (walletAddress.toLowerCase().match(searchKeyword.toLowerCase()) && walletAddress)
-            )
-            return (
-                name.match(searchKeyword) ||
-                walletAddress.match(searchKeyword) ||
-                (name.toLowerCase().match(searchKeyword) && name) ||
-                (walletAddress.toLowerCase().match(searchKeyword) && walletAddress) 
-                 );
-        });
+
+      const userSearchInput = {string:searchKeyword};
+      console.log('searching blah.. xyz xyz xyz...');
+
+        (async()=> {
+          let tempData = await findProfilesDataFetcherRelayer(userSearchInput)
+          if(await tempData == undefined){
+            return
+          }else{
+            console.log("tempData...", await tempData)
+            // searchData = tempData.map3Vendors
+            // setDataFromServer(tempData)
+          setTempDataInfo(tempData.map3Vendors)
+          // setDisplayData(tempData.map3Vendors)
+          dispatchather({type:"FOUND"})
+          console.log('done searching')
+          }
+          
+        })();
     }
+  }, [searchKeyword]); // Note we are running the use effect every time we recieve a new search filter
+
+    useEffect(()  => {
+      if(mapDataState.FoundInfo){
+        console.log("testing values...", mapDataState.dataFromServer)
+        console.log('testing value of tempDataInfo', tempDataInfo)
+        console.log('tempDataInfo.length', tempDataInfo.length)
+        dispatchather({type:"SHOW"})
+      }else{
+        console.log('skipping SHOW state')
+        return
+      }
+        }, [tempDataInfo])
+
     function handleSelectedCoin(walletAddress) {
         onSelect(walletAddress);
     }
@@ -39,7 +78,16 @@ export default function ProfileSearchSelect({ onSelect, tittle }) {
         <input type="search" autoFocus={true} onChange={(e) => setSearchKeyword(e.target.value)} placeholder="Search..." className="w-full border-x-0 border-b border-dashed border-gray-200 py-3.5 pl-14 pr-6 text-sm focus:border-gray-300 focus:ring-0 dark:border-gray-600 dark:bg-light-dark dark:text-white dark:focus:border-gray-500"/>
       </div>
       <ul role="listbox" className="py-3">
-        {searchKeyword.length >0 && searchData.length > 0 ? (searchData.map((item, index) => (
+        { searchKeyword.length >0 && !mapDataState.showDataFromServer &&
+                  (
+                    <li  role="listitem"  className="mb-1 flex flex-col cursor-pointer items-center gap-3 py-1.5 px-6 outline-none hover:bg-gray-300 focus:bg-gray-400 dark:hover:bg-gray-700 dark:focus:bg-gray-600">
+                    <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full shadow-card">
+                        Loading....
+                    </div>
+                  </li>
+                  )
+                }
+        {searchKeyword.length >0 && mapDataState.dataFromServer.length > 0 ? (mapDataState.dataFromServer.map((item, index) => (
         <li key={index} role="listitem" tabIndex={index} onClick={() => handleSelectedCoin(item.walletAddress)} className="mb-1 flex cursor-pointer items-center gap-3 py-1.5 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-600">
               <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full shadow-card">
                 <Image 
@@ -53,7 +101,8 @@ export default function ProfileSearchSelect({ onSelect, tittle }) {
               <span className="text-sm tracking-tight text-gray-600 dark:text-white">
                 {item.name}
               </span>
-            </li>))) : (
+            </li>))) :
+                  (
 
 
         //  VALIDATE THAT INPUT IS AN ADDRESS

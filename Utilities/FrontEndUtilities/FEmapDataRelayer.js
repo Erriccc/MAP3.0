@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 import { mapDataFetcherEndpoint} from'/Utilities/utils';
+const apiUtils = require('../apiUtils');
 
 
 //  mapDataFetcherEndpoint,
@@ -20,7 +21,7 @@ return
 }else{
     const map3SearchData = {
         string: userSearchInput.string
-      }
+      } 
 
         console.log("User input for mapData: from mapDataRelayer", map3SearchData)
 
@@ -38,11 +39,13 @@ return
           // Body of the request is the JSON data we created above.
           body: JSONdata,
         }
-        const response = await fetch(endpoint, options)
+        // const response = await fetch(endpoint, options)
         // console.log("response..... from mapDataFetchingRelayer: ", await response)
-
-        const result = await response.json()
-        console.log("response..... from mapDataFetchingRelayer: ",result)
+ 
+        // const result = await response.json()
+        // console.log("response..... from mapDataFetchingRelayer: ",result)
+        const result = await apiUtils.fetchDataForMap(userSearchInput.string);// new implimentation from moralis database
+ 
 
         // setTempDataInfo(result)
         // dispatchather({type:"FOUND"})

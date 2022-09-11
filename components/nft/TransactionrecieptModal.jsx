@@ -6,7 +6,7 @@ import { useMoralis } from 'react-moralis'
 import { useContext, useEffect } from 'react';
 import ActiveLink from '/components/ui/links/active-link';
  
-export default function ConfirmationModal({  confirmationTitle }) {
+export default function TransactionrecieptModal({  confirmationTitle }) {
     // const { address, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
     // const { closeModal } = useModal();
     const {isAuthenticated, account} = useMoralis()
@@ -23,10 +23,6 @@ export default function ConfirmationModal({  confirmationTitle }) {
         {confirmationTitle}
       </p>
 
-      <p className="text-center text-sm leading-loose tracking-tight text-gray-600 dark:text-gray-400">
-        You have just recieved 3 free transactions for signing up today. invite friends to enjoy this new way of payment.
-      </p>
-
       {/* <div className='mt-10 flex h-14 w-1/2 mx-auto cursor-pointer items-center justify-center rounded-lg bg-blue-200 ' 
         onClick={async ()=>{
         //   closeModal()
@@ -37,13 +33,17 @@ export default function ConfirmationModal({  confirmationTitle }) {
         </ActiveLink>
       {/* </div> */}
       <div className='mt-5 flex h-14 w-1/2 mx-auto cursor-pointer items-center justify-center rounded-lg bg-blue-200 ' 
-        onClick={async ()=>{
+    onClick={async ()=>{
         // closeModal()
       }}
       >
               <span>Send feedback</span>
       </div>
 
+
+      {/* {error && (<p className="mt-3 text-center text-xs text-red-500">
+          we encountered an error: {error}
+        </p>)} */}
     </div>);
 }
  

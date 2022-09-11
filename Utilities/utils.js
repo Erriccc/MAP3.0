@@ -62,6 +62,7 @@ const  Map3PolygonTEST8="0x0158345e52522C57ce34773c89D0214c2d10edd1" // with pla
 const Map3P2PContractTest1 ="0x11F15ad3D1f8Ab61b86FC2Bd2247Cf2EB96F3ddF"
 const Map3P2PContractTest2 ="0x5416c30970a66B041Df941e2A28711E1c7f8e0Ce"
 const Map3P2PContractTest3 ="0x8b637c32B61b838a574a6a1834361758E5610eC8"
+const Map3P2PContractTest4 ="0xfC2d1c0166e00DBfa712C1F33F7634213e720215"
 
 
 
@@ -69,11 +70,12 @@ const  Map3VendorPlansPolgonTest1="0xfdD4e6BFC94a402bC40161067fC29860518159Ca" /
 const  Map3VendorPlansPolgonTest2="0x3095d04AdC87dF6C50A9de0A5106602DB6fc902e" // with plans and sending eth transactions
 const  VendorAccountsManagerContractTest1 = "0xfdF123c9E8BD78a50bdD41aaEe069d89e8B4BE57"
 const  VendorAccountsManagerContractTest2 = "0x2C6792dB0b81678a784F34C916546A5b292fbeA1"
+const  VendorAccountsManagerContractTest3 = "0x7ae71782c11d7Af24A437F802926E3B6859D2b7E"
 
 
 
-const  Map3address=Map3P2PContractTest3;
-const  Map3VendorAddress=VendorAccountsManagerContractTest2;
+const  Map3address=Map3P2PContractTest4;
+const  Map3VendorAddress=VendorAccountsManagerContractTest3;
 
 const EthAddress = "0x0000000000000000000000000000000000000000";
 const _wethAddresses = {

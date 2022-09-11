@@ -1,6 +1,8 @@
 const fetch = require('node-fetch');
 import { payProfileDataFetcherEndpoint} from'/Utilities/utils';
 import Utils from'/Utilities/utils';
+const apiUtils = require('../apiUtils');
+
 
 // ValidateIfStringIsAddress
 // findProfilesDataFetcherRelayer
@@ -39,12 +41,14 @@ const payProfileDataFetcherRelayer = async (account) => {
             // Body of the request is the JSON data we created above.
             body: JSONdata,
           }
-          const response = await fetch(endpoint, options)
+          // const response = await fetch(endpoint, options)
           // console.log("response..... from mapDataFetchingRelayer: ", await response)
   
-          const result = await response.json()
-          console.log("response..... from findProfilesDataFetcherRelayer: ",result)
-  
+          // const result = await response.json()
+          // console.log("response..... from findProfilesDataFetcherRelayer: ",result)
+        const result = await apiUtils.fetchVendorProfileData(account);
+
+          
           // setTempDataInfo(result)
           // dispatchather({type:"FOUND"})
           

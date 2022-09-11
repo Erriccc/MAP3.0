@@ -128,17 +128,17 @@ export default function PayAnonymous() {
         <NextSeo title="map3 pay" description="Map3 - find crypto friendly businesses near you, and make crypto payments in your preferred currency."/>
         <PayAnonymousLayout>
           <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
-                <ProfileModalInput label={`Reciver: ${reciver}`}
+                <ProfileModalInput label={`Receiver: ${reciver}`}
                 getCoinValue={(value) => {
-                console.log('Reciver value:', value)
+                console.log('Receiver value:', value)
                 setReciver(value)
                 }}
                 />
                   
             <div className={cn('relative flex gap-3', toggleCoin ? 'flex-col-reverse' : 'flex-col')}>
-              <ReciversCoinInput label={'Recivers Token'}
+              <ReciversCoinInput label={'Receivers Token'}
               getCoinValue={(data) => {
-                console.log('Recivers coin value:', data)
+                console.log('Receivers coin value:', data)
                 setReciversToken(data.address)
                 setamountToBeSent(data.value)
             
@@ -200,8 +200,12 @@ export default function PayAnonymous() {
                 })();
             }}
            >
-            SEND
+            Confirm
           </Button>
+          {(<Button size="large" shape="rounded" fullWidth={true} className="mt-6 uppercase xs:mt-8 xs:tracking-widest"
+           >
+            SEND
+          </Button>)}
         {validatingInput && (<ProcessingView status={"validating Input..."} arrayToDisplay={Utils.TypoEffectTexts.Validating}/>)}
         {systemProcessing && (<ProcessingView status={"System Processing... "} arrayToDisplay={Utils.TypoEffectTexts.Processing}/>)}
         {transacting && (<ProcessingView status={"Transacting..."} arrayToDisplay={Utils.TypoEffectTexts.Transacting}/>)}

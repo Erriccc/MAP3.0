@@ -166,17 +166,17 @@ export default function PayAnonymous() {
         <NextSeo title="Swap" description="Map3 - find crypto friendly businesses near you, and make crypto payments in your preferred currency."/>
         <PayAnonymousLayout>
           <div className="mb-5 border-b border-dashed border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
-                <ProfileModalInput label={`Reciver: ${reciver}`}
+                <ProfileModalInput label={`Receiver: ${reciver}`}
                 getCoinValue={(value) => {
-                console.log('Reciver value:', value)
+                console.log('Receiver value:', value)
                 setReciver(value)
                 }}
                 />
                   
             <div className={cn('relative flex gap-3', toggleCoin ? 'flex-col-reverse' : 'flex-col')}>
-              <ReciversCoinInput label={'Recivers Token'}
+              <ReciversCoinInput label={'Receivers Token'}
               getCoinValue={(data) => {
-                console.log('Recivers coin value:', data)
+                console.log('Receivers coin value:', data)
                 setReciversToken(data.address)
                 setamountToBeSent(data.value)
             

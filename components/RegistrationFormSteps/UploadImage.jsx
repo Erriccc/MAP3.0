@@ -13,8 +13,15 @@ export default function UploadImage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log("name and value..", name, value)
-    setUserData({ ...userData, ["userImage"]: null });
-    setUserData({ ...userData, [name]: value });
+
+    let tempUserData = {...userData}
+    if (tempUserData.userImage) delete tempUserData.userImage
+    tempUserData.imageUrl = value
+
+    setUserData(tempUserData);
+
+    // setUserData({ ...userData, ["userImage"]: null });
+    // setUserData({ ...userData, [name]: value });
   };
 
   return (
@@ -39,8 +46,12 @@ export default function UploadImage() {
                      <Uploader
                      getSelectedFile={(data) => {
                          console.log('getSelectedFile file value:', data)
-                       setUserData({ ...userData, ["imageUrl"]: null });
-                       setUserData({ ...userData, ["userImage"]: data });
+                         let tempUserData = {...userData}
+                         if (tempUserData.imageUrl) delete tempUserData.imageUrl
+                         tempUserData.userImage = data
+                      //  setUserData({ ...userData, ["imageUrl"]: null });
+                      //  setUserData({ ...userData, ["userImage"]: data });
+                       setUserData(tempUserData);
                        
                        
                        }}

@@ -62,7 +62,7 @@ const VendorsMap = ({ searchResults, setDisplayData }) => {
         longitude: searchResults.length > 0 ? center.longitude : -87.623177,
       // latitude: searchResults.length > 0 ? mapCenter ? mapCenter.latitude             : center.latitude  : 41.881832,
       // longitude: searchResults.length > 0 ? mapCenter ? mapCenter.longitude           : center.longitude : -87.623177,
-        zoom: 8
+        zoom: 6
       }}
       style={{width: "100vw", height: "100vh"}}
 
@@ -72,9 +72,10 @@ const VendorsMap = ({ searchResults, setDisplayData }) => {
         setMapCenter({latitude:e.coords.latitude , longitude:e.coords.longitude })
       }}
       /> */}
-      {searchResults.length > 0 &&  searchResults.map((result) => (
+      {searchResults.length > 0 &&  searchResults.map((result,index) => (
           <Marker
-            key={result.long}
+            key={index}
+            // key={result.long}
             latitude={result.lat}
             longitude={result.long}
             // offsetLeft={-20}

@@ -3,7 +3,8 @@ import Utils from'/Utilities/utils';
 
 import { WalletContext } from 'lib/hooks/use-connect';
 import { useModal } from '/components/modal-views/context';
-import { useMoralis } from 'react-moralis'
+import { useMoralis } from 'react-moralis';
+
 import { useContext, useEffect, useState } from 'react';
 // import { ConnectButton} from "web3uikit";
 import FeaturedCard from '/components/nft/featured-card';
@@ -24,6 +25,7 @@ import ProcessingView from '/components/ui/ProcessingView';
  
 
 export default function Final() {
+  const { openModal } = useModal();
 
 const { userData, setUserData} = useStepperContext();
 const  [files, setFiles] = useState({userData})
@@ -62,7 +64,9 @@ let [systemProcessing, setSystemProcessing] = useState(false);
         const wrappedProvider = new Utils.ethers.providers.Web3Provider(Moralis.connector.provider);
         const wrappedSigner = wrappedProvider.getSigner();
         try{
-          await signUpEventHandler(wrappedSigner, UsertransactionInput, handleSuccess,handleError, setSystemProcessing, setTransacting);
+          await signUpEventHandler(wrappedSigner, UsertransactionInput, handleSuccess,handleError, setSystemProcessing, openModal);
+          // await signUpEventHandler(wrappedSigner, UsertransactionInput, handleSuccess,handleError, setSystemProcessing);
+          // openModal('WALLET_CONNECT_VIEW')
         }catch(e){
         }
       };
@@ -84,26 +88,38 @@ let [systemProcessing, setSystemProcessing] = useState(false);
                 Confirm Details
         </div>
         <div className="flex flex-col">
-                <div className="relative h-25 w-full overflow-hidden rounded-lg sm:h-30 md:h-40 xl:h-50 2xl:h-60">
-                       {userData.userImage ?( 
+                <div className="relative h-40 w-40 overflow-hidden rounded-lg xl:h-50 2xl:h-60">
+                       {userData.userImage &&( 
                        <img
                         src={URL.createObjectURL(userData.userImage[0]) }
                         style={{
-                            width: 'auto',
-                            height: 'auto'
+                            width: '0px',
+                            height: '0px',
+                            minWidth:'100%',
+                            maxWidth:'100%',
+                            minHeight: "100%",
+                            maxHeight: '100%'
+                            
                         }}
                         // Revoke data uri after image is loaded
                         onLoad={() => { URL.revokeObjectURL(userData.userImage[0].preview) }}
                         alt="profile Image"
                         />
-                        ):(
-                <Image 
-                // src={authorData?.cover_image?.thumbnail}
-                src={`/api/imagefetcher?url=${encodeURIComponent(
-                    userData.imageUrl
-                  )}`}
-                layout="fill" objectFit="cover" alt="profile Image"/>
                         )
+                        
+                }{userData.imageUrl && (
+                      <Image 
+                      src={`/api/imagefetcher?url=${encodeURIComponent(
+                          userData?.imageUrl
+                        )}`}
+                      layout="fill" 
+                      // objectFit="cover" 
+                      // width={150} height={150}
+                     
+                      alt="profile Image"/>
+
+              // alt={name} width={48} height={48} className="rounded-[6px]"/>
+                              )
                         }
 
                 </div>

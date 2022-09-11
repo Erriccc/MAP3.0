@@ -25,7 +25,7 @@ export default function Rentals () {
   const { Moralis, account } = useMoralis();
   // REMEMBER NOT TO DELETE, THIS IS HOW YOU SET VENDORS LIST STATE
   let [tempDataInfo, setTempDataInfo] = useState([]);
-const [mapDataState, dispatchather] = useReducer(reducer,{dataFromServer:[],showDataFromServer: false, loadingInfo: true, FoundInfo: false });
+  const [mapDataState, dispatchather] = useReducer(reducer,{dataFromServer:[],showDataFromServer: false, loadingInfo: true, FoundInfo: false });
   const [displayData, setDisplayData] = useState([]);
 
 function reducer(mapDataState, action){
