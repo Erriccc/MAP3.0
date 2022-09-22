@@ -3,7 +3,7 @@
 
 
 
-export default function form(req, res) {
+export default async function form(req, res) {
     const body  = req.body
      // Guard clause checks for first and last name,
     // and returns early if they are not found
@@ -16,7 +16,7 @@ export default function form(req, res) {
     console.log("running server function from map3approve... " )
 
    
-  const  tempResponsePaymentData = apiUtils.approveSendersTokenData(body.contractAddress, body.amount)
+  const  tempResponsePaymentData = await apiUtils.approveSendersTokenData(body.contractAddress, body.amount)
 //   const oxQuoteResult
 const responsePaymentData = {
     txdata:tempResponsePaymentData

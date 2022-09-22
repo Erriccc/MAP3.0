@@ -1,7 +1,9 @@
 const fetch = require('node-fetch');
 import {Map3address, map3ApproveEndpoint} from'/Utilities/utils';
 import {approveSendersTokenExecutor} from '/Utilities/apiUtils'
-const approveTransactionRelayer = async (signer, UsertransactionInput, tokenammount ) => {
+import Utils from '/Utilities/utils'
+
+const approveTransactionRelayer = async (wrappedProvider, tokenammount ) => {
      const approvalData = {
         amount: tokenammount,
         contractAddress: Map3address,
@@ -24,12 +26,22 @@ const approveTransactionRelayer = async (signer, UsertransactionInput, tokenammo
         console.log("response..... from approveTransactionRelayer: ", response)
         const result = await response.json()
         const txdata = result.txdata
+        // let gasPrice = await Utils.provider.getGasPrice()
+        let gasPrice = await wrappedProvider.getGasPrice()
+        // let feedata = await wrappedProvider.getFeeData()
+        // console.log('fee data', feedata)
+        return {txdata, gasPrice, approveTx: true}
 
-        console.log("txdata..... from m3paytransactionrelayer: ", txdata)
+        // console.log("txdata..... from m3paytransactionrelayer: ", txdata)
 
-        const tx2 = await  approveSendersTokenExecutor(signer, UsertransactionInput.sendersToken,txdata) // New Implementation of backend transactions
-        return (tx2)
-
+        // const tx2 = await  approveSendersTokenExecutor(signer, UsertransactionInput.sendersToken,txdata) // New Implementation of backend transactions
+         // return (tx2)
+ 
 }
 
-module.exports = {approveTransactionRelayer}
+
+const approveTransactionSender = async (signer, UsertransactionInput, txdata ) => {
+  const tx2 = await  approveSendersTokenExecutor(signer, UsertransactionInput.sendersToken,txdata) // New Implementation of backend transactions
+  return (tx2)
+}
+module.exports = {approveTransactionRelayer, approveTransactionSender}

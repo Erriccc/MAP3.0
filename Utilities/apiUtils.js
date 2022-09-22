@@ -363,10 +363,11 @@ return(finalResults)
 
 
 
-  const approveSendersTokenData = (spenderAddress,approveAmount) => {
+  const approveSendersTokenData = async (spenderAddress,approveAmount) => {
+    console.log('spender address and approval amount.', spenderAddress, approveAmount)
     const approveAnyTokenData =  [spenderAddress,approveAmount]
     console.log("constructing approveTokenData from oxPay api.....")
-    const approveTokenData =    functionBytesEncoder(IERC20Abi,"approve",approveAnyTokenData)
+    const approveTokenData =    await functionBytesEncoder(IERC20Abi,"approve",approveAnyTokenData)
   console.log("typeOf approveTokenData: ", typeof approveTokenData)
     console.log("completed approveTokenData from oxPay : ", approveTokenData)
     return(approveTokenData)
@@ -390,22 +391,22 @@ return(finalResults)
 }
 
 
-    const map3PayData = (_tokenamount,  _to,  _tokenIn, _sendAsWeth) => {
+    const map3PayData = async (_tokenamount,  _to,  _tokenIn, _sendAsWeth) => {
           const SameTokenPayData =  [_tokenamount,_to,_tokenIn, _sendAsWeth]
           console.log("last stop before details are encoded.....", SameTokenPayData)
           console.log("constructing Map3SameTokenPayData from oxPay api.....")
-          const Map3SameTokenPayData =    functionBytesEncoder(Map3Abi,"SameTokenPay",SameTokenPayData)
+          const Map3SameTokenPayData =    await functionBytesEncoder(Map3Abi,"SameTokenPay",SameTokenPayData)
         console.log("typeOf Map3SwapData: ", typeof Map3SameTokenPayData)
           console.log("completed Map3SameTokenPayData from oxPay : ", Map3SameTokenPayData)
           return(Map3SameTokenPayData)
       }
 
 
-      const map3SignUpData = (_tupple) => {
+      const map3SignUpData = async (_tupple) => {
         const signUpData =  [_tupple]
         console.log("last stop before signUpData details are encoded.....", signUpData)
         console.log("constructing signUpData from oxPay api.....")
-        const Map3SignUpData =    functionBytesEncoder(Map3VendorsABi,"addVendor",signUpData)
+        const Map3SignUpData =   await  functionBytesEncoder(Map3VendorsABi,"addVendor",signUpData)
       console.log("typeOf Map3SignUpData: ", typeof Map3SignUpData)
         console.log("completed Map3SignUpData from oxPay : ", Map3SignUpData)
         return(Map3SignUpData)
@@ -446,7 +447,7 @@ const map3PayExecutor = async (signer, returnOfFunctionBytesEncoder, txValue) =>
 
 
 
- const OxPayTxData = (
+ const OxPayTxData = async (
       sellTokenAddress,
       buyTokenAddress,
       allowanceTargetquote,
@@ -470,7 +471,7 @@ const map3PayExecutor = async (signer, returnOfFunctionBytesEncoder, txValue) =>
         console.log("last stop before details are encoded.....", fillSwapData)
 
         console.log("constructing Map3SwapData from oxPay api.....")
-        const Map3SwapData =    functionBytesEncoder(Map3Abi,"fillQuote",fillSwapData)
+        const Map3SwapData =    await functionBytesEncoder(Map3Abi,"fillQuote",fillSwapData)
       console.log("typeOf Map3SwapData: ", typeof Map3SwapData)
         console.log("completed Map3SwapData from oxPay : ", Map3SwapData)
         return(Map3SwapData)
@@ -495,7 +496,7 @@ const map3PayExecutor = async (signer, returnOfFunctionBytesEncoder, txValue) =>
 
 
     
- const OxErc20ToEthPayTxData = (
+ const OxErc20ToEthPayTxData = async (
   sellTokenAddress,
   // buyTokenAddress, // no buyTokenAddress
   allowanceTargetquote,
@@ -519,7 +520,7 @@ const map3PayExecutor = async (signer, returnOfFunctionBytesEncoder, txValue) =>
     console.log("last stop before details are encoded.....", fillSwapData)
 
     console.log("constructing Map3SwapData from oxPay api.....")
-    const Map3SwapData =    functionBytesEncoder(Map3Abi,"fillErc20ToEthQuote",fillSwapData)
+    const Map3SwapData =    await functionBytesEncoder(Map3Abi,"fillErc20ToEthQuote",fillSwapData)
   console.log("typeOf Map3SwapData: ", typeof Map3SwapData)
     console.log("completed Map3SwapData from oxPay : ", Map3SwapData)
     return(Map3SwapData)
@@ -560,13 +561,20 @@ const OxErc20ToEthPayExecutor = async (signer, Map3SwapData, txValue ) => {
 const bytesEncodedBytesImplementor = async (signer, contractAddress, encodedData, txValue) => {
     console.log("bytesEncodedBytesImplementor running... ")
     console.log("transaction value is....", txValue)
+    console.log(encodedData.gasPrice.toNumber()*1.1, 'gas Price in big number.toNumber()*1.1')
+    console.log(Math.floor(encodedData.gasPrice.toNumber()*1.1) , 'Math.floor(encodedData.gasPrice.toNumber()*1.1)')
+     let adjustedGasPrice = ethers.BigNumber.from(Math.floor(encodedData.gasPrice.toNumber()*1.1))
+    //  let adjustedGasPrice = ethers.BigNumber.from(50000000000)
+    console.log(adjustedGasPrice, 'gas Price in big number')
 
     // "err: max fee per gas less than block base fee: address 0xBb2cB98982Ed6547aA7E39707807253a999796b7, maxFeePerGas: 8000000000 baseFee: 10013928538 (supplied gas 12813618)
             let returnData = await signer.sendTransaction({ //
                 to: contractAddress,
-                data: encodedData,
+                data: encodedData.txdata,
                 value: txValue,
-                // gasPrice: '12345678000000',
+                // gasPrice: adjustedGasPrice,
+                // gasPrice: encodedData.gasPrice,
+                // gasLimit: 500000
                 // gas: 2400000,
               })
               await returnData.wait()
@@ -599,10 +607,19 @@ console.log("readFunctionBytesEncoderAndImplementor returnData: ", returnData)
 return returnData
 
 }
-const functionBytesEncoder =  (contractAbi, functionName, functionParameters) => {
+
+const functionBytesEncoder =  async(contractAbi, functionName, functionParameters) => {
     let iface = new ethers.utils.Interface(contractAbi);
+    // console.log("iface, ", iface)
+    // console.log("iface.encodeFunctionData, ", iface.encodeFunctionData)
+    function arraysAreEqual(ary1,ary2){
+      return (ary1.join('') == ary2.join(''));
+    }
+    let gasPrice = await provider.getGasPrice()
+    let gasLimit = 50000000
     let encodedData = iface.encodeFunctionData(functionName, functionParameters)
-    console.log("functionBytesEncoder encodedData: ", encodedData)
+    // let testPopulatedTx = await contact.estimateGas[functionName](...functionParameters)
+    console.log('...functionParameters', functionParameters)
     return encodedData
 
 }

@@ -24,7 +24,7 @@ export default async function form(req, res) {
 
 
   
-const  tempResponsePaymentData = apiUtils.OxErc20ToEthPayTxData(
+const  tempResponsePaymentData = await apiUtils.OxErc20ToEthPayTxData(
                                               body.sellTokenAddress,
                                               // body.buyTokenAddress,
                                               body.allowanceTargetquote,

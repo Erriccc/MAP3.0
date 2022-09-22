@@ -4,7 +4,7 @@
 //     res.status(200).json({ name: 'John Doe' })
 //   }
 
-export default function form(req, res) {
+export default async function form(req, res) {
     const body  = req.body
     // Guard clause checks for first and last name,
     // and returns early if they are not found
@@ -17,7 +17,7 @@ export default function form(req, res) {
 
   
     
-  const  tempResponsePaymentData = apiUtils.map3PayData(body.amount, body.addressTo, body.tokenIn, body._sendAsWeth)
+  const  tempResponsePaymentData = await apiUtils.map3PayData(body.amount, body.addressTo, body.tokenIn, body._sendAsWeth)
 
   const responsePaymentData = {
     txdata:tempResponsePaymentData

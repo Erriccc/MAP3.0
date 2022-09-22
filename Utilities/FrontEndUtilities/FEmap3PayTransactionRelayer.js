@@ -1,9 +1,10 @@
 const fetch = require('node-fetch');
 import {map3SameTokenTransferEndpoint} from'/Utilities/utils';
 import {map3PayExecutor} from '/Utilities/apiUtils'
+import Utils from '/Utilities/utils'
 
 
-const map3PayTransactionRelayer = async (signer, UsertransactionInput,tokenammount, txValue, _sendAsWeth ) => {
+const map3PayTransactionRelayer = async (wrappedProvider, UsertransactionInput,tokenammount, txValue, _sendAsWeth ) => {
 
      const map3SameTokenTransferData = {
         amount: tokenammount,
@@ -34,11 +35,21 @@ const map3PayTransactionRelayer = async (signer, UsertransactionInput,tokenammou
         const result = await response.json()
         const txdata = result.txdata
 
-        console.log("txdata..... from m3paytransactionrelayer: ", txdata)
+        // let gasPrice = await Utils.provider.getGasPrice()
+        let gasPrice = await wrappedProvider.getGasPrice()
 
-        const tx2 = await  map3PayExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
-        return (tx2)
+      
+        return {txdata, gasPrice, approveTx: false, txValue}
+        // console.log("txdata..... from m3paytransactionrelayer: ", txdata)
+
+        // const tx2 = await  map3PayExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
+        // return (tx2)
 
 }
 
-module.exports = {map3PayTransactionRelayer}
+
+const map3PayTransactionSender = async (signer, txdata,  txValue) => {
+  const tx2 = await  map3PayExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
+  return (tx2)
+}
+module.exports = {map3PayTransactionRelayer,map3PayTransactionSender}

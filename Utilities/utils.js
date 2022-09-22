@@ -107,6 +107,7 @@ const IERC20Abi = [
 // const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_JSON_RPC_URL_POLYGON)
 // const provider = new ethers.providers.Web3Provider(window.ethereum)
 const provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com")
+const providerBlockExplorer = 'https://polygonscan.com/'
 
 const getCurrentWalletAddress = async () => {
     const _provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -680,6 +681,7 @@ module.exports = {
     MAPSTYLE,
     MAPBOXACCESSTOKEN,
     web3StorageToken,
+    providerBlockExplorer,
     // getKeyWordArray,
 
 };

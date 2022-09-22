@@ -2,7 +2,7 @@
 import Utils from'/Utilities/utils'; 
 const {oxQuoteFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
 
-const PaymentInputValidator = async (UsertransactionInput, handleError,setvalidatingInput ) => {
+const PaymentInputValidator = async (UsertransactionInput, setValidationResponce,setvalidatingInput ) => {
 
     console.log("UsertransactionInput values...", UsertransactionInput)
     setvalidatingInput(true)
@@ -12,7 +12,7 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
 
         }catch(e){
             setvalidatingInput(false);
-            handleError("invalid senders address")
+            setValidationResponce("invalid senders address")
             return false;
         }
         console.log("validation passed for sender");
@@ -23,7 +23,7 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
 
         }catch(e){
             setvalidatingInput(false);
-            handleError("invalid reciver address")
+            setValidationResponce("invalid reciver address")
             return false;
         }
         console.log("validation passed for reciver");
@@ -33,7 +33,7 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
             await Utils.getUserNativeBalanceInWei(UsertransactionInput.sendersToken)
         }catch(e){
             setvalidatingInput(false);
-            handleError("invalid sendersToken address")
+            setValidationResponce("invalid sendersToken address")
             return false;
         }
         console.log("validation passed for sendersToken");
@@ -44,7 +44,7 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
 
         }catch(e){
             setvalidatingInput(false);
-            handleError("invalid reciversToken address or ammount")
+            setValidationResponce("invalid reciversToken address or ammount")
             return false;
         }
         console.log("validation passed for reciversToken");
@@ -57,7 +57,7 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
             let sendersBalance;
             if(UsertransactionInput.amountToBeSent <= 0 ){
                 setvalidatingInput(false);
-                handleError("amount must be greater than 0")
+                setValidationResponce("amount must be greater than 0")
                 return false;
             }
             // require users balance is valid for pure ETH transactions
@@ -68,7 +68,7 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
                     if(UsertransactionInput.amountToBeSent > usersEthBalance){
 
                     setvalidatingInput(false);
-                    handleError("insufficient Native balance")
+                    setValidationResponce("insufficient Native balance")
                     return false;
                 }
                 console.log("validation passed for Native balance");
@@ -85,7 +85,7 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
                             let usersEthBalance = await Utils.getUserNativeBalance(UsertransactionInput.sender)
                             if(UsertransactionInput.amountToBeSent > usersEthBalance){
                                 setvalidatingInput(false);
-                                handleError("insufficient Native balance")
+                                setValidationResponce("insufficient Native balance")
                                 return false;
                             }
                             console.log("passed validation for sufficient eth balance")
@@ -134,7 +134,7 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
                             sendersToken,
                             reciversToken,
                             UsertransactionInput.amountToBeSent,
-                            handleError
+                            setValidationResponce
                             )
                         aprovalAmount = (quotedAmmountToSell *UsertransactionInput.slippage) // change multiplier to come from slippage
                         console.log("recived approval amount", aprovalAmount)
@@ -155,7 +155,7 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
                         if(aprovalAmount > sendersBalance ){
                         console.log("sendersBalance AND aprovalAmount final Values tx will fail", sendersBalance, aprovalAmount)
                         setvalidatingInput(false);
-                        handleError("insufficient balance, try adjusting the transaction slippage ")
+                        setValidationResponce("insufficient balance, try adjusting the transaction slippage ")
                             return false;
                         }
                         else{
@@ -165,7 +165,7 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
             
         } catch(e){
             setvalidatingInput(false);
-            handleError("error converting and validating amount");
+            setValidationResponce("error converting and validating amount");
             return false;
         }
 
@@ -174,13 +174,14 @@ const PaymentInputValidator = async (UsertransactionInput, handleError,setvalida
         //Require no ERC20 to Native Token Conversions
         // if ( UsertransactionInput.reciversToken == Utils.EthAddress && UsertransactionInput.sendersToken !== Utils.EthAddress){
         //     setvalidatingInput(false);
-        //     handleError("ERC20 to Native transactions are not available atm, Try Native to ERC20, ERC20 to ERC20, or Native to Native");
+        //     setValidationResponce("ERC20 to Native transactions are not available atm, Try Native to ERC20, ERC20 to ERC20, or Native to Native");
         //     return false;
         // }else{
         //     console.log("validation no ERC20 to Native Token Conversions");
         // }
-
+    setValidationResponce("Processing..")
     setvalidatingInput(false)
+
 
         return true;
 }

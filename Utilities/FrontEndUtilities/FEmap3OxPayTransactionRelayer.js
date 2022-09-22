@@ -1,9 +1,10 @@
 const fetch = require('node-fetch');
 import { map3SwapAndTransferEndpoint} from'/Utilities/utils';
 import {OxPayExecutor} from '/Utilities/apiUtils'
+import Utils from '/Utilities/utils'
 
 
-const map3OxPayTransactionRelayer = async (signer,oxQuoteResult, txValue ) => {
+const map3OxPayTransactionRelayer = async (wrappedProvider,oxQuoteResult, txValue ) => {
 
      const map3OxPayTransferData = {
 
@@ -39,14 +40,23 @@ const map3OxPayTransactionRelayer = async (signer,oxQuoteResult, txValue ) => {
 
         const result = await response.json()
         const txdata = result.txdata
+        // let gasPrice = await Utils.provider.getGasPrice()
+        let gasPrice = await wrappedProvider.getGasPrice()
+        
+        return {txdata, gasPrice, approveTx: false, txValue}
 
-        console.log("txdata..... from map3OxPayTransactionRelayer: ", txdata)
+        // console.log("txdata..... from map3OxPayTransactionRelayer: ", txdata)
 
 
 
-        const tx2 = await  OxPayExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
-        return (tx2)
+        // const tx2 = await  OxPayExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
+        // return (tx2)
 
 }
 
-module.exports = {map3OxPayTransactionRelayer}
+const map3OxPayTransactionSender = async (signer,txdata, txValue ) => {
+  const tx2 = await  OxPayExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
+  return (tx2)
+}
+
+module.exports = {map3OxPayTransactionRelayer, map3OxPayTransactionSender}

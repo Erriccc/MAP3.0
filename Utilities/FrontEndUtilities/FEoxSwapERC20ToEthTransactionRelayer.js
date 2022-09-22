@@ -1,9 +1,10 @@
 const fetch = require('node-fetch');
 import { map3OxMap3SwapERC20ToEthEndpoint} from'/Utilities/utils';
 import {OxErc20ToEthPayExecutor} from '/Utilities/apiUtils'
+import Utils from '/Utilities/utils'
 
 
-const oxSwapERC20ToEthTransactionRelayer = async (signer, oxQuoteResult, txValue ) => {
+const oxSwapERC20ToEthTransactionRelayer = async (wrappedProvider, oxQuoteResult, txValue ) => {
 
      const map3OxPayTransferData = {
 
@@ -40,13 +41,24 @@ const oxSwapERC20ToEthTransactionRelayer = async (signer, oxQuoteResult, txValue
         const result = await response.json()
         const txdata = result.txdata
 
-        console.log("txdata..... from oxSwapERC20ToEthTransactionRelayer: ", txdata)
+
+        // let gasPrice = await Utils.provider.getGasPrice()
+        let gasPrice = await wrappedProvider.getGasPrice()
+      
+        return {txdata, gasPrice, approveTx: false, txValue}
+        // console.log("txdata..... from oxSwapERC20ToEthTransactionRelayer: ", txdata)
 
 
 
-        const tx2 = await  OxErc20ToEthPayExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
-        return (tx2)
+        // const tx2 = await  OxErc20ToEthPayExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
+        // return (tx2)
 
 }
 
-module.exports = {oxSwapERC20ToEthTransactionRelayer}
+
+const oxSwapERC20ToEthTransactionSender = async (signer, txdata, txValue ) => {
+  const tx2 = await  OxErc20ToEthPayExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
+  return (tx2)
+}
+
+module.exports = {oxSwapERC20ToEthTransactionRelayer, oxSwapERC20ToEthTransactionSender}

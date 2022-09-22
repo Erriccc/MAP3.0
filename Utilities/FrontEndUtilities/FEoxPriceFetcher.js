@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const process = require('process');
 const Utils = require('/Utilities/utils');
 
-const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent,handleError) => {
+const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent) => {
   let validatedSendersToken = sendersToken;
   let validatedReciversToken = reciversToken;
   
@@ -106,7 +106,7 @@ else{
 // }
 
 
-const oxQuoteFetcher = async (sendersToken,reciversToken,amountToBeSent,handleError) => {
+const oxQuoteFetcher = async (sendersToken,reciversToken,amountToBeSent) => {
   
 
 console.log("ammount to be sent from Quotefetcher : ",amountToBeSent, " - ", await Utils.WholeTOWeiDecimals(reciversToken,amountToBeSent) )

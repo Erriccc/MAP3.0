@@ -24,11 +24,11 @@ const newSampleVendor = [
 // 0: File {path: 'benefit-two.png', preview: 'blob:http://localhost:3000/f609e4cd-5d1d-4794-9a80-3c4688a5b3af', name: 'benefit-two.png', lastModified: 1655080987124, lastModifiedDate: Sun Jun 12 2022 19:43:07 GMT-0500 (Central Daylight Time), …}
 // length: 1
 
+ 
 
 
 
-
-const signUpTransactionRelayer = async (signer, UserInput, txValue ) => {
+const signUpTransactionRelayer = async (wrappedProvider, UserInput, txValue ) => {
 
     
 let testImageUrl;
@@ -39,9 +39,6 @@ try{
     console.log('ran into error while running test web3Storage Upload..', e)
 
 }
-
-
-
 const manp3SignUpUserInput = {
     vendorsWalletAddress: UserInput.userWallet,
     vendorsName: UserInput.userName,
@@ -79,7 +76,7 @@ const manp3SignUpUserInput = {
         }
         const response = await fetch(endpoint, options)
         console.log("response..... from signUpTransactionRelayer: ", response)
-
+ 
 
         if(response.staus === 400){
             throw   new Error('invalid parameters!');
@@ -87,11 +84,22 @@ const manp3SignUpUserInput = {
             const result = await response.json()
             const txdata = result.txdata
             console.log("txdata..... from signUpTransactionRelayer: ", txdata)
-            const tx2 = await  map3SignUpExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
-            // const tx2 = await  map3SignUpExecutor(txdata, 0) // New Implementation of backend transact    ions
-            return (tx2)
+         // let gasPrice = await Utils.provider.getGasPrice()
+            let gasPrice = await wrappedProvider.getGasPrice()
+        
+        return {txdata, gasPrice, txValue}
+            // const tx2 = await  map3SignUpExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
+            // // const tx2 = await  map3SignUpExecutor(txdata, 0) // New Implementation of backend transact    ions
+            // return (tx2)
         }
 }
+const signUpTransactionSender = async (signer,txdata, txValue ) => {
+  const tx2 = await  map3SignUpExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
+  return (tx2)
+}
+
+
+
 
 
 const getImageUrl = async (UserInput) => {
@@ -142,4 +150,4 @@ function getKeyWordArray (UserInput){
   }
 }
 
-module.exports = {signUpTransactionRelayer,getImageUrl, getKeyWordArray }//
+module.exports = {signUpTransactionRelayer,signUpTransactionSender, getImageUrl, getKeyWordArray }//

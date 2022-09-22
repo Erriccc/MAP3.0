@@ -10,7 +10,7 @@ const apiUtils = require('../apiUtils');
 //  mapDataFetcherEndpoint,
 //  findProfilesDataFetcherEndpoint,
 //  payProfileDataFetcherEndpoint,
-
+ 
 
 const payProfileDataFetcherRelayer = async (account) => {
 

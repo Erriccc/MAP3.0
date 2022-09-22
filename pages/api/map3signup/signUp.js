@@ -2,7 +2,7 @@
 import {map3SignUpData} from '../../../Utilities/apiUtils'
 const apiUtils = require('../../../Utilities/apiUtils');
  
-export default function form(req, res) {
+export default async function form(req, res) {
     // Get data submitted in request's body.
     const body = req.body
   
@@ -52,7 +52,7 @@ export default function form(req, res) {
     console.log("tuple to be sent ... ", signUpTuple )
 
    
-      const  tempResponsePaymentData = apiUtils.map3SignUpData(signUpTuple)
+      const  tempResponsePaymentData = await apiUtils.map3SignUpData(signUpTuple)
         const responsePaymentData = {
             txdata:tempResponsePaymentData
         }
