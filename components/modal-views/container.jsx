@@ -11,8 +11,8 @@ import SearchView from '/components/search/view';
 import ShareView from '/components/nft/share-view';
 import SelectWallet from '/components/nft/select-wallet';
 import BetaModeAcknowledgement from '/components/nft/beta-mode-acknowledgement';
-import ConfirmationModal from '/components/nft/ConfirmationModal.jsx'
-import TransactionRecieptModal from '/components/nft/TransactionRecieptModal.jsx'
+import ConfirmationModal from '/components/nft/ConfirmationModal'
+import TransactionRecieptModal from '/components/nft/TransactionRecieptModal'
  
 function renderModalContent(view) {
     switch (view) {
@@ -31,7 +31,7 @@ function renderModalContent(view) {
         default:
             return null;
     }
-}
+} 
 export default function ModalContainer() {
     const router = useRouter();
     const { view, isOpen, closeModal } = useModal();

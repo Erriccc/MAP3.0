@@ -7,7 +7,7 @@ import{paymentTypeLogicServer, paymentTypeLogicExecutor} from '/Utilities/FrontE
 import { useMoralis, } from 'react-moralis';
 import { useRouter } from "next/dist/client/router"; // use to reroute after transaction is processed
 import { WalletContext } from 'lib/hooks/use-connect';
-import TransactionRecieptModal from '/components/nft/TransactionRecieptModal.jsx'
+import TransactionRecieptModal from '/components/nft/TransactionRecieptModal'
 
 import Spinner from '/components/spinner';
 import cn from 'classnames';
