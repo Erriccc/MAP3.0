@@ -18,6 +18,7 @@ import Image from '/components/ui/image';
 // import dynamic from 'next/dynamic';
 import{signUpEventHandler,signUpEventExecutor, ValidateUserSignUpInput} from '/Utilities/FrontEndUtilities/FEsignUpHandler';
 
+import ConfirmationModal from '/components/nft/confirmationModal'
 
 
 import ProcessingView from '/components/ui/ProcessingView';
@@ -102,6 +103,7 @@ const  [files, setFiles] = useState({userData})
         }catch(e){
         }
       };
+      
       const signUpExecutor = async (txDetails) => {
         const wrappedProvider = new Utils.ethers.providers.Web3Provider(Moralis.connector.provider);
         const wrappedSigner = wrappedProvider.getSigner();
@@ -248,6 +250,8 @@ const  [files, setFiles] = useState({userData})
 
         {/* {validatingInput && (<ProcessingView status={"validating Input..."} arrayToDisplay={Utils.TypoEffectTexts.Validating}/>)} */}
         {/* {systemProcessing && (<ProcessingView status={"System Processing... "} arrayToDisplay={Utils.TypoEffectTexts.Processing}/>)} */}
+        {txReciept && (<ConfirmationModal  txReciept={txReciept} setTxReciept={setTxReciept} confirmationTitle = "Payment was successful"/>)}
+        
         {transacting && (<ProcessingView status={"Transacting..."} arrayToDisplay={Utils.TypoEffectTexts.Transacting}/>)}
 
       </div>
