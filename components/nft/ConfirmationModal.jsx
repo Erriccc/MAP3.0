@@ -59,7 +59,7 @@ import Utils from'/Utilities/utils';
 
 // import { useContext, useEffect } from 'react';
 import ActiveLink from '/components/ui/links/active-link';
- 
+// TransactionRecieptModal
 export default function ConfirmationModal({  confirmationTitle, txReciept, setTxReciept }) {
     // const { address, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
     const { closeModal } = useModal();
@@ -80,7 +80,7 @@ export default function ConfirmationModal({  confirmationTitle, txReciept, setTx
     }, [txReciept]);
     
 
-    console.log('transaction reciept from TransactionRecieptModal', txReciept)
+    console.log('transaction reciept from ConfirmationModal', txReciept)
     return (
       <AnimatePresence>
      {visibleCoinList && ( <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className=" fixed flex flex-col content-center inset-0 z-50 overflow-y-auto overflow-x-hidden bg-gray-700 bg-opacity-60 p-4 text-center backdrop-blur xs:p-5">

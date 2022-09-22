@@ -17,7 +17,7 @@ import GeoAddress from '/components/RegistrationFormSteps/GeoAddress';
 import Currency from '/components/RegistrationFormSteps/Currency';
 import Final from '/components/RegistrationFormSteps/Final';
 
-import ConfirmationModal from '/components/nft/ConfirmationModal.jsx'
+import ConfirmationModal from '/components/nft/confirmationModal.jsx' 
 
 
 

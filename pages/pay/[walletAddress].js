@@ -19,7 +19,7 @@ import { useModal } from '/components/modal-views/context';
 // import{paymentTypeLogicServer} from '/Utilities/FrontEndUtilities/FEpaymentTypeLogicServer';
 import{paymentTypeLogicServer, paymentTypeLogicExecutor} from '/Utilities/FrontEndUtilities/FEpaymentTypeLogicServer';
 import { WalletContext } from 'lib/hooks/use-connect';
-import TransactionRecieptModal from '/components/nft/TransactionRecieptModal'
+import TransactionRecieptModal from '/components/nft/transactionRecieptModal'
 
 // {vendorDataState.dataFromServer?.walletAddress}
 
