@@ -23,6 +23,7 @@ export default function Currency() {
   const [senderstokenCode, setSenderstokenCode] = React.useState("ETH"); // token address for user signing up
   let [validatingCurrency, setValidatingCurrency] = useState(true)
 
+  const { Moralis, account } = useMoralis();
   
   const [amountToBeSent, setamountToBeSent] = React.useState(0.01);
   const [quote, setQuote] = React.useState("select token"); //  Quote is the current rate multiplied by the amount of cryptocurrency to be bouth
@@ -66,7 +67,9 @@ export default function Currency() {
             sendersToken,
             ethTokenAddress,
             amountToBeSent,
-            handleError)
+            // handleError
+             Moralis.chainId? parseInt(Moralis.chainId): 0) // adding chainId
+            // )
             if (isNaN(quotePrice) ){
                 console.log(quotePrice, 'quotePrice is NAN')
                 handleCurrencyWarning("insufficient liquidity for this asset, pick other asset to enable cross currency transactions")

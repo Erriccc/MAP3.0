@@ -3,7 +3,7 @@
 
 const fetch = require('node-fetch');
 const {PaymentHandlerEndpoint} = require('/Utilities/utils');
-const oxQuoteRelayer = async (UsertransactionInput,sendersTokenAddress,User) => {
+const oxQuoteRelayer = async (UsertransactionInput,sendersTokenAddress,User,chainId) => {
     // event.preventDefault();
     // const sendersTokenOfChoice = event.target.token.value
     const sendersTokenOfChoice = sendersTokenAddress
@@ -19,7 +19,8 @@ const oxQuoteRelayer = async (UsertransactionInput,sendersTokenAddress,User) => 
         sender: sender,
         reciversTokenOfChoice :reciversChoiceToken,
         sendersToken: sendersTokenOfChoice ,//
-        userSetSlippage:userSetSlippage
+        userSetSlippage:userSetSlippage,
+        chainId
       }
 
       console.log("paymentdata: from oxQuoteRelayer", paymentData)

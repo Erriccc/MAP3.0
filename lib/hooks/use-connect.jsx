@@ -3,7 +3,7 @@ import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 import { useMoralis, useNFTBalances, useNativeBalance } from "react-moralis";
 import {getCurrentWalletAddress } from'../../Utilities/utils';
-import {provider} from'../../Utilities/utils';
+import {provider,getProvider} from'../../Utilities/utils';
 import { useConnect } from 'wagmi'
 import WalletConnectWeb3Connector from './WalletConnectWeb3Connector'
 import { useModal } from '/components/modal-views/context';
@@ -12,7 +12,7 @@ const web3modalStorageKey = 'WEB3_CONNECT_CACHED_PROVIDER';
 const walletConnectStorageKey = 'walletconnect';
 const injectedProviderConnectStorageKey = 'injectedProvider';
 
-
+ 
 export const WalletContext = createContext({});
  
 
@@ -69,21 +69,29 @@ export const WalletProvider = ({ children }) => {
     }, [isConnected, account, isWeb3Enabled]);
 
 
-    const setWalletAddress = async () => {
-        try {
-            const signer = provider.getSigner();
-            if (signer) {
-                const web3Address = await signer.getAddress();
-                setAddress(web3Address);
-                getBalance(provider, web3Address);
-            }
-        }
-        catch (error) {
-            console.log('Account not connected; logged from setWalletAddress function');
-        }
-    };
+    // const setWalletAddress = async () => {
+    //     try {
+    //         const signer = provider.getSigner();
+    //         if (signer) {
+    //             const web3Address = await signer.getAddress();
+    //             setAddress(web3Address);
+    //             getBalance(provider, web3Address);
+    //         }
+    //     } 
+    //     catch (error) {
+    //         console.log('Account not connected; logged from setWalletAddress function');
+    //     }
+    // };
     const getBalance = async (walletAddress) => {
-        const walletBalance = await provider.getBalance(walletAddress);
+        let tempProvider;
+        if(Moralis.chainId){
+            console.log(Moralis.chainId, 'chain if=d from conector')
+            tempProvider = parseInt(Moralis.chainId)
+        }else{
+            console.log('no network id found from useConnect')
+            tempProvider= 0
+        }
+        const walletBalance = await getProvider(tempProvider).getBalance(walletAddress);
         const balanceInEth = ethers.utils.formatEther(walletBalance);
         setBalance(balanceInEth);
     };

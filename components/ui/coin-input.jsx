@@ -6,7 +6,7 @@ import { ChevronDown } from '/components/icons/chevron-down';
 import { useClickAway } from 'lib/hooks/use-click-away';
 // import { useLockBodyScroll } from 'lib/hooks/use-lock-body-scroll';
 import { coinList } from 'data/static/coin-list'; //
-import { sendersCoinList } from '/constants/coinListPolygon'; //
+import { sendersCoinList } from '/constants/coinLists'; //
 
 // dynamic import
 import CoinSelectView from '/components/ui/coin-select-view';

@@ -1,19 +1,39 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 // import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import cn from 'classnames';
 import { ChevronDown } from '/components/icons/chevron-down';
 import { useClickAway } from 'lib/hooks/use-click-away';
-// import { useLockBodyScroll } from 'lib/hooks/use-lock-body-scroll';
-import { sendersCoinList } from '../constants/coinListPolygon'; //
 
+// import { useLockBodyScroll } from 'lib/hooks/use-lock-body-scroll';
+import { sendersCoinList } from '../constants/coinLists'; //
+import { useMoralis, } from 'react-moralis';
+import {getConnectedCoinList} from 'Utilities/utils';
+// getConnectedCoinList
 // dynamic import
 import Map3CoinSelectView from '/components/ui/map3CoinSelectView';
 
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
 export default function ReciversCoinInput({ label, getCoinValue, className, ...rest }) {
+
+  const { Moralis, account } = useMoralis();
+  let [currentCoinList, setCurrentCoinList] = useState();
+   
+  useEffect(() => {
+    // update Coin List
+    console.log('updating chain id')
+    if (Moralis.chainId){
+      console.log('found chain id')
+      setCurrentCoinList( getConnectedCoinList(parseInt(Moralis.chainId)))
+    }else{
+      console.log('no chain id')
+      setCurrentCoinList( getConnectedCoinList(0))
+    }
+  }, [Moralis.chainId,account,currentCoinList])
+  
+
     let [value, setValue] = useState(0.01);
-    let [selectedCoin, setSelectedCoin] = useState(sendersCoinList[0]);
+    let [selectedCoin, setSelectedCoin] = useState(getConnectedCoinList(0)[0]);
     let [visibleCoinList, setVisibleCoinList] = useState(false);
     const modalContainerRef = useRef(null);//
     useClickAway(modalContainerRef, () => {
@@ -72,7 +92,7 @@ export default function ReciversCoinInput({ label, getCoinValue, className, ...r
               &#8203;
             </span>
             <motion.div initial={{ scale: 1.05 }} animate={{ scale: 1 }} exit={{ scale: 1.05 }} transition={{ duration: 0.3 }} ref={modalContainerRef} className="inline-block text-left align-middle">
-              <Map3CoinSelectView coinList= {sendersCoinList} onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}/>
+              <Map3CoinSelectView coinList= {currentCoinList} onSelect={(selectedCoin) => handleSelectedCoin(selectedCoin)}/>
 
             </motion.div>
           </motion.div>)}

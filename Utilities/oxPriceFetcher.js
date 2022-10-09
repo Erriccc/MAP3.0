@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const process = require('process');
 const { createQueryString,WholeTOWeiDecimals,API_PRICE_URL, API_QUOTE_URL,EthAddress} = require('./utils');
 
-const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent, handleError) => {
+const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent ,chainId) => {
   
 
 if (sendersToken == null || sendersToken.length != 42){
@@ -20,7 +20,7 @@ if (reciversToken == null || reciversToken.length != 42){
 // }
 
 
-console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", await WholeTOWeiDecimals(reciversToken,amountToBeSent) )
+console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", await WholeTOWeiDecimals(reciversToken,amountToBeSent,chainId) )
 
     const qs = createQueryString({
         // Directly Swap and Send Any Token for USDT online
@@ -28,7 +28,7 @@ console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", awa
         buyToken: reciversToken,
         buyAmount: await WholeTOWeiDecimals(reciversToken,amountToBeSent),
     });
-    const quoteUrl = `${API_PRICE_URL}?${qs}`;
+    const quoteUrl = `${API_PRICE_URL(chainId)}?${qs}`;
     console.log(quoteUrl)
     // const quoteUrl = `${Ox_POLYGON_API_PRICE_URL}?${qs}`;
     const response = await fetch(quoteUrl);
@@ -39,18 +39,18 @@ console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", awa
 }
 
 
-const oxQuoteFetcher = async (sendersToken,reciversToken,amountToBeSent, handleError) => {
+const oxQuoteFetcher = async (sendersToken,reciversToken,amountToBeSent,chainId) => {
   
 
-console.log("ammount to be sent from Quotefetcher : ",amountToBeSent, " - ", await WholeTOWeiDecimals(reciversToken,amountToBeSent) )
+console.log("ammount to be sent from Quotefetcher : ",amountToBeSent, " - ", await WholeTOWeiDecimals(reciversToken,amountToBeSent,chainId) )
 
   const qs = createQueryString({
       // Directly Swap and Send Any Token for USDT online
       sellToken: sendersToken,
       buyToken: reciversToken,
-      buyAmount: await WholeTOWeiDecimals(reciversToken,amountToBeSent),
+      buyAmount: await WholeTOWeiDecimals(reciversToken,amountToBeSent,chainId),
   });
-  const quoteUrl = `${API_QUOTE_URL}?${qs}`;
+  const quoteUrl = `${API_QUOTE_URL(chainId)}?${qs}`;
   console.log("Quotefetcher url for price..", quoteUrl)
   // const quoteUrl = `${Ox_POLYGON_API_PRICE_URL}?${qs}`;
   const response = await fetch(quoteUrl);

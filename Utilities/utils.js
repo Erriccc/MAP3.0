@@ -18,7 +18,9 @@ const Map3WebsiteUrl = "https://map3.vercel.app/"
 // const Map3WebsiteUrl = "http://10.0.0.232:3000"
 
 const TypoEffectTexts = require('../constants/TypoEffectTexts')
-const PolygonCoinList = require('../constants/coinListPolygon')
+const {Rpcs} = require('./Rpcs')
+const {ChainsHelperData} = require('./ChainsHelperData')
+const PolygonCoinList = require('../constants/coinLists')
 const ReciversCoinList = PolygonCoinList.reciversCoinList;
 const SendersCoinList = PolygonCoinList.sendersCoinList;
 
@@ -30,12 +32,22 @@ const MAPSTYLE = process.env.NEXT_PUBLIC_MAP_STYLE
 const web3StorageToken = process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN;
 
 
-const API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
+// const API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
 // const API_PRICE_URL = 'https://api.0x.org/swap/v1/price';
 const Ox_POLYGON_API_PRICE_URL = 'https://polygon.api.0x.org/swap/v1/price';
 // const API_QUOTE_URL = 'https://api.0x.org/swap/v1/quote';
-const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
+const getChainHelpers = (id)=>{
+  if (id == 0) {return ChainsHelperData[137]}
+  else if(ChainsHelperData[id] == null || ChainsHelperData[id] == undefined){return ChainsHelperData[0x0]}
+ else{ return ChainsHelperData[id]}
+}
 
+const API_PRICE_URL = (id) => {return getChainHelpers(id).priceEndpoint;}
+
+// const API_QUOTE_URL = 'https://polygon.api.0x.org/swap/v1/quote';
+const API_QUOTE_URL = (id) => {return getChainHelpers(id).quoteEndpoint;}
+
+const WethAddress = (id) => {return getChainHelpers(id).wrappedNative;}
 
 const PaymentHandlerEndpoint = '/api/oxQuoteHandler'
 const map3SameTokenTransferEndpoint = '/api/map3pay/map3sametokentransfer' 
@@ -83,7 +95,8 @@ const _wethAddresses = {
     polygon: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
     
 }
-const WethAddress = _wethAddresses. polygon;
+// const WethAddress = _wethAddresses. polygon;
+
 
 const testAccount ="0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f";
 const vendorSignUpFee = 0;
@@ -107,6 +120,15 @@ const IERC20Abi = [
 // const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_JSON_RPC_URL_POLYGON)
 // const provider = new ethers.providers.Web3Provider(window.ethereum)
 const provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com")
+
+const getProvider = (id)=>{
+  if (id == 0) {return new ethers.providers.JsonRpcProvider("https://polygon-rpc.com")}
+  else if(Rpcs[id] == null || Rpcs[id] == undefined){return new ethers.providers.JsonRpcProvider("https://polygon-rpc.com")}
+ else{ return new ethers.providers.JsonRpcProvider(Rpcs[id])}
+}
+
+
+
 const providerBlockExplorer = 'https://polygonscan.com/'
 
 const getCurrentWalletAddress = async () => {
@@ -204,78 +226,82 @@ function numberExponentToLarge(numIn) {
      return sign + (baseLH + baseRH).replace(/^0*(\d+|\d+\.\d+?)\.?0*$/,"$1");
    }
 
-   const  getTokenDecimal = async (_tokenAddress) =>{
-    const myContract = new ethers.Contract(_tokenAddress,IERC20Abi,provider)
+   const  getTokenDecimal = async (_tokenAddress, _providerId) =>{
+    const myContract = new ethers.Contract(_tokenAddress,IERC20Abi,getProvider(_providerId))
     const tokenDecimals = await myContract.decimals()
     console.log("tokenDecimals from function getTokenDecimal in utils :", tokenDecimals)
     return tokenDecimals;
   }
-  const  getTokenSymbol = async (_tokenAddress) =>{
+  const  getTokenSymbol = async (_tokenAddress, _providerId) =>{
     if (_tokenAddress == EthAddress){
     return "ETH/MTC";
     }else{
-    const myContract = new ethers.Contract(_tokenAddress,IERC20Abi,provider)
+    const myContract = new ethers.Contract(_tokenAddress,IERC20Abi,getProvider(_providerId))
     const tokenSymbol = await myContract.symbol()
     console.log("tokenDecimals from function getTokenSymbol in utils:", tokenSymbol)
     return tokenSymbol;
     }
   }
-  const WholeTOWeiDecimals = async (_tokenAddress, _num) => {
+  const WholeTOWeiDecimals = async (_tokenAddress, _num,chainId) => {
     let tempNum =_num
     if(typeof _num !== "string" ){
       tempNum =_num.toString()
     }
-    const tokenDecimals= await getTokenDecimal(_tokenAddress)
+    const tokenDecimals= await getTokenDecimal(_tokenAddress,chainId)
     const convertedToTokenDecimals = ethers.utils.parseUnits(tempNum,tokenDecimals).toString();
     console.log("passed the WholeTOWeiDecimals conversion test. type of input changed from:", typeof _num, "to: ", typeof convertedToTokenDecimals )
     return convertedToTokenDecimals;
   }
 
-  const getSendersAllowanceBalance = async (ownersTokenAddress,owner) => {
-    const allowanceContract = new ethers.Contract(ownersTokenAddress,IERC20Abi,provider)
+  const getSendersAllowanceBalance = async (ownersTokenAddress,owner,_providerId) => {
+    const allowanceContract = new ethers.Contract(ownersTokenAddress,IERC20Abi,getProvider(_providerId))
     const tx1 = await allowanceContract.allowance(owner,Map3address)
     return tx1 // returns big number
 }
-const getSendersAllowanceBalanceInWei = async (ownersTokenAddress,owner) => {
-    const allowanceContract = new ethers.Contract(ownersTokenAddress,IERC20Abi,provider)
+const getSendersAllowanceBalanceInWei = async (ownersTokenAddress,owner,_providerId) => {
+    const allowanceContract = new ethers.Contract(ownersTokenAddress,IERC20Abi,getProvider(_providerId))
     const tx0 = await allowanceContract.allowance(owner,Map3address)
     const tx1 = Number(tx0._hex)
     return tx1 // returns long number
 }
-const getUserErc20Balance = async (tokenAddress,owner) => {
+const getUserErc20Balance = async (tokenAddress,owner,_providerId) => {
+  console.log('chainId from getUserErc20Balance', _providerId)
+
     // const provider = new ethers.providers.Web3Provider(window.ethereum)
-    const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,provider)
+    const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,getProvider(_providerId))
     const tx0 = await tokenContract.balanceOf(owner)
     const tx1 = ethers.utils.formatUnits(
         tx0, await getTokenDecimal(tokenAddress))
     return tx1
 }
-const getUserErc20BalanceInWei = async (tokenAddress,owner) => {
+const getUserErc20BalanceInWei = async (tokenAddress,owner,_providerId) => {
     // const provider = new ethers.providers.Web3Provider(window.ethereum)
-    const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,provider)
+    const tokenContract = new ethers.Contract(tokenAddress,IERC20Abi,getProvider(_providerId))
     const tx0 = await tokenContract.balanceOf(owner)
     // Number(tx0)
     const tx1 = Number(tx0._hex)
     return tx1
 }
-const getUserNativeBalance = async (owner) => {
-    let balance = await provider.getBalance(owner);
+const getUserNativeBalance = async (owner,_providerId) => {
+  console.log('chainId from getUserNativeBalance', _providerId)
+
+    let balance = await getProvider(_providerId).getBalance(owner);
     const tx1 = ethers.utils.formatUnits( balance, 18);
     console.log("eth balance requested...", tx1)
     return tx1
 }
-const getUserNativeBalanceInWei = async (owner) => {
-    let balance = await provider.getBalance(owner);
+const getUserNativeBalanceInWei = async (owner,_providerId) => {
+    let balance = await getProvider(_providerId).getBalance(owner);
     // Number(balance)
     const tx1 = Number(balance._hex)
     console.log("getUserNativeBalanceInWei requested...", tx1)
     return tx1
   }
 
-  const ValidateIfStringIsAddress = async (address) => {
+  const ValidateIfStringIsAddress = async (address, _providerId) => {
     let addressBalance;
     try{
-        addressBalance = await provider.getBalance(address);
+        addressBalance = await getProvider(_providerId).getBalance(address);
         console.log("was able to fetch a balance for the address", await addressBalance)
         return true;
     }catch(e){
@@ -289,13 +315,13 @@ const getUserNativeBalanceInWei = async (owner) => {
 
 
 
-  const ValidateIfAddressIsErc20 = async (address) => {
+  const ValidateIfAddressIsErc20 = async (address, _providerId) => {
     let addressBalance;
     let addressSymbol;
     let addressBalanceValidated = false;
     let addressSymbolValidated = false;
     try{
-        addressBalance = await provider.getBalance(address);
+        addressBalance = await getProvider(_providerId).getBalance(address);
         console.log("was able to fetch a balance for the address")
         addressBalanceValidated = true;
     }catch(e){
@@ -304,7 +330,7 @@ const getUserNativeBalanceInWei = async (owner) => {
     try{
         addressSymbol = await getTokenSymbol(address);
         addressSymbolValidated = true;
-    }catch(e){
+    }catch(e){ 
         return [false, null]
     }
     if(addressBalanceValidated && addressSymbolValidated){
@@ -388,7 +414,7 @@ const GetCUrrencyDetails = async (address) => {
 
 const listenForMap3Events = async () => {
 
-     const Map3 = new ethers.Contract(Map3address,Map3Abi,provider)
+     const Map3 = new ethers.Contract(Map3address,Map3Abi,getProvider(0))
 
     // Receive an event when ANY transfer occurs
     console.log("listening for map3 events.......")
@@ -530,6 +556,16 @@ return(receipt)
 // USABLE ENCODER!
 // test1 READ parameters Map3address, Map3Abi, "checkIsVendor" [Map3address]
 // test2 WRITE parameters: Map3Abi,"SameTokenPay", [_tokenamount,_to,_tokenIn]
+const getConnectedCoinList = (networkId) => {
+  if (networkId == 0){
+    return SendersCoinList[137];
+  }else if (SendersCoinList[networkId] == undefined || SendersCoinList[networkId] == null){
+    return SendersCoinList[0x0]
+  }
+  else{
+    return SendersCoinList[networkId];
+  }
+}
 
 const bytesEncodedBytesImplementor = async (signer, contractAddress, encodedData) => {
             let returnData = await signer.sendTransaction({
@@ -682,6 +718,9 @@ module.exports = {
     MAPBOXACCESSTOKEN,
     web3StorageToken,
     providerBlockExplorer,
+    getConnectedCoinList,
+    getChainHelpers,
+    getProvider,
     // getKeyWordArray,
 
 };

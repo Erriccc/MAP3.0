@@ -1,0 +1,54 @@
+{
+    "networks": {
+        "evm0": {
+            "type": "evm",
+            "wormholeChainId": 5,
+            "networkId": 80001,
+            "rpc": "https://matic-mumbai.chainstacklabs.com",
+            "bridgeAddress": "0xC89Ce4735882C9F0f0FE26686c53074E09B0D550",
+            "iplnAddress": "0xF9A08e7a8363041ee9d10F59132a066Edf40C90f",
+            "coreAddress": "0x0CBE91CF822c73C2315FB05100C2F714765d5c20"
+
+        },
+        "evm1": {
+            "type": "evm",
+            "wormholeChainId": 16,
+            "networkId": 1287,
+            "rpc": "https://rpc.api.moonbase.moonbeam.network",
+            "bridgeAddress": "0xC89Ce4735882C9F0f0FE26686c53074E09B0D550",
+            "iplnAddress": "0xe3a7627717412837ae7D60817aE8c194BF03E86a",
+            "coreAddress": "0xa5B7D85a8f27dd7907dc8FdC21FA5657D5E2F901"
+        },
+        "evm2": {
+            "type": "evm",
+            "wormholeChainId": 5,
+            "networkId": 137,
+            "rpc": "https://polygon-rpc.com",
+            "bridgeAddress": "0xC89Ce4735882C9F0f0FE26686c53074E09B0D550",
+            "iplnAddress": "0xe3a7627717412837ae7D60817aE8c194BF03E86a",
+            "coreAddress": "0x7A4B5a56256163F07b2C80A7cA55aBE66c4ec4d7"
+        },
+        "evm3": {
+            "type": "evm",
+            "wormholeChainId": 10,
+            "networkId": 250,
+            "rpc": "https://rpc.ankr.com/fantom/",
+            "bridgeAddress": "0xC89Ce4735882C9F0f0FE26686c53074E09B0D550",
+            "iplnAddress": "0xe3a7627717412837ae7D60817aE8c194BF03E86a",
+            "coreAddress": "0x126783A6Cb203a3E35344528B26ca3a0489a1485"
+        },
+        "evm3": {
+            "type": "evm",
+            "wormholeChainId": 4,
+            "networkId": 56,
+            "rpc": "https://rpc.ankr.com/fantom/",
+            "bridgeAddress": "0xB6F6D86a8f9879A9c87f643768d9efc38c1Da6E7",
+            "iplnAddress": "0xe3a7627717412837ae7D60817aE8c194BF03E86a",
+            "coreAddress": "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B"
+        }
+    },
+    "wormhole": {
+        "mainnetGuardianRpc": "https://wormhole.inotel.ro",
+        "testnetGuardianRpc": "https://wormhole-v2-testnet-api.certus.one"
+    }
+}

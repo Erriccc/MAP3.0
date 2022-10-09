@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { coinList } from 'data/static/coin-list';
-import { reciversCoinList, sendersCoinList } from '/constants/coinListPolygon'; //
+import { reciversCoinList, sendersCoinList } from '/constants/coinLists'; //
 import { DefaultCoinIcon } from '/components/icons/defaultCoinIcon';
 import {getTokenSymbol} from '/Utilities/utils'
 import {useContext, useEffect } from 'react';

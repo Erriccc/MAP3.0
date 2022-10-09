@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect , useLayoutEffect} from 'react';
 import cn from 'classnames';
-import { sendersCoinList } from '../constants/coinListPolygon'; //
+import { sendersCoinList } from '../constants/coinLists'; //
 import { DefaultCoinIcon } from '/components/icons/defaultCoinIcon';
 import Utils from '/Utilities/utils'
 

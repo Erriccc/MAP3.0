@@ -7,11 +7,13 @@ import{oxSwapEventHandler, sameTokenEventHandler, oxSwapERC20ToEth,
 import{approveTransactionRelayer} from "./FEapproveTransactionRelayer"
 
 const paymentTypeLogicServer = 
-async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactionPopulated, setTxDetails) => 
+async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactionPopulated, setTxDetails,chainId) => 
 {
+  console.log('chainId from paymentTypeLogicServer', chainId)
+
   setTxDetails(null)
   setTransactionPopulated(false)
-
+ 
   // alert('got here')
     const wrappedProvider = new Utils.ethers.providers.Web3Provider(_provider);
     const wrappedSigner = wrappedProvider.getSigner();
@@ -28,7 +30,7 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
     tokenammount = usersMap3SpendingTokenAwlloanceBallance
   }else{
     console.log('non eth transaction')
-    let {tempTokenammount,tempUsersMap3SpendingTokenAwlloanceBallance } = await returnAmountToBeSent(UsertransactionInput)
+    let {tempTokenammount,tempUsersMap3SpendingTokenAwlloanceBallance } = await returnAmountToBeSent(UsertransactionInput,chainId)
     usersMap3SpendingTokenAwlloanceBallance = tempUsersMap3SpendingTokenAwlloanceBallance
     tokenammount = tempTokenammount
   }
@@ -59,7 +61,7 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
     /////// SWAP From ERC20 To ETH or Native Token
           if(UsertransactionInput.reciversToken == Utils.EthAddress && UsertransactionInput.sendersToken !== Utils.EthAddress){
               try{
-                finalConstructedTxData = await oxSwapERC20ToEth(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError);
+                finalConstructedTxData = await oxSwapERC20ToEth(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError,chainId);
 
               }catch(e){
 
@@ -68,10 +70,10 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
             }else if
 
             // /// SWAP ETH TO WETH
-              (UsertransactionInput.sendersToken == Utils.EthAddress &&  UsertransactionInput.reciversToken == Utils.WethAddress ){
+              (UsertransactionInput.sendersToken == Utils.EthAddress &&  UsertransactionInput.reciversToken == Utils.WethAddress(chainId) ){
 
                       try{
-                        finalConstructedTxData = await sameTokenEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError,true);
+                        finalConstructedTxData = await sameTokenEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError,true,chainId);
 
                       }catch(e){
 
@@ -84,7 +86,7 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
                     if (UsertransactionInput.sendersToken == UsertransactionInput.reciversToken) {
                         try{
                               console.log("both tokens are the same", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
-                              finalConstructedTxData = await sameTokenEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError,false);
+                              finalConstructedTxData = await sameTokenEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError,false,chainId);
 
                         }catch(e){
 
@@ -92,7 +94,7 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
                     } else {
                       try{
                             console.log("different tokens", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
-                            finalConstructedTxData = await oxSwapEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError,);
+                            finalConstructedTxData = await oxSwapEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError,chainId);
                           }catch(e){
 
                           }
@@ -113,8 +115,10 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
 }
 
 const paymentTypeLogicExecutor = 
-async (compiledTxdetails,setTransacting, _provider, handleSuccess,handleError, setTransactionPopulated, setTxDetails, setTxReciept) => 
+async (compiledTxdetails,setTransacting, _provider, handleSuccess,handleError, setTransactionPopulated, setTxDetails, setTxReciept,chainId) => 
 {
+  console.log('chainId from paymentTypeLogicExecutor', chainId)
+
   // alert('got here')
     const wrappedProvider = new Utils.ethers.providers.Web3Provider(_provider);
     const wrappedSigner = wrappedProvider.getSigner();
@@ -140,7 +144,7 @@ async (compiledTxdetails,setTransacting, _provider, handleSuccess,handleError, s
       }
     }
       setTransacting(false)
-      await paymentTypeLogicServer (_provider, compiledTxdetails.UsertransactionInput,handleSuccess,handleError, setTransactionPopulated, setTxDetails)
+      await paymentTypeLogicServer (_provider, compiledTxdetails.UsertransactionInput,handleSuccess,handleError, setTransactionPopulated, setTxDetails,chainId)
 
   }
   else{     
@@ -168,7 +172,7 @@ async (compiledTxdetails,setTransacting, _provider, handleSuccess,handleError, s
             }
             else if
             // /// SWAP ETH TO WETH
-              (compiledTxdetails.UsertransactionInput.sendersToken == Utils.EthAddress &&  compiledTxdetails.UsertransactionInput.reciversToken == Utils.WethAddress ){
+              (compiledTxdetails.UsertransactionInput.sendersToken == Utils.EthAddress &&  compiledTxdetails.UsertransactionInput.reciversToken == Utils.WethAddress(chainId) ){
                 console.log('SWAP ETH TO WETH')
                 setTransacting(true)
 

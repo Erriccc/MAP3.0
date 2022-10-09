@@ -1,7 +1,7 @@
 const {oxQuoteFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
 const {oxQuoteRelayer} = require('/Utilities/FrontEndUtilities/FEoxQuoteRelayer');
 import Utils from'/Utilities/utils';
-
+ 
 // import {Utils.numberExponentToLarge,Utils.WholeTOWeiDecimals,Utils.slippage,Utils.getSendersAllowanceBalance,Utils.EthAddress,Utils.WethAddress,getSendersAllowanceBalanceInWei,
 //  } from'../Utilities/utils';
  import{approveTransactionSender} from "./FEapproveTransactionRelayer"
@@ -9,36 +9,36 @@ import Utils from'/Utilities/utils';
  import{map3OxPayTransactionRelayer, map3OxPayTransactionSender} from "./FEmap3OxPayTransactionRelayer"
  import{oxSwapERC20ToEthTransactionRelayer, oxSwapERC20ToEthTransactionSender} from "./FEoxSwapERC20ToEthTransactionRelayer"
 
- const returnAmountToBeSent = async (UsertransactionInput) =>{
+ const returnAmountToBeSent = async (UsertransactionInput,chainId) =>{
   let tempTokenammount;
   let tempUsersMap3SpendingTokenAwlloanceBallance;
 
       if (UsertransactionInput.sendersToken == UsertransactionInput.reciversToken) {
            console.log("sameTokenEventHandler")
-          tempTokenammount = await  Utils.WholeTOWeiDecimals(UsertransactionInput.sendersToken,UsertransactionInput.amountToBeSent)
-          tempUsersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(UsertransactionInput.sendersToken,UsertransactionInput.sender)
+          tempTokenammount = await  Utils.WholeTOWeiDecimals(UsertransactionInput.sendersToken,UsertransactionInput.amountToBeSent,chainId)
+          tempUsersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(UsertransactionInput.sendersToken,UsertransactionInput.sender,chainId)
 
       } else {
         console.log("oxSwapEventHandler")
         let reciversTokenAddress = UsertransactionInput.reciversToken;
         if ( UsertransactionInput.reciversToken == Utils.EthAddress){
-          reciversTokenAddress = Utils.WethAddress;
+          reciversTokenAddress = Utils.WethAddress(chainId);
         }
 
         let quotedAmmountToSell;
-          if (UsertransactionInput.sendersToken == Utils.WethAddress){
+          if (UsertransactionInput.sendersToken == Utils.WethAddress(chainId)){
             quotedAmmountToSell = UsertransactionInput.amountToBeSent * Math.pow(10, 18)
           }else{ 
           quotedAmmountToSell = await oxQuoteFetcher(
           UsertransactionInput.sendersToken,
           reciversTokenAddress,
-          UsertransactionInput.amountToBeSent,
+          UsertransactionInput.amountToBeSent,chainId
           )}
               console.log("this is amont to sell from returnAmountToBeSent", quotedAmmountToSell)
               const aprovalAmount = (quotedAmmountToSell *UsertransactionInput.slippage).toFixed(0).toString() // change multiplier to come from Utils.slippage
               console.log("this is the approval amount from returnAmountToBeSent: ", Utils.numberExponentToLarge(aprovalAmount))
   
-              let  usersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(UsertransactionInput.sendersToken,UsertransactionInput.sender)
+              let  usersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(UsertransactionInput.sendersToken,UsertransactionInput.sender,chainId)
 
               tempTokenammount = aprovalAmount;
               tempUsersMap3SpendingTokenAwlloanceBallance = usersMap3SpendingTokenAwlloanceBallance;
@@ -61,31 +61,31 @@ const sameTokenTransaction = async (signer, txdata,txValue) => {
 
 // This Functions generates the required bytecode and transaction details required for same token
 //transfers
-const sameTokenEventHandler = async (signer, UsertransactionInput, User,handleError ,  _sendAsWeth) => {
+const sameTokenEventHandler = async (signer, UsertransactionInput, User,handleError ,  _sendAsWeth,chainId) => {
         let constructedTx;
         console.log("initiating simple SameTokenTransfer")
         let tokenammount;
         let sendersTokenAddress = UsertransactionInput.sendersToken;
 
         if ( sendersTokenAddress == Utils.EthAddress){
-        sendersTokenAddress = Utils.WethAddress;
-        tokenammount = await  Utils.WholeTOWeiDecimals(sendersTokenAddress,UsertransactionInput.amountToBeSent)
+        sendersTokenAddress = Utils.WethAddress(chainId);
+        tokenammount = await  Utils.WholeTOWeiDecimals(sendersTokenAddress,UsertransactionInput.amountToBeSent,chainId)
         console.log("tokenAmount is in eth")
         }else{
-        tokenammount = await  Utils.WholeTOWeiDecimals(sendersTokenAddress,UsertransactionInput.amountToBeSent)
+        tokenammount = await  Utils.WholeTOWeiDecimals(sendersTokenAddress,UsertransactionInput.amountToBeSent,chainId)
         console.log("tokenAmount is in ERC20")
 
         }
         console.log("token amount vs converted token amount", UsertransactionInput.amountToBeSent,tokenammount)
         
-        let usersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(sendersTokenAddress,User)
+        let usersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(sendersTokenAddress,User,chainId)
 
         console.log("usersMap3SpendingTokenAwlloanceBallance: ", usersMap3SpendingTokenAwlloanceBallance)
 
       
       // CHECK TO AVOID QUOTE ERROR IN THE CASE OF ETH TRANSACTION
       if ( UsertransactionInput.sendersToken == Utils.EthAddress){
-        // sendersTokenAddress = Utils.WethAddress;
+        // sendersTokenAddress = Utils.WethAddress(chainId);
         usersMap3SpendingTokenAwlloanceBallance = tokenammount;
 
       }
@@ -135,7 +135,7 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
 
 // This Functions generates the required bytecode and transaction details required for 
 // swaps between tokens 
-  const oxSwapEventHandler = async (signer, UsertransactionInput, User,handleError) => {
+  const oxSwapEventHandler = async (signer, UsertransactionInput, User,handleError,chainId) => {
         // situation where Tokens do not match
 // alert('all new provider updates recieved... function2')
         let constructedTx;
@@ -143,9 +143,9 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
       let sendersTokenAddress = UsertransactionInput.sendersToken;
       // CHECK TO AVOID QUOTE ERROR IN THE CASE OF ETH TRANSACTION
       if ( sendersTokenAddress == Utils.EthAddress){
-        console.log("weth address...", Utils.WethAddress)
+        console.log("weth address...", Utils.WethAddress(chainId))
         console.log("ETH address...", Utils.EthAddress)
-        sendersTokenAddress = Utils.WethAddress;
+        sendersTokenAddress = Utils.WethAddress(chainId);
       }
 
 
@@ -160,7 +160,7 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
             const aprovalAmount = (quotedAmmountToSell *UsertransactionInput.slippage).toFixed(0).toString() // change multiplier to come from Utils.slippage
             console.log("this is the approval amount: ", Utils.numberExponentToLarge(aprovalAmount))
 
-            let usersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(sendersTokenAddress,User)
+            let usersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(sendersTokenAddress,User,chainId)
 
             console.log("usersMap3SpendingTokenAwlloanceBallance: ", usersMap3SpendingTokenAwlloanceBallance)
 
@@ -221,23 +221,23 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
 // This Functions generates the required bytecode and transaction details required for 
 // swaps from erc20 to native tokens.
 
-    const oxSwapERC20ToEth = async (signer, UsertransactionInput, User,handleError) => {
+    const oxSwapERC20ToEth = async (signer, UsertransactionInput, User,handleError,chainId) => {
       let constructedTx;
       let reciversTokenAddress = UsertransactionInput.reciversToken;
       let sendersTokenAddress = UsertransactionInput.sendersToken;
       let newUserInput;
       // CHECK TO AVOID QUOTE ERROR IN THE CASE OF ETH TRANSACTION
       if ( reciversTokenAddress == Utils.EthAddress){
-        reciversTokenAddress = Utils.WethAddress;
+        reciversTokenAddress = Utils.WethAddress(chainId);
 
           newUserInput = {sender:UsertransactionInput.sender,
-          reciver:UsertransactionInput.reciver,sendersToken:UsertransactionInput.sendersToken,reciversToken:Utils.WethAddress,
+          reciver:UsertransactionInput.reciver,sendersToken:UsertransactionInput.sendersToken,reciversToken:Utils.WethAddress(chainId),
           amountToBeSent:UsertransactionInput.amountToBeSent, slippage:UsertransactionInput.slippage}
         }
 
           let aprovalAmount;
 
-            if (UsertransactionInput.sendersToken == Utils.WethAddress){
+            if (UsertransactionInput.sendersToken == Utils.WethAddress(chainId)){
             console.log("ethers utils does not always get imported", Utils.ethers.utils)
             console.log("ethers utils does not always UsertransactionInput.amountToBeSent", UsertransactionInput.amountToBeSent)
             console.log(" UsertransactionInput.amountToBeSent*(10^18)", UsertransactionInput.amountToBeSent*Math.pow(10, 18))
@@ -252,7 +252,7 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
                 UsertransactionInput.sendersToken,
                 reciversTokenAddress,
                 // UsertransactionInput.reciversToken,
-                UsertransactionInput.amountToBeSent,
+                UsertransactionInput.amountToBeSent,chainId
                 )
               console.log("this is amont to sell", quotedAmmountToSell)
             aprovalAmount = (quotedAmmountToSell *UsertransactionInput.slippage).toFixed(0).toString() // change multiplier to come from Utils.slippage
@@ -260,7 +260,7 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
         
             console.log("this is the approval amount: ", Utils.numberExponentToLarge(aprovalAmount))
 
-            let usersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(sendersTokenAddress,User)
+            let usersMap3SpendingTokenAwlloanceBallance = await Utils.getSendersAllowanceBalanceInWei(sendersTokenAddress,User,chainId)
 
             console.log("usersMap3SpendingTokenAwlloanceBallance: ", usersMap3SpendingTokenAwlloanceBallance)
           
@@ -268,11 +268,11 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
         let oxQuoteResult;
         try{
 
-            if (UsertransactionInput.sendersToken == Utils.WethAddress){
+            if (UsertransactionInput.sendersToken == Utils.WethAddress(chainId)){
             
                 oxQuoteResult={
-                  sellTokenAddress:Utils.WethAddress, // sellToken // Wrapped token
-                  buyTokenAddress: Utils.WethAddress, // buyToken // we dont need this in this case. but we send it to maintain compactibility
+                  sellTokenAddress:Utils.WethAddress(chainId), // sellToken // Wrapped token
+                  buyTokenAddress: Utils.WethAddress(chainId), // buyToken // we dont need this in this case. but we send it to maintain compactibility
                   allowanceTargetquote: Utils.Map3address,// spender // we dont need this in this case. but we send it to maintain compactibility
                   OxDelegateAddress: Utils.Map3address,// swapTarget // we dont need this in this case. but we send it to maintain compactibility
                   data: Utils.dummyHexData, // swapCallData // we dont need this in this case. but we send it to maintain compactibility
@@ -282,7 +282,7 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
                   reciversAddress: UsertransactionInput.reciver// _toAddress
                   }
             }else{
-            oxQuoteResult = await oxQuoteRelayer(newUserInput,sendersTokenAddress,User)
+            oxQuoteResult = await oxQuoteRelayer(newUserInput,sendersTokenAddress,User,chainId)
             }
         
           }catch(err){

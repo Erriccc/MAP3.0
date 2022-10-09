@@ -1,36 +1,15 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## About Map3.0
 
-Map 3.0 is simply provides cryptocurrency users and vendors a platform to find each other  trade transact between tokens with fewer intermediaries and cheap transaction fees
+Map3.0 is a tool that helps users locate crypto friendly businesses near them, and encourages vendors to automatically accept crypto payments in their preferred currency.
+#### the map
+Map3 creates an ecosystem that connects crypto currency users within a local community. It promotes the use of cryptocurrency as a means of payment and encourages adoption by  real vendors.
+#### map3 pay
+Map3Pay uses outsourced liquidity to enable cross token transfer between users. Map3pay's instant swaps gives the user the freedom to choose what currency they want to hold, while also allowing the vendor choose what crypto currency they want to accept.
+#### Unique features
 
-## how does Map3 intend to solve this problem
-
-##
-Map3 makes it easy for cryptocurrency users to spend find local vendors and spend their favorite tokens
+Unlike current solutions, Map3 actually retains the financial value within the cryptocurency economy, serves as a market maker and taker, and increases volume and stability of the market.
 ## 
-
-Vendors can choose stable or blue chip tokens to reduce their exposure to market volitility
-
-##
-
-Unlike current solutions, Map3 actually retains the financial value within the cryptocurency economy, sereves as a market maker and taker, and increases volume and stability of the market.
-
-## 
-creating a Map3 profile creates a cutom shareable payment link that is attached to your wallet and token of choice
-
-## 
-Map3 is designed to reward early cryptofriendly vendors by giving them the presence and exposure to  crypto users as an aditional source of revenue
-
-## 
-Mpa3Pay is working on integrating a feeless liquidity source 0x protocol's RFQ orders, which will help eliminate all transaction fees bar network gas fees for blue chip stable coins
-
-## Uni Voting Token
-
-Uni VOTING TOken is a simple review implimentation token that is minted to Map3 users after every transaction.
-Users can choose to leave a good or bad review about thier expirience at the store they visit.
-review ranks will be used to reward the best vendors per /week/month when reward programs are open
-review ranks will be reset every week/moth with the hep of chainlink keepers
+To unlock the full potential of map3, Users and vendor can create profiles which creates a personalized payment expirience. Each profile is an  Nft which contains all details about a user's payment prefrence and other info they might want to share including favourite wallet address, favourite crypto currency, website, geo address, contact info, bio, keywords, and image url.
 ## Getting Started
 
 ```
@@ -77,8 +56,8 @@ Tokens with fee or tax atached on sale will likely fail to swap from 0x..
 ## project  details
 Polygon Minnet
 
-  Map3VendorPlansPolgonTest2="0x3095d04AdC87dF6C50A9de0A5106602DB6fc902e" 
-  VendorAccountsManagerContractTest2 = "0x2C6792dB0b81678a784F34C916546A5b292fbeA1"
+  Map3P2PContractTest4 ="0xfC2d1c0166e00DBfa712C1F33F7634213e720215"
+  VendorAccountsManagerContractTest2 = "0x7ae71782c11d7Af24A437F802926E3B6859D2b7E"
 
 ##
 Map3 ABI cann be found under Utilities directory

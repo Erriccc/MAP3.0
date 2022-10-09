@@ -2,7 +2,9 @@ const fetch = require('node-fetch');
 const process = require('process');
 const Utils = require('/Utilities/utils');
 
-const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent) => {
+const oxPriceFetcher = async (sendersToken,reciversToken,amountToBeSent,chainId) => {
+  console.log('chainId from oxPriceFetcher', chainId)
+
   let validatedSendersToken = sendersToken;
   let validatedReciversToken = reciversToken;
   
@@ -24,7 +26,7 @@ if (reciversToken == null){
 
         //VALIDATE sendersToken ADDRESS INPUT
         try{
-            await Utils.getUserNativeBalanceInWei(validatedSendersToken)
+            await Utils.getUserNativeBalanceInWei(validatedSendersToken,chainId)
 
         }catch(e){
           return("invalid ENS address")
@@ -33,7 +35,7 @@ if (reciversToken == null){
 
         //VALIDATE reciversToken ADDRESS INPUT
         try{
-            await Utils.getUserNativeBalanceInWei(validatedReciversToken)
+            await Utils.getUserNativeBalanceInWei(validatedReciversToken,chainId)
 
         }catch(e){
           return("invalid ENS address")
@@ -49,11 +51,11 @@ else{
         console.log("validating for eth addresses")
         if (validatedSendersToken == Utils.EthAddress){
           console.log("validatedSendersToken == Utils.EthAddress detected")
-          validatedSendersToken = Utils.WethAddress
+          validatedSendersToken = Utils.WethAddress(chainId)
         }
         if (validatedReciversToken == Utils.EthAddress){
           console.log("validatedReciversToken = Utils.EthAddress detected")
-          validatedReciversToken = Utils.WethAddress
+          validatedReciversToken = Utils.WethAddress(chainId)
         }
         //second VALIDATE for same WETH tokens 
         if (validatedSendersToken == validatedReciversToken){
@@ -61,14 +63,14 @@ else{
             return 1
         }else{
         console.log("making api call")
-              console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", await Utils.WholeTOWeiDecimals(validatedReciversToken,amountToBeSent) )
+              console.log("ammount to be sent from pricefetcher : ",amountToBeSent, " - ", await Utils.WholeTOWeiDecimals(validatedReciversToken,amountToBeSent,chainId) )
               const qs = Utils.createQueryString({
                   // Directly Swap and Send Any Token for USDT online
                   sellToken: validatedSendersToken,
                   buyToken: validatedReciversToken,
-                  buyAmount: await Utils.WholeTOWeiDecimals(validatedReciversToken,amountToBeSent),
+                  buyAmount: await Utils.WholeTOWeiDecimals(validatedReciversToken,amountToBeSent,chainId),
               });
-              const quoteUrl = `${Utils.API_PRICE_URL}?${qs}`;
+              const quoteUrl = `${Utils.API_PRICE_URL(chainId)}?${qs}`;
               console.log(quoteUrl)
               // const quoteUrl = `${Ox_POLYGON_API_PRICE_URL}?${qs}`;
               const response = await fetch(quoteUrl);
@@ -92,7 +94,7 @@ else{
 
 
 
-
+ 
 
 
 
@@ -106,18 +108,18 @@ else{
 // }
 
 
-const oxQuoteFetcher = async (sendersToken,reciversToken,amountToBeSent) => {
+const oxQuoteFetcher = async (sendersToken,reciversToken,amountToBeSent,chainId) => {
   
-
-console.log("ammount to be sent from Quotefetcher : ",amountToBeSent, " - ", await Utils.WholeTOWeiDecimals(reciversToken,amountToBeSent) )
+console.log("oxQuoteFetcher..",chainId)
+console.log("ammount to be sent from Quotefetcher : ",amountToBeSent, " - ", await Utils.WholeTOWeiDecimals(reciversToken,amountToBeSent,chainId) )
 
   const qs = Utils.createQueryString({
       // Directly Swap and Send Any Token for USDT online
       sellToken: sendersToken,
       buyToken: reciversToken,
-      buyAmount: await Utils.WholeTOWeiDecimals(reciversToken,amountToBeSent),
+      buyAmount: await Utils.WholeTOWeiDecimals(reciversToken,amountToBeSent,chainId),
   });
-  const quoteUrl = `${Utils.API_QUOTE_URL}?${qs}`;
+  const quoteUrl = `${Utils.API_QUOTE_URL(chainId)}?${qs}`;
   console.log("Quotefetcher url for pre swap price..", quoteUrl)
   // const quoteUrl = `${Ox_POLYGON_API_PRICE_URL}?${qs}`;
   const response = await fetch(quoteUrl);

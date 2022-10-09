@@ -67,7 +67,7 @@ export default function PayAnonymous() {
   }else if
 
   // /// SWAP ETH TO WETH
-    (UsertransactionInput.sendersToken == Utils.EthAddress &&  UsertransactionInput.reciversToken == Utils.WethAddress ){
+    (UsertransactionInput.sendersToken == Utils.EthAddress &&  UsertransactionInput.reciversToken == Utils.WethAddress(Moralis.chainId? parseInt(Moralis.chainId): 0) ){
 
             try{
               await sameTokenEventHandler(UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing, setTransacting, true);

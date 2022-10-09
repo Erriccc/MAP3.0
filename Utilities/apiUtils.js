@@ -615,8 +615,8 @@ const functionBytesEncoder =  async(contractAbi, functionName, functionParameter
     function arraysAreEqual(ary1,ary2){
       return (ary1.join('') == ary2.join(''));
     }
-    let gasPrice = await provider.getGasPrice()
-    let gasLimit = 50000000
+    // let gasPrice = await provider.getGasPrice()
+    // let gasLimit = 50000000
     let encodedData = iface.encodeFunctionData(functionName, functionParameters)
     // let testPopulatedTx = await contact.estimateGas[functionName](...functionParameters)
     console.log('...functionParameters', functionParameters)
@@ -630,13 +630,13 @@ const getFunctionSignatureHash =  (contractAbi, functionName) => {
 
 }
 
-   const OxQuote = async (sendersToken,reciversToken,amountToBeSent,reciversAddress,sendersAddress, userSetSlippage) => {
+   const OxQuote = async (sendersToken,reciversToken,amountToBeSent,reciversAddress,sendersAddress, userSetSlippage,chainId) => {
 
             console.log("from OXQuote in oxpay and utils: ",sendersToken,reciversToken,amountToBeSent,reciversAddress,sendersAddress )
-            const sendersTokenContract = new ethers.Contract(sendersToken,IERC20Abi,provider)
+            // const sendersTokenContract = new ethers.Contract(sendersToken,IERC20Abi,provider)
             console.log(" passsed the senderstoken contract instantiation test")
           
-            const Map3 = new ethers.Contract(Map3address,Map3Abi,provider)
+            // const Map3 = new ethers.Contract(Map3address,Map3Abi,provider)
             console.log(" passsed the map3 contract instantiation test")
           
             let buyAmountWei = await WholeTOWeiDecimals(reciversToken ,amountToBeSent);
@@ -654,7 +654,7 @@ const getFunctionSignatureHash =  (contractAbi, functionName) => {
             //   feeRecipient: testAccount,
             //   buyTokenPercentageFee: feeOnVendor// check if vendor IsVendor for fees
               });
-              const quoteUrl = `${API_QUOTE_URL}?${qs}`;
+              const quoteUrl = `${API_QUOTE_URL(chainId)}?${qs}`;
               console.log(`Fetching quote ${quoteUrl}...`);
               const response = await fetch(quoteUrl);
               const quote = await response.json();

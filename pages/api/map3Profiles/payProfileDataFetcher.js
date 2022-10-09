@@ -1,6 +1,6 @@
 const apiUtils = require('../../../Utilities/apiUtils');
 const Utils = require('../../../Utilities/utils');
-// import { sendersCoinList } from '../constants/coinListPolygon'; //
+// import { sendersCoinList } from '../constants/coinLists'; //
 // import { DefaultCoinIcon } from '/components/icons/defaultCoinIcon';
 
 

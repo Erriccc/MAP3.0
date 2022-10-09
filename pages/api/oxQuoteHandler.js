@@ -14,7 +14,8 @@ export default async function form(req, res) {
       sender:body.sender, // takeNote this might be an object
       reciversToken:body.reciversTokenOfChoice,
       sendersToken:body.sendersToken,
-      userSetSlippage:body.userSetSlippage
+      userSetSlippage:body.userSetSlippage,
+      chainId:body.chainId
     }
     console.log("from payment handler reqPaymentData: ",reqPaymentData )
     // Guard clause checks for first and last name,
@@ -32,7 +33,8 @@ export default async function form(req, res) {
     reqPaymentData.amount,
     reqPaymentData.reciver,
     reqPaymentData.sender,
-    reqPaymentData.userSetSlippage
+    reqPaymentData.userSetSlippage,
+    reqPaymentData.chainId
     )
 
     console.log("from payment handler responsePaymentData: ",responsePaymentData )

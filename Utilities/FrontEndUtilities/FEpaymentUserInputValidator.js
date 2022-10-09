@@ -2,13 +2,14 @@
 import Utils from'/Utilities/utils'; 
 const {oxQuoteFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
 
-const PaymentInputValidator = async (UsertransactionInput, setValidationResponce,setvalidatingInput ) => {
+const PaymentInputValidator = async (UsertransactionInput, setValidationResponce,setvalidatingInput,chainId) => {
+    console.log('chainId from validator', chainId)
 
     console.log("UsertransactionInput values...", UsertransactionInput)
     setvalidatingInput(true)
         //VALIDATE SENDER ADDRESS INPUT
         try{
-            await Utils.getUserNativeBalanceInWei(UsertransactionInput.sender)
+            await Utils.getUserNativeBalanceInWei(UsertransactionInput.sender,chainId)
 
         }catch(e){
             setvalidatingInput(false);
@@ -19,7 +20,7 @@ const PaymentInputValidator = async (UsertransactionInput, setValidationResponce
 
         //VALIDATE Reciver ADDRESS INPUT
         try{
-            await Utils.getUserNativeBalanceInWei(UsertransactionInput.reciver)
+            await Utils.getUserNativeBalanceInWei(UsertransactionInput.reciver,chainId)
 
         }catch(e){
             setvalidatingInput(false);
@@ -30,7 +31,7 @@ const PaymentInputValidator = async (UsertransactionInput, setValidationResponce
 
         //VALIDATE sendersToken ADDRESS INPUT
         try{
-            await Utils.getUserNativeBalanceInWei(UsertransactionInput.sendersToken)
+            await Utils.getUserNativeBalanceInWei(UsertransactionInput.sendersToken,chainId)
         }catch(e){
             setvalidatingInput(false);
             setValidationResponce("invalid sendersToken address")
@@ -40,7 +41,7 @@ const PaymentInputValidator = async (UsertransactionInput, setValidationResponce
 
         //VALIDATE reciversToken ADDRESS INPUT
         try{
-            await Utils.getUserNativeBalanceInWei(UsertransactionInput.reciversToken)
+            await Utils.getUserNativeBalanceInWei(UsertransactionInput.reciversToken,chainId)
 
         }catch(e){
             setvalidatingInput(false);
@@ -63,7 +64,7 @@ const PaymentInputValidator = async (UsertransactionInput, setValidationResponce
             // require users balance is valid for pure ETH transactions
             if(UsertransactionInput.reciversToken == Utils.EthAddress && UsertransactionInput.sendersToken == Utils.EthAddress ){
 
-                let usersEthBalance = await Utils.getUserNativeBalance(UsertransactionInput.sender)
+                let usersEthBalance = await Utils.getUserNativeBalance(UsertransactionInput.sender,chainId)
 
                     if(UsertransactionInput.amountToBeSent > usersEthBalance){
 
@@ -82,21 +83,21 @@ const PaymentInputValidator = async (UsertransactionInput, setValidationResponce
                     if(UsertransactionInput.reciversToken == Utils.EthAddress || UsertransactionInput.sendersToken == Utils.EthAddress ){
                         if(UsertransactionInput.sendersToken ==Utils.EthAddress){
                             console.log("sendersEthTpken Dectected validating sufficient balance in eth before making 0x api call")
-                            let usersEthBalance = await Utils.getUserNativeBalance(UsertransactionInput.sender)
+                            let usersEthBalance = await Utils.getUserNativeBalance(UsertransactionInput.sender,chainId)
                             if(UsertransactionInput.amountToBeSent > usersEthBalance){
                                 setvalidatingInput(false);
                                 setValidationResponce("insufficient Native balance")
                                 return false;
                             }
                             console.log("passed validation for sufficient eth balance")
-                            sendersToken = Utils.WethAddress;
+                            sendersToken = Utils.WethAddress(chainId);
                         }else{
                             console.log("reciversEthToken Dectected")
 
-                            reciversToken = Utils.WethAddress;
+                            reciversToken = Utils.WethAddress(chainId);
                         }
                     }
-                    
+                     
                     // Conditions where senders address and recivers addressare the same
                     // note each of them could originally be 
                     if(sendersToken == reciversToken ){
@@ -111,7 +112,7 @@ const PaymentInputValidator = async (UsertransactionInput, setValidationResponce
                         aprovalAmount = parseInt(UsertransactionInput.amountToBeSent,18).toString();
 
                         console.log("aprovalAmount.. from validator..1", aprovalAmount)
-                        sendersBalance = await Utils.getUserNativeBalanceInWei(UsertransactionInput.sender)
+                        sendersBalance = await Utils.getUserNativeBalanceInWei(UsertransactionInput.sender,chainId)
                         console.log("sendersBalance.. from validator..1", sendersBalance)
 
                         }else{
@@ -119,10 +120,10 @@ const PaymentInputValidator = async (UsertransactionInput, setValidationResponce
                         // aprovalAmount = parseInt(UsertransactionInput.amountToBeSent, await Utils.getTokenDecimal(sendersToken)).toString();
                         console.log("users token is weth")
 
-                        aprovalAmount= await Utils.WholeTOWeiDecimals( sendersToken,UsertransactionInput.amountToBeSent)
+                        aprovalAmount= await Utils.WholeTOWeiDecimals( sendersToken,UsertransactionInput.amountToBeSent,chainId)
                         console.log("aprovalAmount.. from validator..2", aprovalAmount)
 
-                        sendersBalance = await Utils.getUserErc20BalanceInWei(sendersToken,UsertransactionInput.sender)
+                        sendersBalance = await Utils.getUserErc20BalanceInWei(sendersToken,UsertransactionInput.sender,chainId)
                         console.log("sendersBalance.. from validator..2", sendersBalance)
 
                         // sendersBalance = parseInt(await Utils.getUserErc20Balance(UsertransactionInput.sendersToken,UsertransactionInput.sender), 10).toString()
@@ -134,18 +135,18 @@ const PaymentInputValidator = async (UsertransactionInput, setValidationResponce
                             sendersToken,
                             reciversToken,
                             UsertransactionInput.amountToBeSent,
-                            setValidationResponce
+                            chainId
                             )
                         aprovalAmount = (quotedAmmountToSell *UsertransactionInput.slippage) // change multiplier to come from slippage
                         console.log("recived approval amount", aprovalAmount)
-                        sendersBalance = await Utils.getUserErc20BalanceInWei(sendersToken,UsertransactionInput.sender)
+                        sendersBalance = await Utils.getUserErc20BalanceInWei(sendersToken,UsertransactionInput.sender,chainId)
                         console.log("aprovalAmount !== sendersBalance ", aprovalAmount,sendersBalance)
                         console.log("quotedAmmountToSell *UsertransactionInput.slippage.", quotedAmmountToSell *UsertransactionInput.slippage)
                     }
 
                     //SPECIAL CONDITION: where sending token was initially Native
                     if(UsertransactionInput.sendersToken ==Utils.EthAddress){
-                        sendersBalance = await Utils.getUserNativeBalanceInWei(UsertransactionInput.sender)
+                        sendersBalance = await Utils.getUserNativeBalanceInWei(UsertransactionInput.sender,chainId)
                         console.log("sendersBalance from user spending eth situation.. remember to conver to weigh numbers..", sendersBalance)
                     }
 
