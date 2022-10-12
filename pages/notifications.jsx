@@ -51,7 +51,7 @@ const notifications = [
         time: '30 minutes ago',
         url: '#',
         notifier: 'you',
-    },
+    }, 
 ];
 const NotificationPage = () => {
     return (<>
