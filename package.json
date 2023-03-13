@@ -42,6 +42,7 @@
     "js-cookie": "3.0.1",
     "little-state-machine": "4.4.1",
     "lodash": "4.17.21",
+    "magic-sdk": "^13.6.0",
     "mapbox-gl": "^2.9.2",
     "next": "12.1.5",
     "next-pwa": "5.5.4",
