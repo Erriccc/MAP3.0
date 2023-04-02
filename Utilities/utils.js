@@ -4,7 +4,7 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const BigNumber = require('bignumber.js');
 // const process = require('process');
-const Web3 = require('web3');
+// const Web3 = require('web3');
 const Map3AbiPlaceHolder = require( '../artifacts/contracts/Map3Pay.sol/Map3Pay.json')
 // const Map3Abi = Map3AbiPlaceHolder.abi;
 // const Map3Abi = require( './map3PayABI.json')

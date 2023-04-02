@@ -1,4 +1,6 @@
-import React from 'react';
+// import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+
 import Head from "next/head";
 // import "/tailwind.css";
 // import "pages/profile/profile.css"
@@ -11,6 +13,8 @@ import ProgressBar from "@badrap/bar-of-progress";
 import { MoralisProvider } from "react-moralis";
 import {NotificationProvider} from "web3uikit";
 
+import { useRouter } from 'next/router'
+
 //cptc
 import 'swiper/css';
 import 'assets/css/scrollbar.css';
@@ -21,7 +25,9 @@ import ModalsContainer from '/components/modal-views/container';
 import DrawersContainer from '/components/drawer-views/container';
 import SettingsDrawer from '/components/settings/settings-drawer';
 import { WalletProvider } from 'lib/hooks/use-connect';
+import { AuthProvider } from 'lib/hooks/AuthContext';
 import{UrlProvider} from 'Utilities/FrontEndUtilities/FEUrlContext'
+import { Analytics } from '@vercel/analytics/react';
 
 // page progress bar
 const progress = new ProgressBar({
@@ -46,6 +52,11 @@ const MoralisAppUrl = process.env.NEXT_PUBLIC_MORALIS_APP_URL;
 
 
 export default function MyApp({ Component, pageProps }) {
+
+
+  const router = useRouter()
+
+
   return(
     <>
       <Head>
@@ -62,6 +73,7 @@ export default function MyApp({ Component, pageProps }) {
       // serverUrl={MoralisAppUrl}
       initializeOnMount={false}
     >
+        <AuthProvider>
         <WalletProvider>
           <UrlProvider>
         <ThemeProvider attribute="class" enableSystem={false} defaultTheme="light">
@@ -69,18 +81,18 @@ export default function MyApp({ Component, pageProps }) {
           <NotificationProvider>
 
           <Component {...pageProps} />
+          <Analytics />
           {/* <SettingsButton /> */}
                     {/* <PageDrawer /> */}
                     <SettingsDrawer />
                     <ModalsContainer />
                     <DrawersContainer />
-          {/* <Partners/> */}
-          {/* <Appfooter/> */}
         </NotificationProvider>
 
           </ThemeProvider>
           </UrlProvider>
         </WalletProvider>
+        </AuthProvider>
       </MoralisProvider>
 
         {/* </WagmiConfig> */}
