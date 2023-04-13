@@ -4,7 +4,6 @@ import { useMoralis } from 'react-moralis'
 import { useContext, useEffect, useState} from 'react';
 import Button from '/components/ui/button';
 import { PowerIcon } from '/components/icons/power';
-import { AuthContext } from 'lib/hooks/AuthContext';
 import { useRouter } from "next/dist/client/router";
 import routes from 'config/routes';
 
