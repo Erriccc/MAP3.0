@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import {useState, useEffect, usemap3Querry} from "react"
 import { useRouter } from "next/dist/client/router";
-import { Button, Icon, useNotification } from "web3uikit";
+import { toast } from 'react-toastify';
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import VendorsMap from "components/VendorsMap";
 import SearchVendorInfo from "components/SearchVendorInfo";
@@ -30,40 +30,9 @@ export default function Rentals () {
 
   const [coOrdinates, setCoOrdinates] = useState([]);
   const contractProcessor = useWeb3ExecuteFunction();
-  const dispatch = useNotification();
   const { map3Querry} = router.query;
 
   console.log(map3Querry);
-
-  const handleSuccess= () => {
-    dispatch({
-      type: "success",
-      // message: `Nice! Your Transaction was succesful ${map3Querry.destination}!!`,
-      message: `Nice! Your Transaction was succesful!!`,
-      title: "Booking Succesful",
-      position: "bottomR",
-    });
-  };
-
-  const handleError= (msg) => {
-    dispatch({
-      type: "error",
-      message: `${msg}`,
-      title: "Booking Failed",
-      position: "bottomR",
-    });
-  };
-
-  const handleNoAccount= () => {
-    dispatch({
-      type: "error",
-      message: `You need to connect your wallet to book a rental`,
-      title: "Not Connected",
-      position: "bottomR",
-    });
-  };
-
-
   // useEffect(() => {
   //   async function fetchvendorsList() {
   //     // // const Rentals = Moralis.Object.extend("Vendors"); // Vendors should be the name of our class in the database 

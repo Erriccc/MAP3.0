@@ -2,8 +2,8 @@ import React from "react";
 import Link from "next/link";
 import {useState, useEffect, useLayoutEffect, useReducer} from "react"
 import { useRouter } from "next/dist/client/router";
-import { useNotification } from "web3uikit";
-import { useMoralis} from "react-moralis";
+import { toast } from 'react-toastify';
+
 import VendorsMap from "components/VendorsMap";
 import { NextSeo } from 'next-seo';
 import VendorSlider from '/components/ui/vendorCard';
@@ -22,7 +22,6 @@ export default function Rentals () {
 // This page shows the results of the search
   const router = useRouter();
 
-  const { Moralis, account } = useMoralis();
   // REMEMBER NOT TO DELETE, THIS IS HOW YOU SET VENDORS LIST STATE
   let [tempDataInfo, setTempDataInfo] = useState([]);
   const [mapDataState, dispatchather] = useReducer(reducer,{dataFromServer:[],showDataFromServer: false, loadingInfo: true, FoundInfo: false });
@@ -44,24 +43,6 @@ function reducer(mapDataState, action){
 }
 
   const { map3Querry} = router.query;
-
-  const dispatch = useNotification();
- const handleWarning= (msg) => {
-   dispatch({
-     type: "warning",
-     message: `${msg}`,
-     title: "failed",
-     position: "bottomR",
-   });
- };
- const handleNoAccount= () => {
-   dispatch({
-     type: "error",
-     message: `You need to connect your wallet to book a rental`,
-     title: "Not Connected",
-     position: "bottomR",
-   });
- };
   const { openDrawer } = useDrawer();
     let [isOpen, setIsOpen] = useState(false);
     let [isOpen2, setIsOpen2] = useState(false);
@@ -91,8 +72,8 @@ useEffect(() => {
       }else{
         console.log("tempData...", await tempData)
         // setDataFromServer(tempData)
-      setTempDataInfo(tempData.map3Vendors)
-      setDisplayData(tempData.map3Vendors)
+      setTempDataInfo(tempData)
+      setDisplayData(tempData)
       dispatchather({type:"FOUND"})
       console.log('done transfering')
       }
@@ -113,7 +94,7 @@ useEffect(() => {
         //   pathname: '/ProfileSearchFilters',
          
         // })
-        handleWarning('vendor not found! please refine your search')
+        toast.warning('vendor not found! please refine your search')
 
       }
       dispatchather({type:"SHOW"})

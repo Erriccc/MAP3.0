@@ -1,12 +1,12 @@
 const fetch = require('node-fetch');
 // import { mapDataFetcherEndpoint} from'/Utilities/utils';
-import { findProfilesDataFetcherEndpoint} from'/Utilities/utils';
+import { dbGetUserEndPoint} from'/Utilities/utils';
 
 const apiUtils = require('../apiUtils');
 
 
 //  mapDataFetcherEndpoint,
-//  findProfilesDataFetcherEndpoint,
+//  dbGetUserEndPoint,
 //  payProfileDataFetcherEndpoint,
 
 
@@ -22,18 +22,18 @@ return
     return {map3Vendors:[]}
 }else{
     const map3SearchData = {
-        string: userSearchInput.string
+        string: userSearchInput.string 
       } 
 
         console.log("User input for mapData: from findProfilesDataFetcherRelayer", map3SearchData)
 
         const JSONdata = JSON.stringify(map3SearchData)
         // API endpoint where we send form data.
-        const endpoint = findProfilesDataFetcherEndpoint // "api/paymentHandler"
+        const endpoint = dbGetUserEndPoint // "api/paymentHandler"
         // Form the request for sending data to the server.
         const options = {
           // The method is POST because we are sending data.
-          method: 'POST',
+          method: 'PUT',
           // Tell the server we're sending JSON.
           headers: {
             'Content-Type': 'application/json',
@@ -41,12 +41,12 @@ return
           // Body of the request is the JSON data we created above.
           body: JSONdata,
         }
-        // const response = await fetch(endpoint, options)
-        // console.log("response..... from mapDataFetchingRelayer: ", await response)
+        const response = await fetch(endpoint, options)
+        console.log("response..... from mapDataFetchingRelayer: ", await response)
  
-        // const result = await response.json()
-        // console.log("response..... from mapDataFetchingRelayer: ",result)
-        const result = await apiUtils.fetchDataForMap(userSearchInput.string);// new implimentation from moralis database
+        const result = await response.json()
+        console.log("result..... from mapDataFetchingRelayer: ",await result)
+        // const result = await apiUtils.fetchDataForMap(userSearchInput.string);// new implimentation from moralis database
  
 
         // setTempDataInfo(result)

@@ -96,5 +96,5 @@ const IERC20Abi =
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+node -v:  16.9.0
 ## Deploy on Vercel

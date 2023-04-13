@@ -1,22 +1,21 @@
 import Button from '/components/ui/button';
 import Utils from'/Utilities/utils';
-
+import Uploader from '/components/ui/forms/profileImageUploader';
 import { WalletContext } from 'lib/hooks/use-connect';
 import { useModal } from '/components/modal-views/context';
-import { useMoralis } from 'react-moralis';
-
 import { useContext, useEffect, useState } from 'react';
 // import { ConnectButton} from "web3uikit";
 import FeaturedCard from '/components/nft/featured-card';
 import InputLabel from '/components/ui/input-label';
 import { Switch } from '/components/ui/switch';
 import cn from 'classnames';
-import { useNotification } from "web3uikit";
+import { toast } from 'react-toastify';
+
 import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext";
-import { useDropzone } from 'react-dropzone';
-import Image from '/components/ui/image';
 // import dynamic from 'next/dynamic';
 import{signUpEventHandler,signUpEventExecutor, ValidateUserSignUpInput} from '/Utilities/FrontEndUtilities/FEsignUpHandler';
+import{getImageUrl} from "/Utilities/FrontEndUtilities/FEsignUpTransactionRelayer"
+import { useRouter } from "next/dist/client/router";
 
 import ConfirmationModal from '/components/nft/confirmationModal'
 
@@ -24,15 +23,13 @@ import ConfirmationModal from '/components/nft/confirmationModal'
 import ProcessingView from '/components/ui/ProcessingView';
 
  
-
+ 
 export default function Final() {
-  const { openModal } = useModal();
 
+  const router = useRouter()
+
+  const { openModal } = useModal();
 const { userData, setUserData} = useStepperContext();
-const  [files, setFiles] = useState({userData})
-// let [systemProcessing, setSystemProcessing] = useState(false);
-  // let [validatingInput, setvalidatingInput] = useState(false);
-  // let [transacting, setTransacting] = useState(false);
   let [validatingInput, setvalidatingInput] = useState(false);
   let [validationResponce, setValidationResponce] = useState('Send');
   let [txReciept, setTxReciept] = useState();
@@ -40,88 +37,51 @@ const  [files, setFiles] = useState({userData})
   let [transacting, setTransacting] = useState(false);
   let [transactionPopulated, setTransactionPopulated] = useState(false);
   let [txDetails, setTxDetails] = useState();
+  const { address,isConnected,currentUser,setCurrentUser, authState, provider,balance, connectToWallet, disconnectWallet } = useContext(WalletContext);
 
-  const { Moralis, account } = useMoralis();
-
-      const dispatch = useNotification();
-
-      const handleSuccess= (msg) => {
-        dispatch({
-          type: "success",
-          message: msg,
-          title: "Done",
-          position: "bottomR",
-        });
-      };
-      const handleError= (msg) => {
-        dispatch({
-          type: "error",
-          message: `${msg}`,
-          title: "failed",
-          position: "bottomR",
-        });
-      };
-      useEffect(() => {
-        if(account){
-            setUserData({ ...userData, ["userWallet"]: account });
-            console.log("userdata before submission..", userData)
-           }else{
-           }
-      }, [account])
 
       useEffect(() => {
-    setTransactionPopulated(false)
 
-    let UsertransactionInput = {
-      userWallet: account,
-      userName: userData.userName,
-      email: userData.email ? userData.email: null,
-      aboutVendor: userData.aboutVendor ? userData.aboutVendor : null,
-      vendorKeywords: userData.vendorKeywords ?  userData.vendorKeywords: null,
-      geoAddress: userData.geoAddress ? userData.geoAddress : null,
-      imageUrl:userData.imageUrl ? userData.imageUrl: null,
-      userImage:userData.userImage ? userData.userImage : null,
-      websiteUrl: userData.websiteUrl ?  userData.websiteUrl: null,
-      userCurrency: userData.userCurrency
-  };
+      txReciept && router.push({
+        pathname: "/profile"}
+      )
+    }, [txReciept])
+
+      useEffect(() => {
+      setTransactionPopulated(false)
+
+      const { currencySymbol,id, ...rest } = userData;
+
     (async function() {
-      if(await ValidateUserSignUpInput(UsertransactionInput,setValidationResponce,setvalidatingInput)){
+      if(await ValidateUserSignUpInput(rest,setValidationResponce,setvalidatingInput)){
       console.log("All validation passed........... processing transaction")
-      submitPayment(UsertransactionInput);
+      submitPayment(rest);
       }
       else{
         console.log("validation is false")
       }
     })();
-      }, [account,userData])
+      }, [address,isConnected,userData])
 
-      const submitPayment = async (UsertransactionInput) => {
-        const wrappedProvider = new Utils.ethers.providers.Web3Provider(Moralis.connector.provider);
-        const wrappedSigner = wrappedProvider.getSigner();
+      const submitPayment = async (rest) => {
         try{
-          await signUpEventHandler(wrappedProvider, UsertransactionInput, handleSuccess,handleError,setTransactionPopulated, setTxDetails  );
+          await signUpEventHandler(provider, rest, toast,setTransactionPopulated, setTxDetails  );
         }catch(e){
         }
       };
       
-      const signUpExecutor = async (txDetails) => {
-        const wrappedProvider = new Utils.ethers.providers.Web3Provider(Moralis.connector.provider);
-        const wrappedSigner = wrappedProvider.getSigner();
+      const signUpExecutor = async () => {
+        const wrappedSigner = provider.getSigner();
+        const { currencySymbol,id, ...rest } = userData;
         try{
-          await signUpEventExecutor(wrappedSigner, txDetails, handleSuccess,handleError, setTransacting, setTransactionPopulated, setTxDetails, setTxReciept);
-
+          console.log(rest)
+          await signUpEventExecutor(wrappedSigner, txDetails,rest,toast, setTransacting, setTxReciept,setCurrentUser);
         }catch(e){
+          toast.error(e)
+          return
         }
+
       };
-
-
-
-
-
-
-
-
-
 
 
 
@@ -131,48 +91,36 @@ const  [files, setFiles] = useState({userData})
                 Confirm Details
         </div>
         <div className="flex flex-col">
-                <div className="relative h-40 w-40 overflow-hidden rounded-lg xl:h-50 2xl:h-60">
-                       {userData.userImage &&( 
-                       <img
-                        src={URL.createObjectURL(userData.userImage[0]) }
-                        style={{
-                            width: '0px',
-                            height: '0px',
-                            minWidth:'100%',
-                            maxWidth:'100%',
-                            minHeight: "100%",
-                            maxHeight: '100%'
-                            
-                        }}
-                        // Revoke data uri after image is loaded
-                        onLoad={() => { URL.revokeObjectURL(userData.userImage[0].preview) }}
-                        alt="profile Image"
-                        />
-                        )
-                        
-                }{userData.imageUrl && (
-                      <Image 
-                      src={`/api/imagefetcher?url=${encodeURIComponent(
-                          userData?.imageUrl
-                        )}`}
-                      layout="fill" 
-                      // objectFit="cover" 
-                      // width={150} height={150}
+
+                <div className=" h-50 w-50 overflow-hidden rounded-lg xl:h-50 2xl:h-60">
+                       
+                <div className="mb-8">
+                     <Uploader
+                     getSelectedFile={(data) => {
+                         console.log('getSelectedFile file value:', data);
+                         (async function() {
+                          let testImageUrl = await getImageUrl(data)
+                          setUserData({ ...userData, vendorsImageUrl: testImageUrl });
+  
+                        })();
+                       }
+                      }
+                      uploadedImageUrl = {userData?.vendorsImageUrl}
+                     />
+                     {/* <InputLabel title="change image"/> */}
+
+                   </div>
+
+                       
                      
-                      alt="profile Image"/>
-
-              // alt={name} width={48} height={48} className="rounded-[6px]"/>
-                              )
-                        }
-
                 </div>
             
             <div className="border-y border-dashed border-gray-200 py-5 dark:border-gray-700 xl:py-6">
                 <div className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
                     Name
                 </div>
-               { userData?.userName ? (<div className="text-sm leading-6 tracking-tighter text-gray-600 dark:text-gray-400">
-                    {userData.userName}
+               { userData?.vendorsName ? (<div className="text-sm leading-6 tracking-tighter text-gray-600 dark:text-gray-400">
+                    {userData.vendorsName}
                 </div>):(
                     <div className="text-sm leading-6 tracking-tighter text-red-600 dark:text-red-400">
                         please enter a valid name to proceed
@@ -184,8 +132,8 @@ const  [files, setFiles] = useState({userData})
                 <div className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
                     Wallet Address
                 </div>
-                { account? (<div className="text-sm leading-6 tracking-tighter text-gray-600 dark:text-gray-400">
-                    {account}
+                { isConnected? (<div className="text-sm leading-6 tracking-tighter text-gray-600 dark:text-gray-400">
+                    {address}
                 </div>):(
                     <div className="text-sm leading-6 tracking-tighter text-red-600 dark:text-red-400">
                         please sign in with your desired wallet to continue
@@ -199,14 +147,15 @@ const  [files, setFiles] = useState({userData})
                     Currency
                 </div>
 
-                { userData?.userCurrency  && userData?.currencySymbol? (
+                {/* { userData?.vendorsToken  && userData?.currencySymbol? ( */}
+                { userData?.vendorsToken? (
                 <div className="flex flex-col text-sm leading-6 tracking-tighter text-gray-600 dark:text-gray-400">
                 <span >symbol: {userData?.currencySymbol} </span> 
                 <span>
-                address: {userData?.userCurrency}
+                address: {userData?.vendorsToken}
                 </span>
             </div>
-                ):(
+                ):( 
                     <div className="text-sm leading-6 tracking-tighter text-red-600 dark:text-red-400">
                         please enter a valid Currency to proceed
                     </div>
@@ -239,7 +188,7 @@ const  [files, setFiles] = useState({userData})
            onClick={
             () => {
               (async function() {
-                signUpExecutor(txDetails && txDetails);
+                await signUpExecutor();
               })();
           }}
            >
@@ -250,33 +199,10 @@ const  [files, setFiles] = useState({userData})
 
         {/* {validatingInput && (<ProcessingView status={"validating Input..."} arrayToDisplay={Utils.TypoEffectTexts.Validating}/>)} */}
         {/* {systemProcessing && (<ProcessingView status={"System Processing... "} arrayToDisplay={Utils.TypoEffectTexts.Processing}/>)} */}
-        {txReciept && (<ConfirmationModal  txReciept={txReciept} setTxReciept={setTxReciept} confirmationTitle = "Payment was successful"/>)}
+        {/* {txReciept && (<ConfirmationModal  txReciept={txReciept} setTxReciept={setTxReciept} confirmationTitle = "Payment was successful"/>)} */}
         
         {transacting && (<ProcessingView status={"Transacting..."} arrayToDisplay={Utils.TypoEffectTexts.Transacting}/>)}
 
       </div>
     );
   }
-
-
-//     let UsertransactionInput = {
-//       userWallet: account,
-//       userName: userData.userName,
-//       email: userData.email ? userData.email: null,
-//       aboutVendor: userData.aboutVendor ? userData.aboutVendor : null,
-//       vendorKeywords: userData.vendorKeywords ?  userData.vendorKeywords: null,
-//       geoAddress: userData.geoAddress ? userData.geoAddress : null,
-//       imageUrl:userData.imageUrl ? userData.imageUrl: null,
-//       userImage:userData.userImage ? userData.userImage : null,
-//       websiteUrl: userData.websiteUrl ?  userData.websiteUrl: null,
-//       userCurrency: userData.userCurrency
-//   };
-//     (async function() {
-//       if(await ValidateUserSignUpInput(UsertransactionInput,handleError,setvalidatingInput)){
-//       console.log("All validation passed........... processing transaction")
-//       submitPayment(UsertransactionInput);
-//       }
-//       else{
-//         console.log("validation is false")
-//       }
-//     })();

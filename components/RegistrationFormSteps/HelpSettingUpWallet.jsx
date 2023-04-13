@@ -1,13 +1,9 @@
 import { WalletContext } from 'lib/hooks/use-connect';
-import { useModal } from '/components/modal-views/context';
-import { useMoralis } from 'react-moralis'
 import { useContext, useEffect, useState } from 'react';
-// import { ConnectButton} from "web3uikit";
 import FeaturedCard from '/components/nft/featured-card';
 import InputLabel from '/components/ui/input-label';
 import { Switch } from '/components/ui/switch';
 import cn from 'classnames';
-import { useNotification } from "web3uikit";
 
 // import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext";
 
@@ -23,7 +19,7 @@ export default function HelpSettingUpWallet({ moduleTitle }) {
   // const { userData, setUserData, finalData, setFinalData } = useStepperContext();
   let [needsHelp, setNeedsHelp] = useState(false);
 
-  const { address, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
+  const { address,isConnected, authState,error, connectToWallet, disconnectWallet} = useContext(WalletContext);
 
   return (
    

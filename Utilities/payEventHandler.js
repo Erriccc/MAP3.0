@@ -10,35 +10,7 @@ import Utils from'../Utilities/utils';
 
  import { ethers }from "ethers";
 
-const sameTokenEventHandler = async (event, User, dispatch ) => {
-
-    const handleSuccess= (msg) => {
-        dispatch({
-          type: "success",
-          message: msg,
-          title: "Done",
-          position: "bottomR",
-        });
-      };
-      const handleError= (msg) => {
-        dispatch({
-          type: "error",
-          message: `${msg}`,
-          title: "failed",
-          position: "bottomR",
-        });
-      };
-      const handleNoAccount= () => {
-        dispatch({
-          type: "error",
-          message: `You need to connect your wallet to book a rental`,
-          title: "Not Connected",
-          position: "bottomR",
-        });
-      };
-
-
-
+const sameTokenEventHandler = async (event, User, toast ) => {
     
         console.log('payevent recieved')
         console.log("initiating simple SameTokenTransfer")
@@ -79,17 +51,17 @@ const sameTokenEventHandler = async (event, User, dispatch ) => {
 
             await approveTransactionRelayer(event,tokenammount)
             alert("approval succesful")
-            handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
+            toast.success(`approval succsesful.. please sign the next transaction to send funds`)
 
             } catch(err){
                 if (err.reason){
                 alert("approval failed. from metamask")
-                 handleError(` approval failed ${err.reason}`)
+                 toast.error(` approval failed ${err.reason}`)
 
                 return;
                 }else{
                 alert("approval failed. from rpc")
-                    handleError(` approval failed ${err.message}`)
+                    toast.error(` approval failed ${err.message}`)
                 return;
                 }
             }
@@ -114,16 +86,16 @@ const sameTokenEventHandler = async (event, User, dispatch ) => {
 
           }
     
-            handleSuccess(`transfer succesfull Thank you!`)
+            toast.success(`transfer succesfull Thank you!`)
 
         } catch (err) {
-            // handleError(` transfer failed please try again. ${err.message}`)
+            // toast.error(` transfer failed please try again. ${err.message}`)
             if (err.reason){
               alert("transaction failed. from metamask")
-                handleError(` transfer failed please try again ${err.reason}`)
+                toast.error(` transfer failed please try again ${err.reason}`)
                }else{
                   alert("transaction failed. from rpc")
-                   handleError(` transfer failed please try again ${err.message}`)
+                   toast.error(` transfer failed please try again ${err.message}`)
                }
 
         }
@@ -137,26 +109,8 @@ const sameTokenEventHandler = async (event, User, dispatch ) => {
 
 
 
-const oxSwapEventHandler = async (event, User, dispatch ) => {
+const oxSwapEventHandler = async (event, User, toast ) => {
         // situation where Tokens do not match
-
-
-    const handleSuccess= (msg) => {
-        dispatch({
-          type: "success",
-          message: msg,
-          title: "Done",
-          position: "bottomR",
-        });
-      };
-      const handleError= (msg) => {
-        dispatch({
-          type: "error",
-          message: `${msg}`,
-          title: "failed",
-          position: "bottomR",
-        });
-      };
       // new inputed code
       let sendersTokenAddress = event.target.token.value;
       // CHECK TO AVOID QUOTE ERROR IN THE CASE OF ETH TRANSACTION
@@ -172,7 +126,7 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
         sendersTokenAddress,
         event.target.reciversChoiceToken.value,
         event.target.amount.value,
-        handleError
+        toast
         )
             console.log("this is amont to sell", quotedAmmountToSell)
             const aprovalAmount = (quotedAmmountToSell *Utils.slippage).toFixed(0).toString() // change multiplier to come from slippage
@@ -202,17 +156,17 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
 
             await approveTransactionRelayer(event,tokenammount)
             alert("approval succesful")
-            handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
+            toast.success(`approval succsesful.. please sign the next transaction to send funds`)
 
             } catch(err){
                 if (err.reason){
                 alert("approval failed. from metamask")
 
-                 handleError(` approval failed ${err.reason}`)
+                 toast.error(` approval failed ${err.reason}`)
                 return;
                 }else{
                 alert("approval failed. from rpc")
-                    handleError(` approval failed ${err.message}`)
+                    toast.error(` approval failed ${err.message}`)
                 return;
                 }
             }
@@ -237,15 +191,15 @@ const oxSwapEventHandler = async (event, User, dispatch ) => {
 
           }
 
-            handleSuccess(`transfer succesfull Thank you!`)
+            toast.success(`transfer succesfull Thank you!`)
         } catch(err){
             if (err.reason){
               alert("transaction failed. from metamask")
-             handleError(` transfer failed ${err.reason}`)
+             toast.error(` transfer failed ${err.reason}`)
             return;
             }else{
               alert("transaction failed. from rpc")
-                handleError(` transfer failed ${err.message}`)
+                toast.error(` transfer failed ${err.message}`)
                 
             return;
             }

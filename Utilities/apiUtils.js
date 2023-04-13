@@ -408,7 +408,7 @@ return(finalResults)
         console.log("constructing signUpData from oxPay api.....")
         const Map3SignUpData =   await  functionBytesEncoder(Map3VendorsABi,"addVendor",signUpData)
       console.log("typeOf Map3SignUpData: ", typeof Map3SignUpData)
-        console.log("completed Map3SignUpData from oxPay : ", Map3SignUpData)
+        console.log("completed Map3SignUpData from oxPay : Map3SignUpData")
         return(Map3SignUpData)
     }
 
@@ -418,14 +418,21 @@ return(finalResults)
 
       // const provider = new ethers.providers.Web3Provider(window.ethereum)
       //  const PaySigner = provider.getSigner()
-      const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(_signer,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue)
+      // console.log(_signer,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue,'UTILS.Map3VendorAddress')
+      // try {
+      // const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(_signer,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue)
+      // console.log("returnOfFunctionBytesEncoderAndImplementor: ", returnOfFunctionBytesEncoderAndImplementor)
+      // console.log("completed signUp Execution...!!")
+      // const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(_signer,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue)
+      // console.log(returnOfFunctionBytesEncoderAndImplementor)
+      //  console.log("signUp successful!")
+       return await bytesEncodedBytesImplementor(_signer,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue)
+      //       } catch (error) {
+      //       console.log(error,"signUp failed!")
+      // }
       // const returnOfFunctionBytesEncoderAndImplementorReciept = await returnOfFunctionBytesEncoderAndImplementor.wait()
-      await returnOfFunctionBytesEncoderAndImplementor.wait()
-      console.log("returnOfFunctionBytesEncoderAndImplementor: ", returnOfFunctionBytesEncoderAndImplementor)
-      console.log("completed signUp Execution...!!")
-  
-       console.log("signUp successful!")
-       return returnOfFunctionBytesEncoderAndImplementor
+      // await returnOfFunctionBytesEncoderAndImplementor.wait()
+      
    }
   
 
@@ -568,19 +575,16 @@ const bytesEncodedBytesImplementor = async (signer, contractAddress, encodedData
     console.log(adjustedGasPrice, 'gas Price in big number')
 
     // "err: max fee per gas less than block base fee: address 0xBb2cB98982Ed6547aA7E39707807253a999796b7, maxFeePerGas: 8000000000 baseFee: 10013928538 (supplied gas 12813618)
-            let returnData = await signer.sendTransaction({ //
-                to: contractAddress,
-                data: encodedData.txdata,
-                value: txValue,
-                // gasPrice: adjustedGasPrice,
-                // gasPrice: encodedData.gasPrice,
-                // gasLimit: 500000
-                // gas: 2400000,
-              })
-              await returnData.wait()
-        console.log("bytesEncodedBytesImplementor returnData: ", returnData)
-
-        return returnData
+   
+      return await signer.sendTransaction({ //
+        to: contractAddress,
+        data: encodedData.txdata,
+        value: txValue,
+        // gasPrice: adjustedGasPrice,
+        // gasPrice: encodedData.gasPrice,
+        // gasLimit: 500000
+        // gas: 2400000,
+      })
 
 }
 

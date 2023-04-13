@@ -7,13 +7,13 @@ import{oxSwapEventHandler, sameTokenEventHandler, oxSwapERC20ToEth,
 import{approveTransactionRelayer} from "./FEapproveTransactionRelayer"
 
 const paymentTypeLogicServer = 
-async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactionPopulated, setTxDetails) => 
+async (_provider, UsertransactionInput, toast, setTransactionPopulated, setTxDetails) => 
 {
   setTxDetails(null)
   setTransactionPopulated(false)
 
   // alert('got here')
-    const wrappedProvider = new Utils.ethers.providers.Web3Provider(_provider);
+    const wrappedProvider = _provider;
     const wrappedSigner = wrappedProvider.getSigner();
     let finalConstructedTxData;
 
@@ -41,16 +41,16 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
               finalConstructedTxData = await approveTransactionRelayer(wrappedProvider,Utils.U256MAXVALUE);
             } catch(err){
                 if (err.reason){
-                 handleError(` approval failed ${err.reason}`)
+                  toast.error(` approval failed ${err.reason}`)
                 return;
                 }else{
-                handleError(` approval failed ${err.message}`)
+                  toast.error(` approval failed ${err.message}`)
                 return;
                 }
             }
             let returnTxdetails  = {...finalConstructedTxData, UsertransactionInput}
             console.log('returnTxdetails',returnTxdetails)
-            handleSuccess(`please  approve to continue`)
+            toast.success(`please  approve to continue`)
             setTxDetails(returnTxdetails)
             setTransactionPopulated(true);
   }
@@ -59,7 +59,7 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
     /////// SWAP From ERC20 To ETH or Native Token
           if(UsertransactionInput.reciversToken == Utils.EthAddress && UsertransactionInput.sendersToken !== Utils.EthAddress){
               try{
-                finalConstructedTxData = await oxSwapERC20ToEth(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError);
+                finalConstructedTxData = await oxSwapERC20ToEth(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,toast);
 
               }catch(e){
 
@@ -71,7 +71,7 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
               (UsertransactionInput.sendersToken == Utils.EthAddress &&  UsertransactionInput.reciversToken == Utils.WethAddress ){
 
                       try{
-                        finalConstructedTxData = await sameTokenEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError,true);
+                        finalConstructedTxData = await sameTokenEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,toast,true);
 
                       }catch(e){
 
@@ -84,7 +84,7 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
                     if (UsertransactionInput.sendersToken == UsertransactionInput.reciversToken) {
                         try{
                               console.log("both tokens are the same", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
-                              finalConstructedTxData = await sameTokenEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError,false);
+                              finalConstructedTxData = await sameTokenEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,toast,false);
 
                         }catch(e){
 
@@ -92,7 +92,7 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
                     } else {
                       try{
                             console.log("different tokens", UsertransactionInput.sendersToken, UsertransactionInput.sendersToken)
-                            finalConstructedTxData = await oxSwapEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,handleError,);
+                            finalConstructedTxData = await oxSwapEventHandler(wrappedProvider, UsertransactionInput, UsertransactionInput.sender,toast,);
                           }catch(e){
 
                           }
@@ -100,7 +100,7 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
               }
               let returnTxdetails  = {...finalConstructedTxData, UsertransactionInput}
             console.log('returnTxdetails',returnTxdetails)
-              // handleSuccess(`transaction generated, please send to continue`)
+              // toast.success(`transaction generated, please send to continue`)
               setTxDetails(returnTxdetails)
               setTransactionPopulated(true);
             }
@@ -113,10 +113,10 @@ async (_provider, UsertransactionInput, handleSuccess,handleError, setTransactio
 }
 
 const paymentTypeLogicExecutor = 
-async (compiledTxdetails,setTransacting, _provider, handleSuccess,handleError, setTransactionPopulated, setTxDetails, setTxReciept) => 
+async (compiledTxdetails,setTransacting, _provider, toast, setTransactionPopulated, setTxDetails, setTxReciept) => 
 {
   // alert('got here')
-    const wrappedProvider = new Utils.ethers.providers.Web3Provider(_provider);
+  const wrappedProvider = _provider;
     const wrappedSigner = wrappedProvider.getSigner();
 
     let transactionReciept;
@@ -128,19 +128,19 @@ async (compiledTxdetails,setTransacting, _provider, handleSuccess,handleError, s
     setTransacting(true)
     try{
       await approveTransaction(wrappedSigner,compiledTxdetails.UsertransactionInput, compiledTxdetails)
-      handleSuccess(`Approval succesfull, please hit send`)
+      toast.success(`Approval succesfull, please hit send`)
     }catch(err){
       setTransacting(false)
       if (err.reason){
-       handleError(` approval failed ${err.reason}`)
+       toast.error(` approval failed ${err.reason}`)
       return;
       }else{
-      handleError(` approval failed ${err.message}`)
+      toast.error(` approval failed ${err.message}`)
       return;
       }
     }
       setTransacting(false)
-      await paymentTypeLogicServer (_provider, compiledTxdetails.UsertransactionInput,handleSuccess,handleError, setTransactionPopulated, setTxDetails)
+      await paymentTypeLogicServer (_provider, compiledTxdetails.UsertransactionInput,toast, setTransactionPopulated, setTxDetails)
 
   }
   else{     
@@ -156,10 +156,10 @@ async (compiledTxdetails,setTransacting, _provider, handleSuccess,handleError, s
               }catch(err){
                   setTransacting(false)
                   if (err.reason){
-                  handleError(` transfer failed ${err.reason}`)
+                  toast.error(` transfer failed ${err.reason}`)
                   return;
                   }else{
-                  handleError(` transfer failed ${err.message}`)
+                  toast.error(` transfer failed ${err.message}`)
                   return;
                   }
               }
@@ -178,10 +178,10 @@ async (compiledTxdetails,setTransacting, _provider, handleSuccess,handleError, s
                       }catch(err){
                         setTransacting(false)
                         if (err.reason){
-                        handleError(` transfer failed ${err.reason}`)
+                        toast.error(` transfer failed ${err.reason}`)
                         return;
                         }else{
-                        handleError(` transfer failed ${err.message}`)
+                        toast.error(` transfer failed ${err.message}`)
                         return;
                         }
                     }
@@ -197,10 +197,10 @@ async (compiledTxdetails,setTransacting, _provider, handleSuccess,handleError, s
                       }catch(err){
                               setTransacting(false)
                               if (err.reason){
-                              handleError(` transfer failed ${err.reason}`)
+                              toast.error(` transfer failed ${err.reason}`)
                               return;
                               }else{
-                              handleError(` transfer failed ${err.message}`)
+                              toast.error(` transfer failed ${err.message}`)
                               return;
                               }
                           }
@@ -213,10 +213,10 @@ async (compiledTxdetails,setTransacting, _provider, handleSuccess,handleError, s
                           }catch(err){
                             setTransacting(false)
                             if (err.reason){
-                            handleError(` transfer failed ${err.reason}`)
+                            toast.error(` transfer failed ${err.reason}`)
                             return;
                             }else{
-                            handleError(` transfer failed ${err.message}`)
+                            toast.error(` transfer failed ${err.message}`)
                             return;
                             }
                         }

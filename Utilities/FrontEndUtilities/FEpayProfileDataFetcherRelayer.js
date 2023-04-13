@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-import { payProfileDataFetcherEndpoint} from'/Utilities/utils';
+import { payProfileDataFetcherEndpoint,dbGetUserEndPoint} from'/Utilities/utils';
 import Utils from'/Utilities/utils';
 const apiUtils = require('../apiUtils');
 
@@ -21,15 +21,15 @@ const payProfileDataFetcherRelayer = async (account) => {
   }else if(await Utils.ValidateIfStringIsAddress(account) == false){
     console.log('invalid address..')
     console.log("return data",{vendorData:{}, isVendor:false})
-    return {vendorData:{}, isVendor:false}
+    return {vendorData:{}, isVendor:false} 
   }else{
       const mapProfileData = {
-          address: account
+          id: account
         }
           console.log("User input for ProfilesData: from findProfilesDataFetcherRelayer", mapProfileData)
           const JSONdata = JSON.stringify(mapProfileData)
           // API endpoint where we send form data.
-          const endpoint = payProfileDataFetcherEndpoint // "api/paymentHandler"
+          const endpoint = dbGetUserEndPoint // "api/paymentHandler"
           // Form the request for sending data to the server.
           const options = {
             // The method is POST because we are sending data.
@@ -41,18 +41,20 @@ const payProfileDataFetcherRelayer = async (account) => {
             // Body of the request is the JSON data we created above.
             body: JSONdata,
           }
-          // const response = await fetch(endpoint, options)
-          // console.log("response..... from mapDataFetchingRelayer: ", await response)
+          const response = await fetch(endpoint, options)
+          console.log("response..... from mapDataFetchingRelayer: ", await response)
   
-          // const result = await response.json()
-          // console.log("response..... from findProfilesDataFetcherRelayer: ",result)
-        const result = await apiUtils.fetchVendorProfileData(account);
+          const result = await response.json()
+      // console.log(result.one,'223333221111111111111111')
+      // console.log("response..... from findProfilesDataFetcherRelayer: ",result)
+          const isVendor = (result.one.vendorsLat !== null || result.one.vendorsLat !== undefined && result.vendorsLong !== null || result.vendorsLong !== undefined)
+        // const result = await apiUtils.fetchVendorProfileData(account);
 
-          
+          // console.log(isVendor, 'isVendorrrrrrorrrroroooorrrrrr')
           // setTempDataInfo(result)
           // dispatchather({type:"FOUND"})
           
-          return (result)
+          return ({isVendor,vendorsData:result.one})
       }
   }
   

@@ -22,7 +22,7 @@ import Utils from'/Utilities/utils';
 
 
 
-const sameTokenEventHandler = async (signer, UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing , setTransacting, _sendAsWeth) => {
+const sameTokenEventHandler = async (signer, UsertransactionInput, User, toast,toast, setSystemProcessing , setTransacting, _sendAsWeth) => {
 // alert('all new provider updates recieved... function 1')
         setSystemProcessing(true)
 
@@ -65,15 +65,15 @@ const sameTokenEventHandler = async (signer, UsertransactionInput, User, handleS
             } catch(err){ 
                 setTransacting(false)
                 if (err.reason){
-                 handleError(` approval failed ${err.reason}`)
+                 toast.error(` approval failed ${err.reason}`)
                 return;
                 }else{
-                handleError(` approval failed ${err.message}`)
+                toast.error(` approval failed ${err.message}`)
                 return;
                 }
             }
             setTransacting(false)
-            handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
+            toast.success(`approval succsesful.. please sign the next transaction to send funds`)
 
         } 
 //         i am having the exact problem. 
@@ -90,14 +90,14 @@ const sameTokenEventHandler = async (signer, UsertransactionInput, User, handleS
             await map3PayTransactionRelayer(signer, UsertransactionInput,tokenammount,0,_sendAsWeth)
           }
           setTransacting(false)
-          handleSuccess(`transfer succesfull Thank you!`)
+          toast.success(`transfer succesfull Thank you!`)
 
         } catch (err) {
           setTransacting(false)
             if (err.reason){
-                handleError(` transfer failed please try again ${err.reason}`)
+                toast.error(` transfer failed please try again ${err.reason}`)
                }else{
-                   handleError(` transfer failed please try again ${err.message}`)
+                   toast.error(` transfer failed please try again ${err.message}`)
                }
 
         }
@@ -111,7 +111,7 @@ const sameTokenEventHandler = async (signer, UsertransactionInput, User, handleS
 
 
 
-const oxSwapEventHandler = async (signer, UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing, setTransacting ) => {
+const oxSwapEventHandler = async (signer, UsertransactionInput, User, toast,toast, setSystemProcessing, setTransacting ) => {
         // situation where Tokens do not match
 // alert('all new provider updates recieved... function2')
 
@@ -132,7 +132,7 @@ const oxSwapEventHandler = async (signer, UsertransactionInput, User, handleSucc
         sendersTokenAddress,
         UsertransactionInput.reciversToken,
         UsertransactionInput.amountToBeSent,
-        handleError
+        toast
         )
             console.log("this is amont to sell", quotedAmmountToSell)
             // const aprovalAmount = (quotedAmmountToSell *Utils.slippage).toFixed(0).toString() // change multiplier to come from Utils.slippage
@@ -164,18 +164,18 @@ const oxSwapEventHandler = async (signer, UsertransactionInput, User, handleSucc
 
             await approveTransactionRelayer(signer, UsertransactionInput,Utils.U256MAXVALUE, )
             //alert("approval succesful")
-            handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
+            toast.success(`approval succsesful.. please sign the next transaction to send funds`)
 
             } catch(err){
               setTransacting(false)
                 if (err.reason){
                 //alert("approval failed. from metamask")
 
-                 handleError(` approval failed ${err.reason}`)
+                 toast.error(` approval failed ${err.reason}`)
                 return;
                 }else{
                 //alert("approval failed. from rpc")
-                    handleError(` approval failed ${err.message}`)
+                    toast.error(` approval failed ${err.message}`)
                 return;
                 }
             }
@@ -198,7 +198,7 @@ const oxSwapEventHandler = async (signer, UsertransactionInput, User, handleSucc
         }catch(err){
           //alert("transaction failed. from rpc")
           setTransacting(false)
-          handleError(`failed to generate Quote ${err.message}`)
+          toast.error(`failed to generate Quote ${err.message}`)
           return;
         }
         
@@ -214,16 +214,16 @@ const oxSwapEventHandler = async (signer, UsertransactionInput, User, handleSucc
 
           }
             setTransacting(false)
-            handleSuccess(`transfer succesfull Thank you!`)
+            toast.success(`transfer succesfull Thank you!`)
         } catch(err){
             setTransacting(false)
             if (err.reason){
               //alert("transaction failed. from metamask")
-             handleError(` transfer failed ${err.reason}`)
+             toast.error(` transfer failed ${err.reason}`)
             return;
             }else{
               //alert("transaction failed. from rpc")
-                handleError(` transfer failed ${err.message}`)
+                toast.error(` transfer failed ${err.message}`)
             return;
             }
         }
@@ -234,7 +234,7 @@ return
 
 
 
-  const oxSwapERC20ToEth = async (signer, UsertransactionInput, User, handleSuccess,handleError, setSystemProcessing, setTransacting ) => {
+  const oxSwapERC20ToEth = async (signer, UsertransactionInput, User, toast,toast, setSystemProcessing, setTransacting ) => {
     // situation where Tokens do not match
 // alert('all new provider updates recieved... function 3')
 
@@ -272,7 +272,7 @@ return
             reciversTokenAddress,
             // UsertransactionInput.reciversToken,
             UsertransactionInput.amountToBeSent,
-            handleError
+            toast
             )
           console.log("this is amont to sell", quotedAmmountToSell)
         aprovalAmount = (quotedAmmountToSell *UsertransactionInput.slippage).toFixed(0).toString() // change multiplier to come from Utils.slippage
@@ -305,17 +305,17 @@ return
 
           await approveTransactionRelayer(signer, UsertransactionInput,Utils.U256MAXVALUE, )
           //alert("approval succesful")
-          handleSuccess(`approval succsesful.. please sign the next transaction to send funds`)
+          toast.success(`approval succsesful.. please sign the next transaction to send funds`)
 
           } catch(err){
             setTransacting(false)
               if (err.reason){
               //alert("approval failed. from metamask")
-              handleError(` approval failed ${err.reason}`)
+              toast.error(` approval failed ${err.reason}`)
               return;
               }else{
               //alert("approval failed. from rpc")
-                  handleError(` approval failed ${err.message}`)
+                  toast.error(` approval failed ${err.message}`)
               return;
               }
           }
@@ -349,7 +349,7 @@ return
     
       }catch(err){
         setTransacting(false)
-        handleError(`failed to generate Quote ${err.message}`)
+        toast.error(`failed to generate Quote ${err.message}`)
         return;
 
       }
@@ -358,16 +358,16 @@ return
 
           await oxSwapERC20ToEthTransactionRelayer(signer, oxQuoteResult,0)// tx value = 0
 
-          handleSuccess(`transfer succesfull Thank you!`)
+          toast.success(`transfer succesfull Thank you!`)
       } catch(err){
         setTransacting(false)
           if (err.reason){
             //alert("transaction failed. from metamask")
-          handleError(` transfer failed ${err.reason}`)
+          toast.error(` transfer failed ${err.reason}`)
           return;
           }else{
             //alert("transaction failed. from rpc")
-              handleError(` transfer failed ${err.message}`)
+              toast.error(` transfer failed ${err.message}`)
               
           return;
           }

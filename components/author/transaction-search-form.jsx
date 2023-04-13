@@ -21,7 +21,7 @@ export default function TransactionSearchForm() {
             <SearchIcon className="h-4 w-4"/>
           </div>
         </label>
-      </form>
+      </form> 
       <div className="mt-4 flex flex-wrap gap-3 sm:mt-5 lg:mt-6">
         {searchFilter?.map((item) => (<div key={item?.id} role="button">
             <ListCard item={item} className="shrink-0 rounded-full p-2 transition-transform hover:-translate-y-0.5 hover:bg-gray-50 focus:-translate-y-0.5 focus:bg-gray-50 ltr:pr-5 rtl:pl-5"/>

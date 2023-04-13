@@ -22,9 +22,11 @@ export default function ListCard({ item, className = 'p-3 tracking-wider rounded
     const { name, logo, balance, coinType } = item ?? {};
     return (<div className={cn('flex items-center justify-between bg-white text-sm font-medium shadow-card dark:bg-light-dark', className)}>
       <div className="flex items-center">
-        <div className={cn('rounded-full', variants[variant])}>
+       { logo && 
+       (<div className={cn('rounded-full', variants[variant])}>
           <Image src={logo} alt={name} width={handleImageSize(variant)} height={handleImageSize(variant)}/>
-        </div>
+        </div>)
+        }
 
         <div className="ltr:ml-2 rtl:mr-2">
           {name}

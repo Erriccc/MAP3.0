@@ -7,6 +7,8 @@ import Head from "next/head";
 // import "pages/appvendors/vendors.css"
 import "components/hero.css"
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Router from "next/router";
 import ProgressBar from "@badrap/bar-of-progress";
@@ -55,7 +57,7 @@ export default function MyApp({ Component, pageProps }) {
 
 
   const router = useRouter()
-
+  const notify = () => toast("Wow so easy!");
 
   return(
     <>
@@ -73,15 +75,27 @@ export default function MyApp({ Component, pageProps }) {
       // serverUrl={MoralisAppUrl}
       initializeOnMount={false}
     >
-        <AuthProvider>
         <WalletProvider>
+        {/* <AuthProvider> */}
           <UrlProvider>
-        <ThemeProvider attribute="class" enableSystem={false} defaultTheme="light">
+        <ThemeProvider attribute="class" enableSystem={false} defaultTheme="dark">
           {/* <Appnav /> */}
           <NotificationProvider>
 
           <Component {...pageProps} />
           <Analytics />
+          <ToastContainer
+            position="top-right"
+            autoClose={1000}
+            hideProgressBar={true}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+      />
           {/* <SettingsButton /> */}
                     {/* <PageDrawer /> */}
                     <SettingsDrawer />
@@ -91,8 +105,8 @@ export default function MyApp({ Component, pageProps }) {
 
           </ThemeProvider>
           </UrlProvider>
+        {/* </AuthProvider> */}
         </WalletProvider>
-        </AuthProvider>
       </MoralisProvider>
 
         {/* </WagmiConfig> */}

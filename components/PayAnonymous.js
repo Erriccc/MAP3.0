@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import tokenAdresses from '../constants/sendersTokens.json'
 import reciversTokenAdresses from '../constants/reciversTokens.json'
-import { useNotification } from "web3uikit";
+import { toast } from 'react-toastify';
+
 import ProgressBar from "@badrap/bar-of-progress";
 const {oxPriceFetcher} = require('../Utilities/oxPriceFetcher');
 import Utils from'../Utilities/utils';
@@ -17,15 +18,6 @@ const progress = new ProgressBar({
 
 export default function PayAnonymous({User}) {
 
-    const dispatch = useNotification();
-    const handleError= (msg) => {
-        dispatch({
-          type: "error",
-          message: `${msg}`,
-          title: "failed",
-          position: "bottomR",
-        });
-      };
 
 // add input for expected slippage amount to complete swap!
     const submitPayment = async (event) => {
@@ -34,11 +26,11 @@ export default function PayAnonymous({User}) {
     // listenForMap3Events();
         if (event.target.token.value == event.target.reciversChoiceToken.value) {
 
-                await sameTokenEventHandler(event, User, dispatch);
+                await sameTokenEventHandler(event, User, toast);
 
         } else {
 
-                await oxSwapEventHandler(event, User, dispatch);
+                await oxSwapEventHandler(event, User, toast);
 
             }
 
@@ -63,7 +55,7 @@ export default function PayAnonymous({User}) {
             sendersToken,
             reciversToken,
             amountToBeSent,
-            handleError)
+            toast)
           setQuote(quotePrice)
         }
 

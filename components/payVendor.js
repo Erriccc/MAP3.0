@@ -3,8 +3,8 @@ import PayAnonymous from  "components/PayAnonymous.js"
 import tokenAdresses from '../constants/sendersTokens.json'
 import { useRouter } from "next/router";
 const BigNumber = require('bignumber.js');
-import { Button, Icon, useNotification } from "web3uikit";
 import ProgressBar from "@badrap/bar-of-progress";
+import { toast } from 'react-toastify';
 
 const fetch = require('node-fetch');
 // const {oxKnownVendorQuoteRelayer} = require('../Utilities/oxKnownVendorQuoteRelayer')
@@ -31,15 +31,6 @@ const progress = new ProgressBar({
 
 export default function PayVendor({walletAddress,vendorsToken,User,vendorsName,vendorsTokenSymbol}) {
 
-    const dispatch = useNotification();
-    const handleError= (msg) => {
-        dispatch({
-          type: "error",
-          message: `${msg}`,
-          title: "failed",
-          position: "bottomR",
-        });
-      };
     console.log('testing values from paVendor:',walletAddress,vendorsToken,User,vendorsName,vendorsTokenSymbol)
 
     const submitPayment = async (event) => {
@@ -48,11 +39,11 @@ export default function PayVendor({walletAddress,vendorsToken,User,vendorsName,v
         // listenForMap3Events();
             if (event.target.token.value == vendorsToken) {
     
-                    await sameTokenEventHandler(event, User, dispatch);
+                    await sameTokenEventHandler(event, User, toast);
     
             } else {
     
-                    await oxSwapEventHandler(event, User, dispatch);
+                    await oxSwapEventHandler(event, User, toast);
     
                 }
     
@@ -67,7 +58,7 @@ export default function PayVendor({walletAddress,vendorsToken,User,vendorsName,v
     useEffect(()=>{
         const fetchPrice = async () => {
             // this function comes from the utililty folder
-        let quotePrice = await oxPriceFetcher(sendersToken,vendorsToken,amountToBeSent,handleError)
+        let quotePrice = await oxPriceFetcher(sendersToken,vendorsToken,amountToBeSent,toast)
           setQuote(quotePrice)
         }
         fetchPrice()

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNotification } from "web3uikit";
+import { toast } from 'react-toastify';
+
 const {oxPriceFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
 import Utils from'/Utilities/utils';
 import{PaymentInputValidator} from '/Utilities/FrontEndUtilities/FEpaymentUserInputValidator'
@@ -30,34 +31,10 @@ import SendersCoinInput from '/components/sendersCoinInput';
 export default function PayAnonymous() {
     const { Moralis, account } = useMoralis();
 
-    const dispatch = useNotification();
-     const handleSuccess= (msg) => {
-        dispatch({
-          type: "success",
-          message: msg,
-          title: "Done",
-          position: "bottomR",
-        });
-      };
-    const handleError= (msg) => {
-      dispatch({
-        type: "error",
-        message: `${msg}`,
-        title: "failed",
-        position: "bottomR",
-      });
-    };
-    const handleNoAccount= () => {
-      dispatch({
-        type: "error",
-        message: `You need to connect your wallet to book a rental`,
-        title: "Not Connected",
-        position: "bottomR",
-      });
-    };
+    
 // add input for expected slippage amount to complete swap!
     const submitPayment = async (UsertransactionInput) => {
-      await paymentTypeLogicServer(Moralis.connector.provider, UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing , setTransacting)
+      await paymentTypeLogicServer(Moralis.connector.provider, UsertransactionInput, account, toast, setSystemProcessing , setTransacting)
     };
 
 
@@ -91,7 +68,7 @@ export default function PayAnonymous() {
             sendersToken,
             reciversToken,
             amountToBeSent,
-            handleError)
+            toast)
             if (isNaN(quotePrice) ){
               setRate(quotePrice)
               setQuote(quotePrice)
@@ -190,7 +167,7 @@ export default function PayAnonymous() {
                     slippage: userSlippage
                 };
                 (async function() {
-                  if(await PaymentInputValidator(UsertransactionInput,handleError,setvalidatingInput)){
+                  if(await PaymentInputValidator(UsertransactionInput,toast,setvalidatingInput)){
                     // if(true){
                   console.log("All validation passed........... processing transaction")
                   submitPayment(UsertransactionInput);

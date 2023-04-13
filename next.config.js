@@ -32,7 +32,15 @@ module.exports = withPWA({
       ignoreDuringBuilds: true,
     },
     images: {
-      domains: ["links.tailus.io"],
+      domains: ["links.tailus.io", "https://dweb.link/ipfs/**"],
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'dweb.link',
+          port: '',
+          pathname: '/ipfs/**',
+        },
+      ],
     },
     // env: {
     //   mapbox_key: "pk.eyJ1IjoibmZhMTIzIiwiYSI6ImNsNmtsMWxjeTAyNzUza296dTZybDBvNTcifQ.eh9aAeqXhP3X99pdnPr17A",

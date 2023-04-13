@@ -5,10 +5,9 @@ import Apphero from 'components/Apphero';
 import PayVendor from 'components/payVendor';
 import VendorQrCode from 'components/VendorQrCode';
 import DashboardLayout from 'layouts/_dashboard';
-
-import { useNotification, CreditCard } from "web3uikit";
 import { useRouter } from "next/router";
 import {Map3WebsiteUrl} from "../../../Utilities/utils"
+import { toast } from 'react-toastify';
 
 
 
@@ -18,7 +17,6 @@ export default function PAY () {
 
   const { Moralis, account } = useMoralis();
   const contractProcessor = useWeb3ExecuteFunction();
-  const dispatch = useNotification();
   let router = useRouter();
 
   const {walletAddress,vendorsName, vendorsToken,vendorsTokenSymbol} = router.query
@@ -39,32 +37,7 @@ export default function PAY () {
   //     <Apphero/>
   //   )
   // }
-//   const handleSuccess= () => {
-//     dispatch({
-//       type: "success",
-//       message: `Nice! You are going to ${searchFilters.destination}!!`,
-//       title: "Booking Succesful",
-//       position: "bottomR",
-//     });
-//   };
 
-//   const handleError= (msg) => {
-//     dispatch({
-//       type: "error",
-//       message: `${msg}`,
-//       title: "Booking Failed",
-//       position: "bottomR",
-//     });
-//   };
-
-//   const handleNoAccount= () => {
-//     dispatch({
-//       type: "error",
-//       message: `You need to connect your wallet to book a rental`,
-//       title: "Not Connected",
-//       position: "bottomR",
-//     });
-//   };
 
   return (
     <DashboardLayout>

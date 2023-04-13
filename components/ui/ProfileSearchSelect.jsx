@@ -3,8 +3,8 @@ import Image from '/components/ui/image';
 import { SearchIcon } from '/components/icons/search';
 import vendorsData from "../../constants/testdata.json";
 import CollectionImage1 from 'assets/images/collection/collection-1.jpg';
-import {findProfilesDataFetcherRelayer} from '/Utilities/FrontEndUtilities/FEfindProfilesDataFetcherRelayer'
-
+import {findProfilesDataFetcherRelayer} from '/Utilities/FrontEndUtilities/FEfindProfilesDataFetcherRelayer' 
+ 
 export default function ProfileSearchSelect({ onSelect, tittle }) {
     let [searchKeyword, setSearchKeyword] = useState('');
 
@@ -40,11 +40,12 @@ function reducer(mapDataState, action){
           let tempData = await findProfilesDataFetcherRelayer(userSearchInput)
           if(await tempData == undefined){
             return
-          }else{
+          }else{ 
             console.log("tempData...", await tempData)
             // searchData = tempData.map3Vendors
             // setDataFromServer(tempData)
-          setTempDataInfo(tempData.map3Vendors)
+          setTempDataInfo(tempData)
+          // setTempDataInfo(tempData.map3Vendors)
           // setDisplayData(tempData.map3Vendors)
           dispatchather({type:"FOUND"})
           console.log('done searching')
@@ -91,19 +92,19 @@ function reducer(mapDataState, action){
                   </li>
                   )
                 }
-        {searchKeyword.length >0 && mapDataState.dataFromServer.length > 0 ? (mapDataState.dataFromServer.map((item, index) => (
-        <li key={index} role="listitem" tabIndex={index} onClick={() => handleSelectedCoin(item.walletAddress)} className="mb-1 flex cursor-pointer items-center gap-3 py-1.5 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-600">
+        {searchKeyword?.length >0 && mapDataState?.dataFromServer?.length > 0 ? (mapDataState?.dataFromServer.map((item, index) => (
+        <li key={index} role="listitem" tabIndex={index} onClick={() => handleSelectedCoin(item.vendorsWalletAddress)} className="mb-1 flex cursor-pointer items-center gap-3 py-1.5 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-600">
               <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full shadow-card">
                 <Image 
                 src={`/api/imagefetcher?url=${encodeURIComponent(
-                  item.imgUrl
+                  item.vendorsImageUrl
                 )}`}
                 
                 // placeholder="blur" 
-                layout="fill" objectFit="cover" className="rounded-full" alt={item.name}/>
+                layout="fill" objectFit="cover" className="rounded-full" alt={item.vendorsName}/>
               </div>
               <span className="text-sm tracking-tight text-gray-600 dark:text-white">
-                {item.name}
+                {item.vendorsName}
               </span>
             </li>))) :
                   (

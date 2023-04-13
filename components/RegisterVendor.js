@@ -5,7 +5,6 @@ const fetch = require('node-fetch');
 const process = require('process');
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 const {oxPriceFetcher,oxQuoteFetcher} = require('../Utilities/oxPriceFetcher');
-import { Button, Icon, useNotification } from "web3uikit";
 import ProgressBar from "@badrap/bar-of-progress";
 const {oxQuoteRelayer} = require('../Utilities/oxQuoteRelayer')
 // const Map3Abi = require( '../artifacts/contracts/Map3.sol/Map3Pay.json')
@@ -13,6 +12,7 @@ import {Map3Abi,map3Pay,approveSendersToken,testAccount,Map3address,numberExpone
     WholeTOWeiDecimals,IERC20Abi, getTokenSymbol } from'../Utilities/utils';
 import{map3RegisterVendor} from '../Utilities/map3RegisterVendor';
 import { useRouter } from "next/dist/client/router";
+import { toast } from 'react-toastify';
 
 import { ethers }from "ethers";
 const { createWeb3, createQueryString, etherToWei, waitForTxSuccess, weiToEther } = require('../Utilities/utils');
@@ -30,33 +30,7 @@ const progress = new ProgressBar({
 export default function RegisterVendor() {
 
   const router = useRouter()
-    const dispatch = useNotification();
     
-    const handleSuccess= (msg) => {
-        dispatch({
-          type: "success",
-          message: msg,
-          title: "Done",
-          position: "bottomR",
-        });
-      };
-      const handleError= (msg) => {
-        dispatch({
-          type: "error",
-          message: `${msg}`,
-          title: "failed",
-          position: "bottomR",
-        });
-      };
-      const handleNoAccount= () => {
-        dispatch({
-          type: "error",
-          message: `You need to connect your wallet to book a rental`,
-          title: "Not Connected",
-          position: "bottomR",
-        });
-      };
-
 
 
       const submitRegistration = async (event) => {
@@ -84,7 +58,7 @@ export default function RegisterVendor() {
           ]
        
           await map3RegisterVendor(newVendorRegistrationData);
-          handleSuccess(`Welcome to Map3`)
+          toast.success(`Welcome to Map3`)
         router.push({
             pathname: "/pay/[walletAddress]",
             query: {
@@ -96,7 +70,7 @@ export default function RegisterVendor() {
           });
 
         } catch(err){
-            handleError(err.message)
+            toast.error(err.message)
             progress.finish()
 
             // router.push({

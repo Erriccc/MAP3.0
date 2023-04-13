@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useMoralis, useWeb3ExecuteFunction  } from 'react-moralis';
 import Apphero from 'components/Apphero';
 import RegisterVendor from 'components/RegisterVendor';
-import { useNotification, CreditCard } from "web3uikit";
 import DashboardLayout from 'layouts/_dashboard';
 import { NextSeo } from 'next-seo';
+import { toast } from 'react-toastify';
 
 
 
@@ -16,7 +16,6 @@ export default function PAY () {
 
   const { Moralis, account } = useMoralis();
   const contractProcessor = useWeb3ExecuteFunction();
-  const dispatch = useNotification();
 
   // user is autenticated
   const {isAuthenticated} = useMoralis()
@@ -25,33 +24,6 @@ export default function PAY () {
   //     <Apphero/>
   //   )
   // }
-//   const handleSuccess= () => {
-//     dispatch({
-//       type: "success",
-//       message: `Nice! You are going to ${searchFilters.destination}!!`,
-//       title: "Booking Succesful",
-//       position: "bottomR",
-//     });
-//   };
-
-//   const handleError= (msg) => {
-//     dispatch({
-//       type: "error",
-//       message: `${msg}`,
-//       title: "Booking Failed",
-//       position: "bottomR",
-//     });
-//   };
-
-//   const handleNoAccount= () => {
-//     dispatch({
-//       type: "error",
-//       message: `You need to connect your wallet to book a rental`,
-//       title: "Not Connected",
-//       position: "bottomR",
-//     });
-//   };
-
 
 
   return (

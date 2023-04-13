@@ -1,66 +1,155 @@
 const fetch = require('node-fetch');
-import { map3SignUpEndpoint} from'/Utilities/utils';
+import { map3SignUpEndpoint, dbSignUpEndPoint,dbGetUserEndPoint,dbCheckIfUserExistsEndPoint} from'/Utilities/utils';
 import  Utils from'/Utilities/utils';
 import {map3SignUpExecutor} from '/Utilities/apiUtils'
 import { Web3Storage, File } from 'web3.storage'
-
-const newSampleVendor = [
-    "0x6fe4668722E3195Fa897217A4Bdd6ee1d289543f", // wallet address
-  "OG Account", // name
-   "Jozizuke@gmail.com", //email
-  "any tips will be much appreciated", // bio
-  ["dev", "map3 Pay","map3","Chicago", "osborn"], // keyWords
-  "41.881832", //lat
-  "-87.623177", //long
-  "https://pbs.twimg.com/profile_images/1461343110215225349/oxAN3Dve_400x400.jpg",//imageUrl
-  "https://github.com/Erriccc", //websiteUrl
-  "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270" //token
-  ]
-
-
-
+ 
 
 // userImage: Array(1)
 // 0: File {path: 'benefit-two.png', preview: 'blob:http://localhost:3000/f609e4cd-5d1d-4794-9a80-3c4688a5b3af', name: 'benefit-two.png', lastModified: 1655080987124, lastModifiedDate: Sun Jun 12 2022 19:43:07 GMT-0500 (Central Daylight Time), …}
 // length: 1
 
- 
+const checkUserFromDb = async (id ) => {
+  console.log('userId from signup relayer..', id)
+  const JSONdata = JSON.stringify({id})
+  // API endpoint where we send form data.
+  const endpoint = dbCheckIfUserExistsEndPoint // "api/paymentHandler"
+  // Form the request for sending data to the server.
+  const options = {
+    // The method is POST because we are sending data.
+    method: 'POST',
+    // Tell the server we're sending JSON.
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    // Body of the request is the JSON data we created above.
+    body: JSONdata,
+  }
+  let response
+      try{
+        response = await fetch(endpoint, options)
+    }catch(e){
+      console.log('ran into error while running test web3Storage Upload..', e)
+    }
+     // expected output
+    // // {one} || {OXProfile}
+    const jsonResponse = await response.json()
+    console.log('response from db Checking to see if user already exists...............',jsonResponse)
+   return  await jsonResponse.exists;
+}
+
+
+
+
+
+
+const getUserFromDb = async (id ) => {
+  console.log('userId from signup relayer..', id)
+  const JSONdata = JSON.stringify({id})
+  // API endpoint where we send form data.
+  const endpoint = dbGetUserEndPoint // "api/paymentHandler"
+  // Form the request for sending data to the server.
+  const options = {
+    // The method is POST because we are sending data.
+    method: 'POST',
+    // Tell the server we're sending JSON.
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    // Body of the request is the JSON data we created above.
+    body: JSONdata,
+  }
+  let response
+      try{
+        response = await fetch(endpoint, options)
+    }catch(e){
+      console.log('ran into error while running test web3Storage Upload..', e)
+    }
+     // expected output
+    // // {one} || {OXProfile}
+    const jsonResponse = await response.json()
+    console.log('response from db Checking to see if user already exists...............',jsonResponse)
+   return  await jsonResponse.one;
+}
+
+
+
+
+
+const dbSignUp = async (UserInput ) => {
+  console.log('userInput from signup relayer..', UserInput)
+  const JSONdata = JSON.stringify(UserInput)
+  // API endpoint where we send form data.
+  const endpoint = dbSignUpEndPoint // "api/paymentHandler"
+  // Form the request for sending data to the server.
+  const options = {
+    // The method is POST because we are sending data.
+    method: 'POST',
+    // Tell the server we're sending JSON.
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    // Body of the request is the JSON data we created above.
+    body: JSONdata,
+  }
+  let response
+      try{
+        response = await fetch(endpoint, options)
+        console.log("response..... from signUpTransactionRelayer: ", response)
+
+    }catch(e){
+      console.log('ran into error while running test web3Storage Upload..', e)
+
+    }
+
+    // expected output
+    // {OXProfile,error: error?error:false}
+    // const {OXProfile, error} = response;
+    return response.json()
+}
+
+const dbUpdate = async (UserInput ) => {
+  console.log('userInput from db signup relayer..', UserInput)
+  const JSONdata = JSON.stringify(UserInput)
+  // API endpoint where we send form data.
+  const endpoint = dbSignUpEndPoint // "api/paymentHandler"
+  // Form the request for sending data to the server.
+  const options = {
+    // The method is POST because we are sending data.
+    method: 'PUT',
+    // Tell the server we're sending JSON.
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    // Body of the request is the JSON data we created above.
+    body: JSONdata,
+  }
+  let response
+      try{
+        response = await fetch(endpoint, options)
+        console.log("response..... from signUpTransactionRelayer: ", response)
+        console.log('// PUT REQUEST // PUT REQUESThefjbbfefeb;ffbfebedbedvdvdjlvdev')
+
+
+    }catch(e){
+      console.log('ran into error while running test web3Storage Upload..', e)
+    }
+    // expected output
+    // {OXProfile,error: error?error:false}
+    // const {OXProfile, error} = response;
+    return response.json()
+}
+
 
 
 
 const signUpTransactionRelayer = async (wrappedProvider, UserInput, txValue ) => {
 
-    
-let testImageUrl;
-try{
-     testImageUrl = await getImageUrl(UserInput)
-    console.log('running test web3Storage Upload..', testImageUrl)
-}catch(e){
-    console.log('ran into error while running test web3Storage Upload..', e)
+  const { vendorsStreetAddress, ...rest } = UserInput; // everything except the street address
+  const map3SignUpUserInput = {...rest, keyWords:UserInput.keyWords.split(/[, ]+/)}
+        console.log("map3SignUpUserInput: from map3PayTransactionRelayer", map3SignUpUserInput)
 
-}
-const manp3SignUpUserInput = {
-    vendorsWalletAddress: UserInput.userWallet,
-    vendorsName: UserInput.userName,
-    vendorsEmail: UserInput.email,
-    vendorsBio: UserInput.aboutVendor,
-    keyWords:getKeyWordArray(UserInput),// testing split function
-    // keyWords: UserInput.vendorKeywords.split(/[, ]+/),
-    // vendorsLat: get(lat), // UserInput.geoAddress
-    // vendorsLong: get(long), // UserInput.geoAddress
-    vendorsLat: UserInput.geoAddress?.lat? UserInput.geoAddress.lat : "41.881832",
-    vendorsLong: UserInput.geoAddress?.long? UserInput.geoAddress.long : "-87.623177",
-    // vendorsImageUrl: get(imageUrl), // UserInput.imageUrl || UserInput.userImage[0]
-    vendorsImageUrl: testImageUrl ? testImageUrl :"https://pbs.twimg.com/profile_images/1461343110215225349/oxAN3Dve_400x400.jpg",
-    vendorsWebsiteUrl: UserInput.websiteUrl,
-    vendorsToken: UserInput.userCurrency
-
-
-}
-
-        console.log("manp3SignUpUserInput: from map3PayTransactionRelayer", manp3SignUpUserInput)
-
-        const JSONdata = JSON.stringify(manp3SignUpUserInput)
+        const JSONdata = JSON.stringify(map3SignUpUserInput)
         // API endpoint where we send form data.
         const endpoint = map3SignUpEndpoint // "api/paymentHandler"
         // Form the request for sending data to the server.
@@ -78,38 +167,58 @@ const manp3SignUpUserInput = {
         console.log("response..... from signUpTransactionRelayer: ", response)
  
 
-        if(response.staus === 400){
+        if(response.status === 400){
             throw   new Error('invalid parameters!');
         }else{
             const result = await response.json()
             const txdata = result.txdata
-            console.log("txdata..... from signUpTransactionRelayer: ", txdata)
-         // let gasPrice = await Utils.provider.getGasPrice()
-            let gasPrice = await wrappedProvider.getGasPrice()
-        
+     
+         let gasPrice = undefined;
+                    try{
+                      // gasPrice = await wrappedProvider.getGasPrice()
+                      gasPrice = await wrappedProvider.getGasPrice()
+                  }catch(e){
+                    console.log('error while getting gas price', e)
+                  }
         return {txdata, gasPrice, txValue}
-            // const tx2 = await  map3SignUpExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
-            // // const tx2 = await  map3SignUpExecutor(txdata, 0) // New Implementation of backend transact    ions
-            // return (tx2)
+          
         }
 }
-const signUpTransactionSender = async (signer,txdata, txValue ) => {
-  const tx2 = await  map3SignUpExecutor(signer, txdata, txValue) // New Implementation of backend transact    ions
-  return (tx2)
+function toNumberString(num) { 
+  if (Number.isInteger(num)) { 
+    return num + ".0"
+  } else {
+    return num.toString(); 
+  }
+}
+
+
+const signUpTransactionSender = async (signer,txdata, txValue,UsertransactionInput ) => {
+
+  const dbSignUpUserInput = {...UsertransactionInput, vendorsLat: toNumberString(UsertransactionInput.vendorsLat), vendorsLong:  toNumberString( UsertransactionInput.vendorsLong)}
+  let dbUser = await dbUpdate(dbSignUpUserInput) 
+
+
+  //Check if user already exists in the database
+  if(await checkUserFromDb(UsertransactionInput.vendorsWalletAddress)){
+    console.log('dbUser......///////', dbUser)
+    return ({tx2:'user already exists', dbUser})
+  }else{
+    console.log('dbUser......///////', dbUser)
+    return ({tx2:await map3SignUpExecutor(signer, txdata, txValue), dbUser})
+  }
+ 
 }
 
 
 
 
 
-const getImageUrl = async (UserInput) => {
- 
-    if (UserInput.imageUrl){
-        return(UserInput.imageUrl)
-    }else if (UserInput.userImage){ 
+const getImageUrl = async (userImage) => {
+  
         console.log('> 📦 creating web3.storage client')
-        const imageLocalName =  encodeURIComponent(UserInput.userImage[0].name.trim()) 
-        const imageLocalPath =  encodeURIComponent(UserInput.userImage[0].path.trim()) 
+        const imageLocalName =  encodeURIComponent(userImage[0].name.trim()) 
+        const imageLocalPath =  encodeURIComponent(userImage[0].path.trim()) 
         console.log('imageLocalName...', imageLocalName)
         
         let token = Utils.web3StorageToken
@@ -117,7 +226,7 @@ const getImageUrl = async (UserInput) => {
         const client = new Web3Storage({token})
 
         console.log('> 🤖 chunking and hashing the files (in your browser!) to calculate the Content ID')
-        const cid = await client.put(UserInput.userImage, {
+        const cid = await client.put(userImage, {
           onRootCidReady: localCid =>{},
           onStoredChunk: bytes =>{}
         })
@@ -128,26 +237,14 @@ const getImageUrl = async (UserInput) => {
         let totalBytes = 0
         for await (const upload of client.list()) {
           totalBytes += upload.dagSize || 0
-        }
+        } 
         console.log(`> ⁂ ${totalBytes.toLocaleString()} bytes stored!`)
         // return (`https://dweb.link/ipfs/${cid}`)
         return (`https://dweb.link/ipfs/${cid}/${imageLocalName}`)
-    }else{
-        return("https://pbs.twimg.com/profile_images/1461343110215225349/oxAN3Dve_400x400.jpg")
-    }
-
-
 }
 
 function getKeyWordArray (UserInput){
-  if (!UserInput.vendorKeywords){
-      return ['','']
-  }else if (UserInput.vendorKeywords.legnth < 1){
-        return UserInput.vendorKeywords
-  }else {
-        return UserInput.vendorKeywords.split(/[, ]+/)
-
-  }
+        return UserInput.keyWords.split(/[, ]+/)
 }
 
-module.exports = {signUpTransactionRelayer,signUpTransactionSender, getImageUrl, getKeyWordArray }//
+module.exports = {signUpTransactionRelayer,signUpTransactionSender, getImageUrl, getKeyWordArray, dbSignUp, getUserFromDb,dbUpdate, checkUserFromDb }//

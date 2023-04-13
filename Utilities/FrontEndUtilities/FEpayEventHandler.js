@@ -61,7 +61,7 @@ const sameTokenTransaction = async (signer, txdata,txValue) => {
 
 // This Functions generates the required bytecode and transaction details required for same token
 //transfers
-const sameTokenEventHandler = async (signer, UsertransactionInput, User,handleError ,  _sendAsWeth) => {
+const sameTokenEventHandler = async (signer, UsertransactionInput, User,toast ,  _sendAsWeth) => {
         let constructedTx;
         console.log("initiating simple SameTokenTransfer")
         let tokenammount;
@@ -102,9 +102,9 @@ const sameTokenEventHandler = async (signer, UsertransactionInput, User,handleEr
           }
         } catch (err) {
             if (err.reason){
-                handleError(` transfer failed please try again ${err.reason}`)
+                toast.error(` transfer failed please try again ${err.reason}`)
                }else{
-                   handleError(` transfer failed please try again ${err.message}`)
+                   toast.error(` transfer failed please try again ${err.message}`)
                }
 
         }
@@ -135,7 +135,7 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
 
 // This Functions generates the required bytecode and transaction details required for 
 // swaps between tokens 
-  const oxSwapEventHandler = async (signer, UsertransactionInput, User,handleError) => {
+  const oxSwapEventHandler = async (signer, UsertransactionInput, User,toast) => {
         // situation where Tokens do not match
 // alert('all new provider updates recieved... function2')
         let constructedTx;
@@ -154,7 +154,7 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
         sendersTokenAddress,
         UsertransactionInput.reciversToken,
         UsertransactionInput.amountToBeSent,
-        // handleError
+        // toast
         )
             console.log("this is amont to sell", quotedAmmountToSell)
             const aprovalAmount = (quotedAmmountToSell *UsertransactionInput.slippage).toFixed(0).toString() // change multiplier to come from Utils.slippage
@@ -175,7 +175,7 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
           oxQuoteResult = await oxQuoteRelayer(UsertransactionInput,sendersTokenAddress,User)
 
         }catch(err){
-          handleError(`failed to generate Quote ${err.message}`)
+          toast.error(`failed to generate Quote ${err.message}`)
           return;
         }
         
@@ -188,10 +188,10 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
           }
         } catch(err){
             if (err.reason){
-             handleError(` transfer failed ${err.reason}`)
+             toast.error(` transfer failed ${err.reason}`)
             return;
             }else{
-                handleError(` transfer failed ${err.message}`)
+                toast.error(` transfer failed ${err.message}`)
             return;
             }
         }
@@ -221,7 +221,7 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
 // This Functions generates the required bytecode and transaction details required for 
 // swaps from erc20 to native tokens.
 
-    const oxSwapERC20ToEth = async (signer, UsertransactionInput, User,handleError) => {
+    const oxSwapERC20ToEth = async (signer, UsertransactionInput, User,toast) => {
       let constructedTx;
       let reciversTokenAddress = UsertransactionInput.reciversToken;
       let sendersTokenAddress = UsertransactionInput.sendersToken;
@@ -286,7 +286,7 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
             }
         
           }catch(err){
-            handleError(`failed to generate Quote ${err.message}`)
+            toast.error(`failed to generate Quote ${err.message}`)
             return;
           }
 
@@ -295,10 +295,10 @@ const oxSwapTransaction = async (signer,txdata, txValue) => {
             constructedTx = await oxSwapERC20ToEthTransactionRelayer(signer, oxQuoteResult,0)// tx value = 0
           } catch(err){
               if (err.reason){
-              handleError(` transfer failed ${err.reason}`)
+              toast.error(` transfer failed ${err.reason}`)
               return;
               }else{
-                  handleError(` transfer failed ${err.message}`)
+                  toast.error(` transfer failed ${err.message}`)
               return;
               }
           }

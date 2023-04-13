@@ -2,6 +2,7 @@ const routes = {
     home: '/',
     pay:'/pay',
     registerVendor:'/registerVendor/',
+    completeSetup:'/completeSetup/',
     profile: '/profile',
     swap: '/swap',
     liquidity: '/liquidity',

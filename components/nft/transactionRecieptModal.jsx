@@ -14,7 +14,7 @@ export default function TransactionRecieptModal({  confirmationTitle, txReciept,
     // const { address, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
     const { closeModal } = useModal();
     const {isAuthenticated, account} = useMoralis()
-    const { address, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
+    const { address, isConnected,authState, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
 
     let [visibleCoinList, setVisibleCoinList] = useState(true);
 

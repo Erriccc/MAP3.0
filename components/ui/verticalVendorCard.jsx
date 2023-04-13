@@ -76,7 +76,7 @@ export  function VendorCollectionCard({ walletAddress, name, vendorsToken, imgUr
       </div>
     </div>);
 }
-
+ 
 export default function VerticalVendorSlider({ vendorsData }) {
     return (
     
@@ -89,11 +89,11 @@ export default function VerticalVendorSlider({ vendorsData }) {
 
         {vendorsData.map((vendor) => (
             <VendorCollectionCard id={vendor.walletAddress} name={vendor.name} 
-            walletAddress={vendor.walletAddress}
+            walletAddress={vendor.vendorsWalletAddress}
             vendorsToken={vendor.vendorsToken}
-             imgUrl={vendor.imgUrl} 
-             description={vendor.description}
-             key={vendor.walletAddress}
+             imgUrl={vendor.vendorsImageUrl} 
+             description={vendor.vendorsBio}
+             key={vendor.vendorsWalletAddress}
              
             />
 

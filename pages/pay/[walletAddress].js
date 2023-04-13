@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useLayoutEffect, useReducer, useContext } from 'react';
+import { toast } from 'react-toastify';
 
 import Link from "next/link";
-import { useMoralis} from 'react-moralis'
 import Apphero from 'components/Apphero'
-import { useNotification} from "web3uikit";
 import { useRouter } from "next/dist/client/router";
 import { NextSeo } from 'next-seo';
 import { useCopyToClipboard } from 'lib/hooks/use-copy-to-clipboard';
@@ -47,9 +46,8 @@ import SendersCoinInput from '/components/sendersCoinInput';
 
 const PayVendorPage = () => {
   let router = useRouter();
-  const {walletAddress} = router.query;
-  const { Moralis, account } = useMoralis();
-  const { address} = useContext(WalletContext);
+  const {walletAddress} = router.query; 
+  const { address,isConnected,authState,provider,balance, connectToWallet, disconnectWallet } = useContext(WalletContext);
 
   const { currentUrl,setCurrentUrl} = useUrlContext();
   const { openModal } = useModal();
@@ -59,6 +57,7 @@ const PayVendorPage = () => {
     let [copyButtonStatus, setCopyButtonStatus] = useState(false);
     let [_, copyToClipboard] = useCopyToClipboard();
     const handleCopyToClipboard = () => {
+        // copyToClipboard(address);
         copyToClipboard(vendorDataState.dataFromServer?.walletAddress);
         setCopyButtonStatus(true);
         setTimeout(() => {
@@ -66,45 +65,18 @@ const PayVendorPage = () => {
         }, 2500);
     };
 
-  const dispatch = useNotification();
-
-  const handleSuccess= (msg) => {
-    dispatch({
-      type: "success",
-      message: msg,
-      title: "Done",
-      position: "bottomR",
-    });
-  };
-const handleError= (msg) => {
-  dispatch({
-    type: "error",
-    message: `${msg}`,
-    title: "failed",
-    position: "bottomR",
-  });
-};
-const handleNoAccount= () => {
-  dispatch({
-    type: "error",
-    message: `You need to connect your wallet to book a rental`,
-    title: "Not Connected",
-    position: "bottomR",
-  });
-};
-
 // add input for expected slippage amount to complete swap!
     // const submitPayment = async (UsertransactionInput) => {
-    //   await paymentTypeLogicServer(Moralis.connector.provider, UsertransactionInput, account, handleSuccess,handleError, setSystemProcessing , setTransacting)
+    //   await paymentTypeLogicServer(Moralis.connector.provider, UsertransactionInput, account, toast,toast, setSystemProcessing , setTransacting)
 
     // };
     const submitPayment = async (UsertransactionInput) => {
       await paymentTypeLogicServer
-      (Moralis.connector.provider, UsertransactionInput,handleSuccess,handleError,setTransactionPopulated, setTxDetails)
+      (provider, UsertransactionInput,toast,setTransactionPopulated, setTxDetails)
       };
       const sendPayment = async (txDetails) => {
-        // (_provider, UsertransactionInput, handleSuccess,handleError, setSystemProcessing ,setTransactionPopulated, setTxDetails)
-      await paymentTypeLogicExecutor(txDetails,setTransacting,Moralis.connector.provider,handleSuccess,handleError, setTransactionPopulated, setTxDetails, setTxReciept)
+        // (_provider, UsertransactionInput, toast,toast, setSystemProcessing ,setTransactionPopulated, setTxDetails)
+      await paymentTypeLogicExecutor(txDetails,setTransacting,provider,toast, setTransactionPopulated, setTxDetails, setTxReciept)
       };
 
 
@@ -191,18 +163,28 @@ const handleNoAccount= () => {
       (async function() {
         const returnData = await payProfileDataFetcherRelayer(walletAddress);
     
-        console.log( returnData, 'returnData from client')
+        console.log( returnData.vendorsData, 'returnData.vendorsData from client')
 
         if(returnData.isVendor == false){
           console.log('invalid User, pushing to regular pay page')
           router.push("/pay")
         }else{
+        console.log('(returnData.vendorData(returnData.vendorData(returnData.vendorData',returnData)
           // VendorsCurrencyInfo
           // vendorsDetails
-        setReciversTokenIfo(returnData.vendorData.VendorsCurrencyInfo);
-        setReciversToken(returnData.vendorData.VendorsCurrencyInfo.address);
-        setReciver(walletAddress);
-        setUserData(returnData.vendorData.vendorsDetails[0]);
+        // setReciversTokenIfo(returnData.vendorData.VendorsCurrencyInfo);
+        // setReciversToken(returnData.vendorData.VendorsCurrencyInfo.address);
+        // setReciver(walletAddress);
+        // setUserData(returnData.vendorData.vendorsDetails[0]);
+        // setAddressIsVendor(true)
+        // dispatchather({type:"FOUND"})
+        // console.log('.done dispensing data....')
+      const symbol = await Utils.magicProviderTokenSymbol(returnData.vendorsData.vendorsToken,provider)
+      setReciversTokenIfo({code:symbol});
+        setReciversToken(returnData.vendorsData.vendorsToken);
+        // setReciver(walletAddress);
+        setReciver(returnData.vendorsData.vendorsWalletAddress);
+        setUserData(returnData.vendorsData);
         setAddressIsVendor(true)
         dispatchather({type:"FOUND"})
         console.log('.done dispensing data....')
@@ -215,7 +197,7 @@ const handleNoAccount= () => {
     }
     document.documentElement.style.removeProperty('overflow');
     return () => { isMounted = false };
-}, [walletAddress, router, address, account])
+}, [walletAddress, router, address, isConnected])
 
 
 
@@ -234,7 +216,7 @@ const handleNoAccount= () => {
             sendersToken,
             reciversToken,
             amountToBeSent,
-            handleError)
+            toast)
             if (isNaN(quotePrice) ){
               setRate(quotePrice)
               setQuote(quotePrice)
@@ -253,9 +235,9 @@ const handleNoAccount= () => {
         const loadUsersBalances = async () => {
             try{
             if(sendersToken == Utils.EthAddress){
-              setSendersTokenBalance(await Utils.getUserNativeBalance(account))
+              setSendersTokenBalance(await Utils.getUserNativeBalance(address))
             }else{
-              setSendersTokenBalance(await Utils.getUserErc20Balance(sendersToken,account))
+              setSendersTokenBalance(await Utils.getUserErc20Balance(sendersToken,address))
             }
           } catch(e){
             return
@@ -265,7 +247,7 @@ const handleNoAccount= () => {
 
         fetchPrice()
         let UsertransactionInput = {
-          sender: account,
+          sender: address,
           reciver: reciver,
           sendersToken: sendersToken,
           reciversToken: reciversToken,
@@ -273,7 +255,8 @@ const handleNoAccount= () => {
           slippage: userSlippage
       };
       (async function() {
-        // if(await PaymentInputValidator(UsertransactionInput,handleError,setvalidatingInput)){
+        console.log("VVVaddressaddressaddress", address)
+        // if(await PaymentInputValidator(UsertransactionInput,toast,setvalidatingInput)){
         if(await PaymentInputValidator(UsertransactionInput,setValidationResponce, setvalidatingInput)){
           // if(true){
         console.log("All validation passed........... processing transaction")
@@ -289,7 +272,7 @@ const handleNoAccount= () => {
         document.documentElement.style.removeProperty('overflow');
 
         return () => { isMounted = false };
-      }, [sendersToken, reciversToken,amountToBeSent, account, userSlippage, quote, vendorDataState.FoundInfo]);
+      }, [sendersToken, reciversToken,amountToBeSent, address, isConnected,userSlippage, quote, vendorDataState.FoundInfo]);
 
 
 
@@ -315,7 +298,7 @@ const handleNoAccount= () => {
         <div className="relative h-36 w-full overflow-hidden rounded-lg sm:h-44 md:h-64 xl:h-80 2xl:h-96 3xl:h-[448px]">
           <Image 
           src={`/api/imagefetcher?url=${encodeURIComponent(
-            vendorDataState.dataFromServer?.imgUrl
+            vendorDataState.dataFromServer?.vendorsImageUrl
           )}`}
           layout="fill" objectFit="cover" alt="Cover Image"/>
         </div>
@@ -326,7 +309,7 @@ const handleNoAccount= () => {
           <div className="relative z-5 mx-auto -mt-12 h-24 w-24 shrink-0 overflow-hidden rounded-full border-[5px] border-white shadow-large dark:border-gray-500 sm:-mt-14 sm:h-28 sm:w-28 md:mx-0 md:-mt-16 md:h-32 md:w-32 xl:mx-0 3xl:-mt-20 3xl:h-40 3xl:w-40 3xl:border-8">
             <Image 
             src={`/api/imagefetcher?url=${encodeURIComponent(
-              vendorDataState.dataFromServer?.imgUrl
+              vendorDataState.dataFromServer?.vendorsImageUrl
             )}`}
              layout="fill" objectFit="cover" className="rounded-full" alt="Author"/>
           </div>
@@ -336,13 +319,13 @@ const handleNoAccount= () => {
               <div className="text-center ltr:md:text-left rtl:md:text-right">
                 {/* Name */}
                 <h2 className="text-xl font-medium tracking-tighter text-gray-900 dark:text-white xl:text-2xl">
-                  {vendorDataState.dataFromServer?.name}
+                  {vendorDataState.dataFromServer?.vendorsName}
                 </h2>
 
                 {/* Username */}
                 <div className="mt-1 text-sm font-medium tracking-tighter text-gray-600 dark:text-gray-400 xl:mt-3">
                   {/* @{authorData?.user_name} */}
-                  @{vendorDataState.dataFromServer?.email}
+                  @{vendorDataState.dataFromServer?.vendorsWalletAddress}
                 </div>
                 
                 {/* User ID and Address */}
@@ -351,7 +334,7 @@ const handleNoAccount= () => {
                     {reciversTokenInfo?.code}
                   </div>
                   <div className="text w-28 grow-0 truncate text-ellipsis bg-center text-xs text-gray-500 ltr:pl-4 rtl:pr-4 dark:text-gray-300 sm:w-32 sm:text-sm">
-                    {vendorDataState.dataFromServer?.walletAddress}
+                    {vendorDataState.dataFromServer?.vendorsWalletAddress}
                   </div>
                   <div className="flex cursor-pointer items-center px-4 text-gray-500 transition hover:text-gray-900 dark:text-gray-300 dark:hover:text-white" title="Copy Address" onClick={handleCopyToClipboard}>
                     {copyButtonStatus ? (<Check className="h-auto w-3.5 text-green-500"/>) : (<Copy className="h-auto w-3.5"/>)}

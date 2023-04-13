@@ -5,7 +5,7 @@ const apiUtils = require('../../../Utilities/apiUtils');
 export default async function form(req, res) {
     // Get data submitted in request's body.
     const body = req.body
-  
+    
     // Optional logging to see the responses
     // in the command line where next.js app is running.
     console.log('body: ', body)
@@ -46,18 +46,19 @@ export default async function form(req, res) {
       body.vendorsWebsiteUrl ? body.vendorsWebsiteUrl : '',
       body.vendorsToken,
     ]
+
+    const signUpObject = {
+      
+    }
   
   
     console.log("running server function from map3SignUp... " )
-    console.log("tuple to be sent ... ", signUpTuple )
-
-   
       const  tempResponsePaymentData = await apiUtils.map3SignUpData(signUpTuple)
         const responsePaymentData = {
             txdata:tempResponsePaymentData
         }
 
-    console.log("completed server function from map3SignUp: ",responsePaymentData )
+    console.log("completed server function from map3SignUp: responsePaymentData" )
 
     res.status(200).json(responsePaymentData)
 

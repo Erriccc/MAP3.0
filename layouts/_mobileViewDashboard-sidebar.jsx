@@ -19,15 +19,24 @@ import { PlusCircle } from '/components/icons/plus-circle';
 import { CompassIcon } from '/components/icons/compass';
 import SettingsButton from '/components/settings/settings-button';
 import { useMoralis } from "react-moralis";
+import { useContext, useEffect } from 'react';
+import { WalletContext } from 'lib/hooks/use-connect';
+
+
 // import { ConnectButton, Icon, Select, DatePicker, Input } from "web3uikit";
 //images
 import AuthorImage from 'assets/images/author.jpg';//
 const menuItems = [
     {
-        name: 'Map3 PAY',
+        name: 'Home',
         icon: <HomeIcon />,
         href: routes.home,
     },
+    {
+      name: 'Map3 PAY',
+      icon: <PoolIcon />,
+      href: routes.pay,
+  },
     // {
     //     name: 'Farm',
     //     icon: <FarmIcon />,
@@ -140,12 +149,14 @@ export default function MobileSidebar({ className }) {
     const { closeDrawer } = useDrawer();
     const router = useRouter();
   const {isAuthenticated, account } = useMoralis();
+  const { address,isConnected,authState, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
+
 
     return (<aside className={cn('top-0 z-40 h-full w-full max-w-full border-dashed border-gray-200 bg-body ltr:left-0 ltr:border-r rtl:right-0 rtl:border-l dark:border-gray-700 dark:bg-dark xs:w-80   xl:w-72 2xl:w-80', className)}>
       <div className="relative flex h-24 items-center justify-between overflow-hidden px-6 py-4 2xl:px-8">
         {/* <Logo /> */}
         <div
-        onClick={() => router.push("/")}
+        onClick={() => router.push("./")}
         className="relative flex items-center justify-center py-1 cursor-pointer"
       >
         <h1 className="text-blue-500 font-bold">map<span className="text-gray-500 font-bold">3</span></h1>
@@ -163,7 +174,7 @@ export default function MobileSidebar({ className }) {
       <Scrollbar style={{ height: 'calc(100% - 96px)' }}>
         <div className="px-6 pb-5 2xl:px-8">
           {/* <AuthorCard image={AuthorImage} name="Map3 User" role="admin"/> */}
-          {account ? (
+          {isConnected ? (
           
           <AuthorCard image={AuthorImage} name="Map3 User" role="admin"/>
           ):(

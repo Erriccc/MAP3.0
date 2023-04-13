@@ -45,7 +45,13 @@ const mapDataFetcherEndpoint = '/api/map3Profiles/mapDataFetcher'
 const findProfilesDataFetcherEndpoint = '/api/map3Profiles/findProfilesDataFetcher' 
 const payProfileDataFetcherEndpoint = '/api/map3Profiles/payProfileDataFetcher' 
 
-const map3SignUpEndpoint = '/api/map3signup/signUp' 
+const map3SignUpEndpoint = '/api/map3signup/contractSignUp' 
+const dbSignUpEndPoint = '/api/map3signup/dbCRUD' 
+const dbGetUserEndPoint = '/api/map3signup/dbGetUser' 
+const dbGetUsersForMapEndPoint = '/api/map3signup/dbGetUsersForMap' 
+const dbCheckIfUserExistsEndPoint = '/api/map3signup/dbCheckIfUserExists' 
+
+
 const map3ApproveEndpoint = '/api/map3pay/map3approve' 
 
 const  { ethers }=require( "ethers"); // from hardhat throws error "Can't resolve 'console'"
@@ -108,7 +114,10 @@ const IERC20Abi = [
 // const provider = new ethers.providers.Web3Provider(window.ethereum)
 const provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com")
 const providerBlockExplorer = 'https://polygonscan.com/'
-
+const customNodeOptions = {
+  rpcUrl: 'https://polygon-rpc.com/', // Polygon RPC URL
+  chainId: 137, // Polygon chain id
+}
 const getCurrentWalletAddress = async () => {
     const _provider = new ethers.providers.Web3Provider(window.ethereum)
 
@@ -206,9 +215,26 @@ function numberExponentToLarge(numIn) {
 
    const  getTokenDecimal = async (_tokenAddress) =>{
     const myContract = new ethers.Contract(_tokenAddress,IERC20Abi,provider)
+    console.log(myContract,"ertynftgthfjyuyhtdgthfjy")
     const tokenDecimals = await myContract.decimals()
     console.log("tokenDecimals from function getTokenDecimal in utils :", tokenDecimals)
     return tokenDecimals;
+  }
+  const  magicProviderTokenSymbol = async (_tokenAddress,_provider) =>{
+    console.log(typeof(_tokenAddress))
+    if (_tokenAddress == EthAddress){
+      return "ETH/MTC";
+      }else{
+      
+      try {
+        const myContract = new ethers.Contract(_tokenAddress,IERC20Abi,_provider)
+      const tokenSymbol = await myContract.symbol()
+      return tokenSymbol;
+      } catch (error) {
+        console.log(error)
+        return "INVALID CURRENCY"
+      }
+      }
   }
   const  getTokenSymbol = async (_tokenAddress) =>{
     if (_tokenAddress == EthAddress){
@@ -276,7 +302,7 @@ const getUserNativeBalanceInWei = async (owner) => {
     let addressBalance;
     try{
         addressBalance = await provider.getBalance(address);
-        console.log("was able to fetch a balance for the address", await addressBalance)
+        console.log("was able to fetch a balance for the address", addressBalance)
         return true;
     }catch(e){
         return false;
@@ -635,11 +661,13 @@ module.exports = {
     map3Pay,
     vendorSignUpFee,
     getTokenSymbol,
+    magicProviderTokenSymbol,
     slippage,
     API_QUOTE_URL,
     Ox_POLYGON_API_PRICE_URL,
     API_PRICE_URL,
     provider,
+    customNodeOptions,
     Map3Abi,
     Map3VendorsABi,
     getSendersAllowanceBalance,
@@ -661,6 +689,10 @@ module.exports = {
     findProfilesDataFetcherEndpoint,
     payProfileDataFetcherEndpoint,
     map3SignUpEndpoint,
+    dbSignUpEndPoint,
+    dbGetUserEndPoint,
+    dbGetUsersForMapEndPoint,
+    dbCheckIfUserExistsEndPoint,
     EthAddress,
     WethAddress,
     getCurrentWalletAddress,

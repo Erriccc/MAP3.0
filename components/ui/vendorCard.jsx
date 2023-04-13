@@ -144,14 +144,14 @@ export default function VendorSlider({ vendorsData }) {
       <Swiper modules={[Scrollbar, A11y]} spaceBetween={24} slidesPerView={1.5} scrollbar={{ draggable: true }} breakpoints={sliderBreakPoints} observer={true} dir="ltr">
         {vendorsData.map((vendor) => (
         
-        <SwiperSlide key={vendor.walletAddress}>
+        <SwiperSlide key={vendor.vendorsWalletAddress}>
           <div className=''>
             
-            <VendorCollectionCard id={vendor.walletAddress} name={vendor.name} 
-            walletAddress={vendor.walletAddress}
+            <VendorCollectionCard id={vendor.vendorsWalletAddress} name={vendor.vendorsName} 
+            walletAddress={vendor.vendorsWalletAddress}
             vendorsToken={vendor.vendorsToken}
-             imgUrl={vendor.imgUrl} 
-             description={vendor.description}
+             imgUrl={vendor.vendorsImageUrl} 
+             description={vendor.vendorsBio}
              
             />
             </div>

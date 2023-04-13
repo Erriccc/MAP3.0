@@ -1,13 +1,9 @@
 import { WalletContext } from 'lib/hooks/use-connect';
-import { useModal } from '/components/modal-views/context';
 import { useMoralis } from 'react-moralis'
 import { useContext, useEffect, useState } from 'react';
-// import { ConnectButton} from "web3uikit";
-import FeaturedCard from '/components/nft/featured-card';
-import InputLabel from '/components/ui/input-label';
-import { Switch } from '/components/ui/switch';
 import cn from 'classnames';
-import { useNotification } from "web3uikit";
+import { toast } from 'react-toastify';
+
 import HelpSettingUpWallet from '/components/RegistrationFormSteps/HelpSettingUpWallet'
 
 import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext";
@@ -22,12 +18,7 @@ const UsefulResources = [
 
 export default function Wallet({ ...props }) {
   const { userData, setUserData, finalData, setFinalData } = useStepperContext();
-  let [needsHelp, setNeedsHelp] = useState(false);
-
-  const { address, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
-    const {account} = useMoralis()
-    const dispatch = useNotification();
-
+  const { address,isConnected,authState, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
   // const handleChange = (e) => {
   //   const { name, value } = e.target;
   //   setUserData({ ...userData, [name]: value });
@@ -35,12 +26,12 @@ export default function Wallet({ ...props }) {
 
 
   useEffect(() => {
-   if(account){
-    setUserData({ ...userData, ["userWallet"]: account });
+   if(isConnected){
+    setUserData({ ...userData, ["userWallet"]: address });
     console.log("userdata before submission..", userData)
    }else{
    }
-  }, [account])
+  }, [isConnected])
   
 
   return (

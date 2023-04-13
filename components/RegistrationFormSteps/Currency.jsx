@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNotification } from "web3uikit";
+import { toast } from 'react-toastify';
+
 const {oxPriceFetcher} = require('/Utilities/FrontEndUtilities/FEoxPriceFetcher');
 import Utils from'/Utilities/utils';
 import{PaymentInputValidator} from '/Utilities/FrontEndUtilities/FEpaymentUserInputValidator'
@@ -26,37 +27,6 @@ export default function Currency() {
   
   const [amountToBeSent, setamountToBeSent] = React.useState(0.01);
   const [quote, setQuote] = React.useState("select token"); //  Quote is the current rate multiplied by the amount of cryptocurrency to be bouth
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
-  };
-
-  const dispatch = useNotification();
-  const handleSuccess= (msg) => {
-     dispatch({
-       type: "success",
-       message: msg,
-       title: "Done",
-       position: "bottomR",
-     });
-   };
- const handleError= (msg) => {
-   dispatch({
-     type: "error",
-     message: `${msg}`,
-     title: "failed",
-     position: "bottomR",
-   });
- };
- const handleCurrencyWarning= (msg) => {
-    dispatch({
-      type: "warning",
-      message: `${msg}`,
-      title: "failed",
-      position: "bottomR",
-    });
-  };
     /// USER EXPIRIENCE TOOLS
     useEffect(()=>{
         const fetchPrice = async () => {
@@ -66,25 +36,25 @@ export default function Currency() {
             sendersToken,
             ethTokenAddress,
             amountToBeSent,
-            handleError)
+            toast)
             if (isNaN(quotePrice) ){
                 console.log(quotePrice, 'quotePrice is NAN')
-                handleCurrencyWarning("insufficient liquidity for this asset, pick other asset to enable cross currency transactions")
+                toast.warning("insufficient liquidity for this asset, pick other asset to enable cross currency transactions")
                 setQuote(quotePrice)
                 setIsValidCurrency(false)
 
             }else{
                     setIsValidCurrency(true)
-                    handleSuccess("Valid Currency")
+                    toast.success("Valid Currency")
               setQuote("Valid Currency")
-              setUserData({ ...userData, ["userCurrency"]: sendersToken, ["currencySymbol"]: senderstokenCode});
+              setUserData({ ...userData, ["vendorsToken"]: sendersToken, ["currencySymbol"]: senderstokenCode});
             //   setUserData({ ...userData, ["currencySymbol"]: senderstokenCode });
 
               
             }
             
         }catch(e){
-            handleError("error validating this currency")
+            toast.error("error validating this currency")
             setIsValidCurrency(false)
             setQuote("quote Failed")
 

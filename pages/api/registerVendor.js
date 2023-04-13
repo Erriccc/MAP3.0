@@ -1,5 +1,7 @@
 
 
+ 
+
 export default function form(req, res) {
     // Get data submitted in request's body.
     const body = req.body
@@ -7,7 +9,7 @@ export default function form(req, res) {
     // Optional logging to see the responses
     // in the command line where next.js app is running.
     console.log('body: ', body)
-
+ 
     ////////////////////////////////////////////////////
     //REMEMBER TO CHANGE CITY STATE AND ZIP T LONGITUTE AND LATITUDE
     ////////////////////////////////////////////////

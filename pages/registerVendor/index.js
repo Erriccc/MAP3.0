@@ -1,32 +1,32 @@
 import { useState, useContext, useEffect,useLayoutEffect} from "react";
 import Utils from'/Utilities/utils';
-import Stepper from "/components/RegistrationFormSteps/Stepper";
-import StepperControl from "/components/RegistrationFormSteps/StepperControl";
-import { UseContextProvider } from "/Utilities/FrontEndUtilities/FEStepperContext";
 import DashboardLayout from 'layouts/_dashboard';
 import { NextSeo } from 'next-seo';
-import Button from '/components/ui/button';
-import { useModal } from '/components/modal-views/context';
 // import dynamic from 'next/dynamic';
-import { useNotification } from "web3uikit";
+import { PowerIcon } from '/components/icons/power';
+import { toast } from 'react-toastify';
+
 import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext";
-
-import Details from '/components/RegistrationFormSteps/Details';
-import UploadImage from '/components/RegistrationFormSteps/UploadImage';
-import GeoAddress from '/components/RegistrationFormSteps/GeoAddress';
-import Currency from '/components/RegistrationFormSteps/Currency';
-import Final from '/components/RegistrationFormSteps/Final';
-
 import ConfirmationModal from '/components/nft/confirmationModal.jsx' 
+import { WalletContext } from 'lib/hooks/use-connect';
+import { useModal } from '/components/modal-views/context';
+import Button from '/components/ui/button';
+
+import HelpSettingUpWallet from '/components/RegistrationFormSteps/HelpSettingUpWallet'
+import routes from 'config/routes';
+
+import { useRouter } from "next/dist/client/router";
+
+
 
 
 
 function RegisterVendor() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const { view, isOpen, closeModal } = useModal();
   const { userData, setUserData } = useStepperContext();
-  
+  const { address,isConnected, magicEmail, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
+    const [inputEmail, setInputEmail] = useState();
 
+    const router = useRouter()
 
 
   useEffect(() => {
@@ -36,71 +36,98 @@ function RegisterVendor() {
     document.documentElement.style.removeProperty('overflow');
     return () => { isMounted = false };
 
-  }, [])
-  
+  }, [address,isConnected])
 
-  const steps = [
-    "Account Details",
-    "Upload Image",
-    "Geographical Address",
-    "Currency",
-    "Complete"
-  ];
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    await connectToWallet(inputEmail)
+  }
 
-  const displayStep = (step) => {
-    switch (step) {
-      case 1:
-        return <Details />;
-      case 2:
-        return <UploadImage />;
-      case 3:
-        return <GeoAddress />;
-      case 4:
-        return <Currency />;
-      case 5:
-        return <Final />;
-      default:
-    }
-  };
 
-  const handleClick = (direction) => {
-    let newStep = currentStep;
-
-    direction === "next" ? newStep++ : newStep--;
-    if(typeof direction == "number")  {
-        newStep = direction ;
-     // check if steps are within bounds
-     newStep >= 0 && newStep <= steps.length && setCurrentStep(newStep);
-    }else{
-
-    // check if steps are within bounds
-    newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
-    }
-  };
 
   return (
-
     <>
-    <NextSeo title="sign up" description="Map3 - sign up new vendor profiles"/>
+    <NextSeo title="sign up" description="0xMaps - sign up new vendor profiles"/>
     <DashboardLayout>
-      <div className="horizontal container mt-5 ">
-        <Stepper steps={steps} currentStep={currentStep} handleClick={handleClick} />
 
-        <div className="my-10 p-10 ">
-          <UseContextProvider>{displayStep(currentStep)}</UseContextProvider>
-        </div>
+        <div className="relative mx-auto max-w-full rounded-lg bg-white px-9 py-16 dark:bg-light-dark">
+      <h2 className="mb-4 text-center text-2xl font-medium uppercase text-gray-900 dark:text-white">
+        Quick SignUp
+      </h2>
+      <p className="text-center text-sm leading-loose tracking-tight text-gray-600 dark:text-gray-400">
+        Join Our Community
+      </p>
+    <HelpSettingUpWallet moduleTitle={"new to web3 wallets?"}/>
+      {isConnected ? (
+        <div className='flex flex-col'>
+          <Button size="large" shape="rounded"  className="mt-6 flex mx-auto justify-center items-center uppercase xs:mt-8 xs:tracking-widest"
+              onClick={async ()=>{
+                await disconnectWallet()}}>
+                {/* <PowerIcon /> */}
+                Discconnect
+              </Button>
+
+            <Button size="large" shape="rounded"  className="mt-6 flex mx-auto justify-center items-center uppercase xs:mt-8 xs:tracking-widest"
+                  onClick={async ()=>{
+                    router.push({
+                      pathname: routes.completeSetup
+                    });
+                  }}
+                  >Become A Vendor</Button>
       </div>
+      ):(
+        <div>
+            <form onSubmit={handleSubmit}>
+
+                <input
+                onChange={(e) => setInputEmail(e.target.value)}
+                type="email"
+                placeholder="Email address..."
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                />
+            </form>
+
+
+
+        {/* <input
+                onChange={(e) => setInputEmail(e.target.value)}
+                type="email"
+                placeholder="Sign Up With Email"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+              />
+        <div className='mt-5 flex h-14 w-1/2 mx-auto cursor-pointer items-center justify-center rounded-lg bg-gradient-to-l from-blue-400  to-blue-100' 
+        // onClick={closeModal}
+        onClick={async ()=>{
+          // closeModal()
+          await connectToWallet(inputEmail)
+        }}
+        
+        >
+          <span>Welcome</span>
+        </div> */}
+    </div>
+      )}
+
+                
+
+      {error && (<p className="mt-3 text-center text-xs text-red-500">
+          Please install Metamask or other wallet providers in order to connect
+          wallet.
+        </p>)}
+    </div>
+
+
+
+
+
+
+
+
+        
 
       {/* navigation button */}
       {/* <ConfirmationModal confirmationTitle = "Payment was successful"/> */}
-      {currentStep !== steps.length && (
-        <StepperControl
-          handleClick={handleClick}
-          currentStep={currentStep}
-          steps={steps}
-        />
-       
-      )}
+      
     {/* </div> */}
     </DashboardLayout>
       </>

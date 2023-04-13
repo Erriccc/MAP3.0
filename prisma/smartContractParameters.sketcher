@@ -1,0 +1,14 @@
+
+model OXProfile {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  vendorsWalletAddress   String   @unique
+  vendorsName   String?
+  vendorsEmail   String?
+  vendorsBio   String @default("Welcome to 0x maps")
+  keyWords String[] @default(["new User", "Just Signed Up", "Discover web3 on 0xmaps"])
+  vendorsLat String?
+  vendorsLong String?
+  vendorsImageUrl String @default("https://gateway.pinata.cloud/ipfs/QmREjM3TDrG931ecoNXMifpnVruFnzgw6Rv3DRpECLvVRp?_gl=1*6yrfy5*_ga*MTgzOTY5NDM1Mi4xNjc2NzUwMzUz*_ga_5RMPXG14TE*MTY3NzAzNDkzNy41LjAuMTY3NzAzNDk0MC41Ny4wLjA.%22,")
+  vendorsWebsiteUrl String?
+  vendorsToken String @default("0xd9145CCE52D386f254917e481eB44e9943F39138")
+}

@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+ 
+
+model OXProfile {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  vendorsWalletAddress   String   @unique
+  vendorsName   String?
+  vendorsEmail   String?
+  vendorsBio   String @default("Welcome to 0x maps")
+  keyWords String[] @default(["new User", "Just Signed Up", "Discover web3 on 0xmaps"])
+  vendorsLat String?
+  vendorsLong String?
+  vendorsStreetAddress String?
+  vendorsImageUrl String @default("https://gateway.pinata.cloud/ipfs/QmREjM3TDrG931ecoNXMifpnVruFnzgw6Rv3DRpECLvVRp?_gl=1*6yrfy5*_ga*MTgzOTY5NDM1Mi4xNjc2NzUwMzUz*_ga_5RMPXG14TE*MTY3NzAzNDkzNy41LjAuMTY3NzAzNDk0MC41Ny4wLjA.%22,")
+  vendorsWebsiteUrl String @default("https://0xmaps.xyz")
+
+  vendorsToken String @default("0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174")
+}
+
+// model VendorProfile {
+//   id      String   @id @default(auto()) @map("_id") @db.ObjectId
+//   tagUid   String   @unique
+//   mintId   Int?
+//   mediaUrl String @default("https://gateway.pinata.cloud/ipfs/QmREjM3TDrG931ecoNXMifpnVruFnzgw6Rv3DRpECLvVRp?_gl=1*6yrfy5*_ga*MTgzOTY5NDM1Mi4xNjc2NzUwMzUz*_ga_5RMPXG14TE*MTY3NzAzNDkzNy41LjAuMTY3NzAzNDk0MC41Ny4wLjA.%22,")
+//   metadataUrl String  @default("https://gateway.pinata.cloud/ipfs/QmSCJbe6VExxGmvdTLbvmLub3ESgDdDwYuxr3X57yD3bs4/1")
+//   issuer  String  @default("imNotArt")
+//   claimed Boolean @default(false)
+//   owner String  @default("User X")
+// }

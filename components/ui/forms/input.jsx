@@ -4,7 +4,7 @@ const Input = forwardRef(({ label, error, type = 'text', className, inputClassNa
       <label>
         {label && (<span className={cn('block font-medium tracking-widest dark:text-gray-100', useUppercaseLabel ? 'mb-2 uppercase sm:mb-3' : 'mb-2')}>
             {label}
-
+ 
             {props.required && (<sup className="inline-block text-[13px] text-red-500 ltr:ml-1 rtl:mr-1">
                 *
               </sup>)}
@@ -17,3 +17,4 @@ const Input = forwardRef(({ label, error, type = 'text', className, inputClassNa
     </div>));
 Input.displayName = 'Input';
 export default Input;
+ 

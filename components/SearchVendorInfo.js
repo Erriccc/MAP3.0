@@ -2,7 +2,7 @@ import React, { useInsertionEffect } from 'react'
 import Link from "next/link";
 import {useState, useEffect, useLocation} from "react"
 import { useRouter } from "next/dist/client/router";
-import { Button, Icon, useNotification } from "web3uikit";
+import { toast } from 'react-toastify';
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import PayAnonymous from './PayAnonymous';
 import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,

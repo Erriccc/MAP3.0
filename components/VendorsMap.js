@@ -11,12 +11,18 @@ const VendorsMap = ({ searchResults, setDisplayData }) => {
   // const [showPopup, setShowPopup] = useState(false);
   //   Transform coordinates into required array of objects in the correct shape
   const coordinates = searchResults.map((result) => ({
-    latitude: result.lat,
-    longitude: result.long,
+    latitude: parseFloat(result.vendorsLat),
+    longitude: parseFloat(result.vendorsLong),
   }));
+  console.log(coordinates,'coordinatescoordinatescoordinatescoordinates')
 
   // The latitude and longitude of the center of locations coordinates
-  const center = getCenter(coordinates);
+  const center =  (async function () {
+    // body of the function
+   getCenter(coordinates);
+
+  }());
+
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [mapCenter, setMapCenter] = useState(null)
 
@@ -76,8 +82,8 @@ const VendorsMap = ({ searchResults, setDisplayData }) => {
           <Marker
             key={index}
             // key={result.long}
-            latitude={result.lat}
-            longitude={result.long}
+            latitude={result.vendorsLat}
+            longitude={result.vendorsLong}
             // offsetLeft={-20}
             // offsetTop={-10}
             color="gray"

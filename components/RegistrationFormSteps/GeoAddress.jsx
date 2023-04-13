@@ -10,29 +10,30 @@ import Input from '/components/ui/forms/input';
 import { Switch } from '/components/ui/switch';
 import useInput from "/lib/hooks/useInput";
 
-export default function GeoAddress() {
-  const address = useInput("");
+export default function GeoAddress() { 
 
   const { userData, setUserData } = useStepperContext();
-  let [hasGeoAddress, setHasGeoAddress] = useState(true);
+  const address = useInput(userData.vendorsStreetAddress); 
+
+  let [hasGeoAddress, setHasGeoAddress] = useState(false);
 
   const handleGeoCode = (suggestion) => {
         const addrressLong = suggestion.geometry.coordinates[0]
         const addrressLat = suggestion.geometry.coordinates[1]
         const addrressName = suggestion.place_name
 
-    setUserData({ ...userData, ["geoAddress"]: 
-    {
-      name:addrressName,
-      long: addrressLong,
-      lat: addrressLat
-    } });
+    setUserData({ ...userData,
+  ['vendorsLat']:addrressLat,
+  ['vendorsLong']:addrressLong,
+  ['vendorsStreetAddress']: addrressName,
+
+  });
       console.log('long and lat', addrressLong, addrressLat)
       address.setValue(suggestion.place_name);
       address.setSuggestions([]);
 
 
-  };
+  }; 
   return ( 
     <div className="flex flex-col ">
        <div className="flex items-center justify-between gap-4 mt-5">
@@ -51,12 +52,13 @@ export default function GeoAddress() {
                     {hasGeoAddress && (
                     <div className="mb-8">
                     <InputLabel title="address" />
-                    <Input  autoComplete="off" placeholder="123 street Avenue" inputClassName="spin-button-hidden"
-                    value={userData.geoAddress ? userData.geoAddress?.name : ""}
+                    <Input  autoComplete="off" placeholder="123 street Avenue" inputClassName=""
+                    value={ 
+                      userData.vendorsStreetAddress}
                     // value={address? address : ""}
                     {...address}
                     name="geoAddress"
-                    />
+                    /> 
         {address.suggestions?.length > 0 && (
             <ul role="listbox" className="py-3">
                 {address.suggestions.map((suggestion, index) => {
