@@ -27,7 +27,6 @@ import ModalsContainer from '/components/modal-views/container';
 import DrawersContainer from '/components/drawer-views/container';
 import SettingsDrawer from '/components/settings/settings-drawer';
 import { WalletProvider } from 'lib/hooks/use-connect';
-import { AuthProvider } from 'lib/hooks/AuthContext';
 import{UrlProvider} from 'Utilities/FrontEndUtilities/FEUrlContext'
 import { Analytics } from '@vercel/analytics/react';
 
@@ -76,7 +75,6 @@ export default function MyApp({ Component, pageProps }) {
       initializeOnMount={false}
     >
         <WalletProvider>
-        {/* <AuthProvider> */}
           <UrlProvider>
         <ThemeProvider attribute="class" enableSystem={false} defaultTheme="dark">
           {/* <Appnav /> */}
@@ -105,7 +103,6 @@ export default function MyApp({ Component, pageProps }) {
 
           </ThemeProvider>
           </UrlProvider>
-        {/* </AuthProvider> */}
         </WalletProvider>
       </MoralisProvider>
 
