@@ -1,6 +1,6 @@
 import { useEffect, useState, createContext } from 'react';
 import { ethers } from 'ethers';
-import {customNodeOptions} from'../../Utilities/utils';
+import {customNodeOptions} from'/Utilities/utils';
 import { useModal } from '/components/modal-views/context';
 import{dbSignUp} from "/Utilities/FrontEndUtilities/FEsignUpTransactionRelayer"
 

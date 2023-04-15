@@ -33,7 +33,7 @@ export default async function form(req, res) {
     "https://github.com/Erriccc", //websiteUrl
     "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270" //token
     ]
-
+ 
     const signUpTuple = [
       body.vendorsWalletAddress,
       body.vendorsName,
@@ -47,13 +47,16 @@ export default async function form(req, res) {
       body.vendorsToken,
     ]
 
-    const signUpObject = {
-      
-    }
+    const newSignUpTuple = [
+      body.vendorsWalletAddress,
+      body.vendorsToken,
+      0
+    ]
   
   
     console.log("running server function from map3SignUp... " )
-      const  tempResponsePaymentData = await apiUtils.map3SignUpData(signUpTuple)
+      const  tempResponsePaymentData = await apiUtils.map3SignUpData(newSignUpTuple)
+      // const  tempResponsePaymentData = await apiUtils.map3SignUpData(signUpTuple)
         const responsePaymentData = {
             txdata:tempResponsePaymentData
         }

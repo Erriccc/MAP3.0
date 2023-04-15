@@ -95,7 +95,7 @@ const dbSignUp = async (UserInput ) => {
   let response
       try{
         response = await fetch(endpoint, options)
-        console.log("response..... from signUpTransactionRelayer: ", response)
+        console.log("response..... from dbSignUpRelayer: ", response)
 
     }catch(e){
       console.log('ran into error while running test web3Storage Upload..', e)
@@ -127,7 +127,7 @@ const dbUpdate = async (UserInput ) => {
   let response
       try{
         response = await fetch(endpoint, options)
-        console.log("response..... from signUpTransactionRelayer: ", response)
+        console.log("response..... from updateDBRelayer: ", response)
         console.log('// PUT REQUEST // PUT REQUESThefjbbfefeb;ffbfebedbedvdvdjlvdev')
 
 
@@ -173,14 +173,16 @@ const signUpTransactionRelayer = async (wrappedProvider, UserInput, txValue ) =>
             const result = await response.json()
             const txdata = result.txdata
      
-         let gasPrice = undefined;
-                    try{
-                      // gasPrice = await wrappedProvider.getGasPrice()
-                      gasPrice = await wrappedProvider.getGasPrice()
-                  }catch(e){
-                    console.log('error while getting gas price', e)
-                  }
-        return {txdata, gasPrice, txValue}
+        //  let gasPrice = undefined;
+        //             try{
+        //               // gasPrice = await wrappedProvider.getGasPrice()
+        //               gasPrice = await wrappedProvider.getGasPrice() 
+        //               alert(typeof gasPrice)
+        //           }catch(e){
+        //             console.log('error while getting gas price', e)
+        //           }
+        // return {txdata, gasPrice, txValue}
+        return {txdata, txValue}
           
         }
 }
@@ -201,11 +203,12 @@ const signUpTransactionSender = async (signer,txdata, txValue,UsertransactionInp
 
   //Check if user already exists in the database
   if(await checkUserFromDb(UsertransactionInput.vendorsWalletAddress)){
-    console.log('dbUser......///////', dbUser)
+    console.log('dbUser......Already Exists', dbUser)
     return ({tx2:'user already exists', dbUser})
   }else{
-    console.log('dbUser......///////', dbUser)
-    return ({tx2:await map3SignUpExecutor(signer, txdata, txValue), dbUser})
+    console.log('dbUser......Brand new User', dbUser)
+    const tx2 = await map3SignUpExecutor(signer, txdata, txValue,UsertransactionInput)
+    return ({tx2, dbUser}) 
   }
  
 }

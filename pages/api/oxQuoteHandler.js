@@ -29,7 +29,7 @@ export default async function form(req, res) {
   const  responsePaymentData = await OxQuote(
     reqPaymentData.sendersToken,
     reqPaymentData.reciversToken,
-    reqPaymentData.amount,
+    reqPaymentData.amount, 
     reqPaymentData.reciver,
     reqPaymentData.sender,
     reqPaymentData.userSetSlippage

@@ -8,13 +8,16 @@ const BigNumber = require('bignumber.js');
 const Map3AbiPlaceHolder = require( '../artifacts/contracts/Map3Pay.sol/Map3Pay.json')
 // const Map3Abi = Map3AbiPlaceHolder.abi;
 // const Map3Abi = require( './map3PayABI.json')
-const Map3Abi = require( './Map3P2PContract.json')
+const Map3Abi = require( '/Utilities/ABI/p2pContractABI.json')
+// const Map3Abi = require( './Map3P2PContract.json')
 
 // const Map3VendorsABi = require( './map3VendorPlansABI.json')
-const Map3VendorsABi = require( './VendorAccountsManagerContract.json')
+const Map3VendorsABi = require( '/Utilities/ABI/accountsManagerContractABI.json')
+// const Map3VendorsABi = require( './VendorAccountsManagerContract.json')
 const uniVoteAbi = require( './univotetoken.json')
 // const Map3WebsiteUrl = "https://www.map3.com"
-const Map3WebsiteUrl = "https://map3.vercel.app/"
+const Map3WebsiteUrl = "https:/0xmaps.xyz/"
+// const Map3WebsiteUrl = "https://map3.vercel.app/"
 // const Map3WebsiteUrl = "http://10.0.0.232:3000"
 
 const TypoEffectTexts = require('../constants/TypoEffectTexts')
@@ -44,7 +47,7 @@ const map3OxMap3SwapERC20ToEthEndpoint = '/api/map3pay/oxmap3SwapERC20ToEth'
 const mapDataFetcherEndpoint = '/api/map3Profiles/mapDataFetcher' 
 const findProfilesDataFetcherEndpoint = '/api/map3Profiles/findProfilesDataFetcher' 
 const payProfileDataFetcherEndpoint = '/api/map3Profiles/payProfileDataFetcher' 
-
+const sponsoredContractSignUpEndPoint = '/api/sponsoredTransactions/signUp/contractSignUp'
 const map3SignUpEndpoint = '/api/map3signup/contractSignUp' 
 const dbSignUpEndPoint = '/api/map3signup/dbCRUD' 
 const dbGetUserEndPoint = '/api/map3signup/dbGetUser' 
@@ -69,6 +72,7 @@ const Map3P2PContractTest1 ="0x11F15ad3D1f8Ab61b86FC2Bd2247Cf2EB96F3ddF"
 const Map3P2PContractTest2 ="0x5416c30970a66B041Df941e2A28711E1c7f8e0Ce"
 const Map3P2PContractTest3 ="0x8b637c32B61b838a574a6a1834361758E5610eC8"
 const Map3P2PContractTest4 ="0xfC2d1c0166e00DBfa712C1F33F7634213e720215"
+const Map3P2PContractTest5 ="0xBbd572969E7Cd361a0DbD0E42cc8DD35e59ad176"
 
 
 
@@ -77,11 +81,14 @@ const  Map3VendorPlansPolgonTest2="0x3095d04AdC87dF6C50A9de0A5106602DB6fc902e" /
 const  VendorAccountsManagerContractTest1 = "0xfdF123c9E8BD78a50bdD41aaEe069d89e8B4BE57"
 const  VendorAccountsManagerContractTest2 = "0x2C6792dB0b81678a784F34C916546A5b292fbeA1"
 const  VendorAccountsManagerContractTest3 = "0x7ae71782c11d7Af24A437F802926E3B6859D2b7E"
+const  VendorAccountsManagerContractTest4 = "0x3cb378f3cD2461563e6942F00857d6BC65054CB7"
 
 
 
-const  Map3address=Map3P2PContractTest4;
-const  Map3VendorAddress=VendorAccountsManagerContractTest3;
+// const  Map3address=Map3P2PContractTest4;
+const  Map3address=Map3P2PContractTest5;
+const  Map3VendorAddress=VendorAccountsManagerContractTest4;
+// const  Map3VendorAddress=VendorAccountsManagerContractTest3;
 
 const EthAddress = "0x0000000000000000000000000000000000000000";
 const _wethAddresses = {
@@ -689,6 +696,7 @@ module.exports = {
     findProfilesDataFetcherEndpoint,
     payProfileDataFetcherEndpoint,
     map3SignUpEndpoint,
+    sponsoredContractSignUpEndPoint,
     dbSignUpEndPoint,
     dbGetUserEndPoint,
     dbGetUsersForMapEndPoint,

@@ -323,10 +323,9 @@ const PayVendorPage = () => {
                 </h2>
 
                 {/* Username */}
-                <div className="mt-1 text-sm font-medium tracking-tighter text-gray-600 dark:text-gray-400 xl:mt-3">
-                  {/* @{authorData?.user_name} */}
+                {/* <div className="mt-1 text-sm font-medium tracking-tighter text-gray-600 dark:text-gray-400 xl:mt-3">
                   @{vendorDataState.dataFromServer?.vendorsWalletAddress}
-                </div>
+                </div> */}
                 
                 {/* User ID and Address */}
                 <div className="mt-5 inline-flex h-9 items-center rounded-full bg-white shadow-card dark:bg-light-dark xl:mt-6">

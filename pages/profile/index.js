@@ -22,7 +22,8 @@ import { toast } from 'react-toastify';
 // import GenerateQrCodes from '/components/ui/forms/GenerateQrCodes';
 import GenerateQrCodes from '/components/GenerateQrCodes';
 
- 
+import routes from 'config/routes';
+
 
 // static data
 import { authorData } from 'data/static/author';
@@ -48,27 +49,6 @@ const AuthorProfilePage = () => {
     const { currentUrl,setCurrentUrl} = useUrlContext();
 
   const { openModal } = useModal();
-
-
-          //   const tagDisplayArray = (sweetArray) => {
-          //     let tobj = {};
-
-          //     sweetArray.map(function(currentValue, index){
-          //       tobj.id = index;
-          //       tobj.name = currentValue;
-
-          //     })
-
-
-          //     // sweetArray.map(sweetItem => {
-                
-          //     return [{id:  i}]
-          // // })
-
-          // }
-
-
-          // const reformattedArray = kvArray.map(({ key, value }) => ({ id: key, name: value }));
 
   useEffect(() => {
 
@@ -136,9 +116,15 @@ const AuthorProfilePage = () => {
 
                 {/* User ID and Address */}
                 <div className="mt-5 inline-flex h-9 items-center rounded-full bg-white shadow-card dark:bg-light-dark xl:mt-6">
-                  <div className="inline-flex h-full shrink-0 grow-0 items-center rounded-full bg-gray-900 px-4 text-xs text-white sm:text-sm">
+                  <div className="inline-flex h-full shrink-0 grow-0 items-center rounded-full bg-gray-900 px-4 text-xs text-white sm:text-sm"
+                   onClick={async ()=>{
+                    router.push({
+                      pathname: routes.completeSetup
+                    });
+                  }}
+                  >
                     {/* #{authorData?.id} */}
-                    EDIT PROFILE
+                    EDIT PROFILE 
                   </div>
                   <div className="text w-28 grow-0 truncate text-ellipsis bg-center text-xs text-gray-500 ltr:pl-4 rtl:pr-4 dark:text-gray-300 sm:w-32 sm:text-sm">
                     {address}

@@ -99,6 +99,8 @@ return({map3Vendors:map3Vendors})
 }
 
 
+
+
 const fetchVendorProfileData = async (_vendorAddress) => {
 
   const vendorsData = await fetchVendorsDataFromApi();
@@ -109,7 +111,7 @@ const fetchVendorProfileData = async (_vendorAddress) => {
 
   return( 
           (walletAddress.toLowerCase().includes(VendorsAddress) && item))
-  })
+  }) 
 console.log(mapProfileData.length ,'(mapProfileData.legnth?')
 console.log(mapProfileData.length == 0 ,'(mapProfileData.legnth ==0)')
   if (mapProfileData.length == 0){
@@ -192,7 +194,7 @@ return({map3Vendors:map3Vendors})
 
 
 const fetchVendorsDataFromApi = async () => {
-
+ 
   console.log('trying to get data from moralis')
   const serverUrl = API_MoralisAppUrl;
 const appId = API_MoralisAppId;
@@ -400,7 +402,7 @@ return(finalResults)
           console.log("completed Map3SameTokenPayData from oxPay : ", Map3SameTokenPayData)
           return(Map3SameTokenPayData)
       }
-
+ 
 
       const map3SignUpData = async (_tupple) => {
         const signUpData =  [_tupple]
@@ -414,8 +416,7 @@ return(finalResults)
 
 
 
-    const map3SignUpExecutor = async (_signer, returnOfFunctionBytesEncoder, txValue) => {
-
+    const map3SignUpExecutor = async (_signer, returnOfFunctionBytesEncoder, txValue,UsertransactionInput) => {
       // const provider = new ethers.providers.Web3Provider(window.ethereum)
       //  const PaySigner = provider.getSigner()
       // console.log(_signer,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue,'UTILS.Map3VendorAddress')
@@ -425,8 +426,53 @@ return(finalResults)
       // console.log("completed signUp Execution...!!")
       // const returnOfFunctionBytesEncoderAndImplementor = await bytesEncodedBytesImplementor(_signer,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue)
       // console.log(returnOfFunctionBytesEncoderAndImplementor)
-      //  console.log("signUp successful!")
-       return await bytesEncodedBytesImplementor(_signer,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue)
+      //  console.log("signUp successful!") 
+
+
+      const JSONdata = JSON.stringify({
+        vendorsWalletAddress:UsertransactionInput.vendorsWalletAddress,
+        vendorsToken:UsertransactionInput.vendorsToken,
+        txValue:txValue
+      })
+      // API endpoint where we send form data.
+      const endpoint = UTILS.sponsoredContractSignUpEndPoint // "api/paymentHandler"
+      // Form the request for sending data to the server.
+      const options = {
+        // The method is POST because we are sending data.
+        method: 'POST',
+        // Tell the server we're sending JSON.
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Body of the request is the JSON data we created above.
+        body: JSONdata,
+      }
+      let response
+          try{
+            response = await fetch(endpoint, options)
+            console.log("response..... from signUpTransactionRelayer: ", response)
+    
+        }catch(e){
+          console.log('ran into error while running test web3Storage Upload..', e)
+    
+        }
+    
+        // expected output
+        // {OXProfile,error: error?error:false}
+        // const {OXProfile, error} = response;
+        console.log(response.json(),'..........................')
+        return response.json()
+
+
+
+
+
+
+
+
+
+      // UTILS.sponsoredContractSignUpEndPoint
+      //  return await bytesEncodedBytesImplementor(_signer,UTILS.Map3VendorAddress, returnOfFunctionBytesEncoder, txValue)
       //       } catch (error) {
       //       console.log(error,"signUp failed!")
       // }
@@ -568,6 +614,7 @@ const OxErc20ToEthPayExecutor = async (signer, Map3SwapData, txValue ) => {
 const bytesEncodedBytesImplementor = async (signer, contractAddress, encodedData, txValue) => {
     console.log("bytesEncodedBytesImplementor running... ")
     console.log("transaction value is....", txValue)
+    console.log("typeof encodedData.gasPrice value is....", typeof encodedData.gasPrice)
     console.log(encodedData.gasPrice.toNumber()*1.1, 'gas Price in big number.toNumber()*1.1')
     console.log(Math.floor(encodedData.gasPrice.toNumber()*1.1) , 'Math.floor(encodedData.gasPrice.toNumber()*1.1)')
      let adjustedGasPrice = ethers.BigNumber.from(Math.floor(encodedData.gasPrice.toNumber()*1.1))
@@ -576,7 +623,7 @@ const bytesEncodedBytesImplementor = async (signer, contractAddress, encodedData
 
     // "err: max fee per gas less than block base fee: address 0xBb2cB98982Ed6547aA7E39707807253a999796b7, maxFeePerGas: 8000000000 baseFee: 10013928538 (supplied gas 12813618)
    
-      return await signer.sendTransaction({ //
+      const _tx = await signer.sendTransaction({ //
         to: contractAddress,
         data: encodedData.txdata,
         value: txValue,
@@ -585,6 +632,9 @@ const bytesEncodedBytesImplementor = async (signer, contractAddress, encodedData
         // gasLimit: 500000
         // gas: 2400000,
       })
+      console.log(_tx,'_tx_tx_tx_tx_tx_tx_tx_tx')
+      console.log(await _tx.wait(),'_tx_tx_tx_tx_tx_tx_tx_tx')
+      return _tx
 
 }
 
@@ -635,7 +685,7 @@ const getFunctionSignatureHash =  (contractAbi, functionName) => {
 }
 
    const OxQuote = async (sendersToken,reciversToken,amountToBeSent,reciversAddress,sendersAddress, userSetSlippage) => {
-
+ 
             console.log("from OXQuote in oxpay and utils: ",sendersToken,reciversToken,amountToBeSent,reciversAddress,sendersAddress )
             const sendersTokenContract = new ethers.Contract(sendersToken,IERC20Abi,provider)
             console.log(" passsed the senderstoken contract instantiation test")
