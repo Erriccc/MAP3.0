@@ -25,8 +25,8 @@ export default function AuthorInformation({ className = 'md:hidden', data, map3U
         <div className="mb-2 text-sm font-medium uppercase tracking-wider text-gray-900 dark:text-white">
           Website
         </div>
-        {data.vendorsWebsiteUrl && (
-          <div>{data.vendorsWebsiteUrl}</div>
+        {data?.vendorsWebsiteUrl && (
+          <div>{data?.vendorsWebsiteUrl}</div>
           
           )}
           {/* {data.websiteUrl && data.websiteUrl} */}

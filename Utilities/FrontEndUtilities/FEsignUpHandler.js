@@ -98,6 +98,16 @@ const ValidateUserSignUpInput = async (UsertransactionInput, setValidationRespon
         }
         console.log("validation passed for currency");
 
+        if (
+                UsertransactionInput.vendorsLat == null 
+                || UsertransactionInput.vendorsLong == null
+        ){
+            setvalidatingInput(false);
+            setValidationResponce("invalid street address")
+            return false;
+        }
+        console.log("validation passed for street address");
+
         setValidationResponce('Processing..')
         setvalidatingInput(false)
 

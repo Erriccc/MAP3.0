@@ -35,8 +35,8 @@ export default function ListCard({ item, className = 'p-3 tracking-wider rounded
             </span>)}
         </div>
       </div>
-      <div className="overflow-hidden text-ellipsis -tracking-wider ltr:pl-2 rtl:pr-2">
+      {balance && <div className="overflow-hidden text-ellipsis -tracking-wider ltr:pl-2 rtl:pr-2">
         {balance}
-      </div>
+      </div>}
     </div>);
 }

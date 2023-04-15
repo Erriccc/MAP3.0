@@ -39,7 +39,7 @@ export default async function form(req, res) {
                 res.status(200).json(OXProfile)
               }
             }else{ // PUT' REQUEST
-              console.log('// PUT REQUEST // PUT REQUESThefjbbfefeb;ffbfebedbedvdvdjlvdev')
+              console.log('// PUT REQUEST // PUT REQUEST GET ONE ')
               const { OXProfile, error } = await updateOneById(body.vendorsWalletAddress, body)
               if (error) {
                 // throw error
@@ -55,3 +55,24 @@ export default async function form(req, res) {
   
     
   }
+
+
+
+  // if (req.method == "POST"){
+  //   const checkBeforeCreate = await checkIfOneExistById(signUpObject.vendorsWalletAddress)
+
+  //   if (checkBeforeCreate.exists){
+  //     const OXProfile = checkBeforeCreate.user
+  //     res.status(200).json( OXProfile)
+  //   }else{
+  //     const { OXProfile, error } = await createOne(signUpObject)
+
+  //     if (error) {
+  //       throw error
+  //     }else{
+  //       res.status(200).json(OXProfile)
+  //     }
+
+  //   }
+   
+  // }

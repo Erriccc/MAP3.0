@@ -171,7 +171,7 @@ export default function MobileSidebar({ className }) {
         </div>
       </div>
 
-      <Scrollbar style={{ height: 'calc(100% - 96px)' }}>
+      {/* <Scrollbar style={{ height: 'calc(100% - 96px)' }}> */}
         <div className="px-6 pb-5 2xl:px-8">
           {/* <AuthorCard image={AuthorImage} name="Map3 User" role="admin"/> */}
           {isConnected ? (
@@ -190,7 +190,7 @@ export default function MobileSidebar({ className }) {
           </div>
 
         </div>
-      </Scrollbar>
+      {/* </Scrollbar> */}
     </aside>);
 }
 //

@@ -10,15 +10,16 @@ export async function getAll() {
 }
  
 export async function createOne(OXProfile) {
-
-  try { 
-    const checkBeforeCreate = await checkIfOneExistById(OXProfile.vendorsWalletAddress)
-    if (checkBeforeCreate.exists){
-        return { OXProfile: checkBeforeCreate.user }
-    }else {
+  try {
+        console.log('creating user')
+        const status = await checkIfOneExistById(OXProfile.vendorsWalletAddress) 
+        console.log(status)
+          if (status.exists ){
+            return { OXProfile: status.user }
+        }else{
         const NftFromDB = await prisma.OXProfile.create({ data: OXProfile })
         return { OXProfile: NftFromDB }
-    }
+        }
   } catch (error) {
     return { error }
   }
@@ -36,11 +37,13 @@ export async function getOneById(vendorsWalletAddress) {
 
 export async function checkIfOneExistById(vendorsWalletAddress) {
     try {
-      const one = await prisma.OXProfile.findUnique({where: { vendorsWalletAddress }})
-      if (one.vendorsWalletAddress == vendorsWalletAddress){
-        return {exists:true, user: one}
-      }else{
+      const {one} = await getOneById (vendorsWalletAddress)
+      if (one == null){
+        console.log('checked and did not find user')
         return {exists:false, user: one}
+      }else{
+        console.log('checked and found user')
+        return {exists:true, user: one}
       }
     } catch (error) {
       throw error 

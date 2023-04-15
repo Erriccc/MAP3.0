@@ -28,6 +28,9 @@ export const WalletProvider = ({ children }) => {
     const [authState, setAuthState] = useState({stateLoaded:false, isLoadingState:false});
 
 
+
+
+
                 useEffect(() => { // INITIAL USEFFECT
                   // SET UP MAGIC
                   magic == undefined  && (async  () => {
@@ -42,9 +45,21 @@ export const WalletProvider = ({ children }) => {
 
                   useEffect(() => {
                     console.log('MISC AUTH RENDER')
+                    // alert(currentUser)
                     // (async  () => {
                     // })();
-                  }, [address,currentUser]);
+                  }, [currentUser]);
+
+                  useEffect(() => {
+
+
+                    address !== undefined  && (async  () => {
+                      // vendorsWalletAddress:inputAddress, vendorsEmail: inputEmail, vendorsName: inputEmail.split('@')[0] 
+                      const tempUserData = await quickSignUp(magicEmail,address);
+                      // const tempUserData = await quickSignUp(email,magicAddress);
+                      setCurrentUser(tempUserData);
+                      })();
+                  }, [address]);
 
 
 
@@ -53,7 +68,7 @@ export const WalletProvider = ({ children }) => {
                               isConnected == true  && (async  () => {
                               await setUpDetails()
                               })();
-                    }, [isConnected,]);
+                    }, [isConnected]);
 
         const setUpDetails = async () => {
 
@@ -66,19 +81,29 @@ export const WalletProvider = ({ children }) => {
              // expected output
             // {OXProfile || error: error?error:false}
             // vendorsWalletAddress:inputAddress, vendorsEmail: inputEmail, vendorsName: inputEmail.split('@')[0] 
-            const tempUserData = await quickSignUp(email,magicAddress);
-            setCurrentUser(tempUserData);
+            // const tempUserData = await quickSignUp(email,magicAddress);
+            // setCurrentUser(tempUserData);
             setBalance(balanceInEth);
             setMagicEmail(email);
             setAddress(magicAddress);
-
-            
-            
         } catch (err) {
             console.log(err);
         }
 
         }
+
+
+        const quickSignUp = async (inputEmail, inputAddress) => {
+          // "signup"
+          try{ 
+             // expected output
+            // {OXProfile,error: error?error:false}
+            const XProfile = await dbSignUp({vendorsWalletAddress:inputAddress, vendorsEmail: inputEmail, vendorsName: inputEmail.split('@')[0] })
+            return XProfile
+            // return await dbSignUp({vendorsWalletAddress:inputAddress, vendorsEmail: inputEmail, vendorsName: inputEmail.split('@')[0] })
+          }catch(e){
+        }
+      };
     // const web3Modal = typeof window !== 'undefined' && new Web3Modal({ cacheProvider: true });
     /**
    * If user is logged in, get data and display it
@@ -180,18 +205,6 @@ export const WalletProvider = ({ children }) => {
           console.log(err)
         }
       }
-
-
-
-      const quickSignUp = async (inputEmail, inputAddress) => {
-          "signup"
-          try{ 
-             // expected output
-            // {OXProfile,error: error?error:false}
-            return await dbSignUp({vendorsWalletAddress:inputAddress, vendorsEmail: inputEmail, vendorsName: inputEmail.split('@')[0] })
-          }catch(e){
-        }
-      };
   
     return (<WalletContext.Provider value={{
             address,

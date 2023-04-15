@@ -11,7 +11,7 @@ import { Web3Storage, File } from 'web3.storage'
 
 const checkUserFromDb = async (id ) => {
   console.log('userId from signup relayer..', id)
-  const JSONdata = JSON.stringify({id})
+  const JSONdata = JSON.stringify({id}) 
   // API endpoint where we send form data.
   const endpoint = dbCheckIfUserExistsEndPoint // "api/paymentHandler"
   // Form the request for sending data to the server.
@@ -93,19 +93,35 @@ const dbSignUp = async (UserInput ) => {
     body: JSONdata,
   }
   let response
-      try{
-        response = await fetch(endpoint, options)
-        console.log("response..... from dbSignUpRelayer: ", response)
 
-    }catch(e){
-      console.log('ran into error while running test web3Storage Upload..', e)
+  if (await checkUserFromDb(UserInput.vendorsWalletAddress)){
+                  try{
+                    console.log('user already exists so we will now fetch them.')
+                    response = await getUserFromDb(UserInput.vendorsWalletAddress)
+                    console.log("response..... from user already exists dbSignUpRelayer: ", response)
 
-    }
+                }catch(e){
+                  console.log('ran into error while running test web3Storage Upload..', e)
+                }
+                  return response
+            }else{
+                  console.log('creating a  new user because user does not exist')
+                  try{
+                    response = await fetch(endpoint, options)
+                    console.log("response..... from dbSignUpRelayer: ", response)
 
-    // expected output
-    // {OXProfile,error: error?error:false}
-    // const {OXProfile, error} = response;
-    return response.json()
+                }catch(e){
+                  console.log('ran into error while running test web3Storage Upload..', e)
+                }
+                // expected output
+                  // {OXProfile,error: error?error:false} 
+                  // const {OXProfile, error} = response;
+                return response.json()
+
+        }
+            
+
+    
 }
 
 const dbUpdate = async (UserInput ) => {
@@ -128,8 +144,6 @@ const dbUpdate = async (UserInput ) => {
       try{
         response = await fetch(endpoint, options)
         console.log("response..... from updateDBRelayer: ", response)
-        console.log('// PUT REQUEST // PUT REQUESThefjbbfefeb;ffbfebedbedvdvdjlvdev')
-
 
     }catch(e){
       console.log('ran into error while running test web3Storage Upload..', e)
@@ -201,18 +215,19 @@ const signUpTransactionSender = async (signer,txdata, txValue,UsertransactionInp
   let dbUser = await dbUpdate(dbSignUpUserInput) 
 
   
-  //Check if user already exists in the database
-  if(
-    await checkUserFromDb(UsertransactionInput.vendorsWalletAddress)&&
-    await Utils.checkIfAddressIsVendor(UsertransactionInput.vendorsWalletAddress)
-  ){
+  //Check if user already exists in the database and smart contract
+  // if(
+  //   await checkUserFromDb(UsertransactionInput.vendorsWalletAddress)&&
+  //   await Utils.checkIfAddressIsVendor(UsertransactionInput.vendorsWalletAddress)
+  // ){
     console.log('dbUser......Already Exists both on chain and off chain', dbUser)
     return ({tx2:'user already exists', dbUser})
-  }else{
-    console.log('dbUser......Brand new User. Starting registration transaction')
-    const tx2 = await map3SignUpExecutor(signer, txdata, txValue,UsertransactionInput)
-    return ({tx2, dbUser}) 
-  }
+  // }else{
+  //   // 0x contract sign up, pending security upgrade.
+  //   console.log('dbUser......Brand new User. Starting registration transaction')
+  //   const tx2 = await map3SignUpExecutor(signer, txdata, txValue,UsertransactionInput)
+  //   return ({tx2, dbUser}) 
+  // }
  
 }
 

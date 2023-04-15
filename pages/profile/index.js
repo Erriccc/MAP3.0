@@ -1,6 +1,6 @@
 import React from "react";
 import { WalletContext } from 'lib/hooks/use-connect';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useLayoutEffect } from 'react';
 import ListCard from '/components/ui/list-card';
 import Apphero from 'components/Apphero'
 import { useRouter } from "next/dist/client/router";
@@ -52,19 +52,27 @@ const AuthorProfilePage = () => {
 
   useEffect(() => {
 
+    console.log('refreshing...') 
+    document?.documentElement.style.removeProperty('overflow');
+  // (async function() {
+  //   console.log("validation is false")
+    
+  // })();
+    }, [currentUser])
+
+
+
+    useEffect(() => {
+
     address && setCurrentUrl(`${Utils.Map3WebsiteUrl}/pay/${address}`);
    
-
-  (async function() {
-      console.log("validation is false")
-  })();
-    }, [address,isConnected,currentUser])
+    }, [address,isConnected])
 
 
   // // // UNCOMMENT to AUTHENTICATE!!!!
   // if (!account) {
   //   // if (process.browser){
-  //   //   router.push({
+  //   //   router.push({ 
   //   //     pathname: "/"
   //   //   });
   //   // }
@@ -82,9 +90,8 @@ const AuthorProfilePage = () => {
         (<div>
         <div className="relative h-36 w-full overflow-hidden rounded-lg sm:h-44 md:h-64 xl:h-80 2xl:h-96 3xl:h-[448px]">
           <Image 
-          // src={currentUser?.vendorsImageUrl}  
           src = {`/api/imagefetcher?url=${encodeURIComponent(
-            currentUser?.vendorsImageUrl
+            currentUser?.vendorsImageUrl && currentUser.vendorsImageUrl
           )}`}
 
           layout="fill" objectFit="cover" alt="Cover Image"/>
@@ -95,9 +102,8 @@ const AuthorProfilePage = () => {
           {/* Profile Image */}
           <div className="relative z-5 mx-auto -mt-12 h-24 w-24 shrink-0 overflow-hidden rounded-full border-[5px] border-white shadow-large dark:border-gray-500 sm:-mt-14 sm:h-28 sm:w-28 md:mx-0 md:-mt-16 md:h-32 md:w-32 xl:mx-0 3xl:-mt-20 3xl:h-40 3xl:w-40 3xl:border-8">
             <Image 
-            // src={currentUser?.vendorsImageUrl}  
             src = {`/api/imagefetcher?url=${encodeURIComponent(
-              currentUser?.vendorsImageUrl
+              currentUser?.vendorsImageUrl && currentUser.vendorsImageUrl
             )}`}
             layout="fill" objectFit="cover" className="rounded-full" alt="Author"/>
           </div>
@@ -135,16 +141,18 @@ const AuthorProfilePage = () => {
                 </div>
               </div>
               <div className=" flex mt-10  flex-wrap items-center justify-center gap-6 border-y border-dashed border-gray-200 py-5 text-center dark:border-gray-700 ">
-                  <Button color="white" className="shadow-card dark:bg-light-dark md:h-10 md:px-5 xl:h-12 xl:px-7"  onClick={() => openModal('SHARE_VIEW')}>
+                  <Button color="white" className="shadow-card dark:bg-light-dark md:h-10 md:px-5 xl:h-12 xl:px-7" 
+                   onClick={() => openModal('SHARE_VIEW')}
+                   >
                     Share
                   </Button>
                 </div>
               {/* <AuthorInformation className="hidden md:block" data={authorData}/> */}
-              <AuthorInformation className="hidden md:block" 
+             { currentUser && <AuthorInformation className="hidden md:block" 
                  data={
-                  {websiteUrl:currentUser.vendorsWebsiteUrl,
-                  description:currentUser.vendorsBio,}
-                  }/>
+                  {vendorsWebsiteUrl:currentUser?.vendorsWebsiteUrl,
+                    vendorsBio:currentUser?.vendorsBio,}
+                  }/>}
             </div>
            
             <div className="grow pt-6 pb-9 md:-mt-2.5 md:pt-1.5 md:pb-0 md:ltr:pl-7 md:rtl:pr-7 lg:ltr:pl-10 lg:rtl:pr-10 xl:ltr:pl-14 xl:rtl:pr-14 3xl:ltr:pl-16 3xl:rtl:pr-16">
@@ -171,11 +179,11 @@ const AuthorProfilePage = () => {
                           </div>
 
                           <div className="mt-4 flex flex-wrap gap-3 sm:mt-5 lg:mt-6">
-                            {currentUser.keyWords &&  
-                            currentUser.keyWords.toString().split(/[, ]+/).map(function(val, index){
+                            {currentUser?.keyWords &&  
+                            currentUser?.keyWords.toString().split(/[, ]+/).map(function(val, index){
                               return { name: val, id: index };
                           }).map((item) => (<div key={item?.id} role="button">
-                                <ListCard item={item} className="shrink-0 rounded-full p-2 transition-transform hover:-translate-y-0.5 hover:bg-gray-50 focus:-translate-y-0.5 focus:bg-gray-50 ltr:pr-5 rtl:pl-5"/>
+                                <ListCard item={item && item} className="shrink-0 rounded-full p-2 transition-transform hover:-translate-y-0.5 hover:bg-gray-50 focus:-translate-y-0.5 focus:bg-gray-50 ltr:pr-5 rtl:pl-5"/>
                               </div>))}
                           </div>
 

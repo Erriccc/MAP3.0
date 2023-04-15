@@ -113,7 +113,7 @@ export default function Sidebar({ className }) {
         </div>
       </div>
 
-      <Scrollbar style={{ height: 'calc(100% - 96px)' }}>
+      {/* <Scrollbar style={{ height: 'calc(100% - 96px)' }}> */}
         <div className="px-6 pb-5 2xl:px-8">
 
 
@@ -132,7 +132,7 @@ export default function Sidebar({ className }) {
           </div>
 
         </div>
-      </Scrollbar>
+      {/* </Scrollbar> */}
     </aside>);
 }
 //

@@ -130,7 +130,7 @@ export default function DrawerMenu() {
         </div>
       </div>
 
-      <Scrollbar style={{ height: 'calc(100% - 96px)' }}>
+      {/* <Scrollbar style={{ height: 'calc(100% - 96px)' }}> */}
         <div className="flex flex-col px-6 pb-16 sm:pb-20">
           <Menu>
             {({ open }) => (<>
@@ -204,7 +204,7 @@ export default function DrawerMenu() {
             Notification
           </ActiveLink>
         </div>
-      </Scrollbar>
+      {/* </Scrollbar> */}
 
       <div className="absolute left-0 bottom-4 z-10 w-full  px-6">
         <Button fullWidth>Connect</Button>

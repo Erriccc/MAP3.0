@@ -40,12 +40,12 @@ const { userData, setUserData} = useStepperContext();
   const { address,isConnected,currentUser,setCurrentUser, authState, provider,balance, connectToWallet, disconnectWallet } = useContext(WalletContext);
 
 
-      useEffect(() => {
+    //   useEffect(() => {
 
-      txReciept && router.push({
-        pathname: "/profile"}
-      )
-    }, [txReciept])
+    //   txReciept && router.push({
+    //     pathname: "/profile"}
+    //   )
+    // }, [txReciept]) 
 
       useEffect(() => {
       setTransactionPopulated(false)
@@ -69,17 +69,20 @@ const { userData, setUserData} = useStepperContext();
         }catch(e){
         }
       };
-      
+       
       const signUpExecutor = async () => {
         const wrappedSigner = provider.getSigner();
         const { currencySymbol,id, ...rest } = userData;
         try{
-          console.log(rest)
+          console.log(rest) 
           await signUpEventExecutor(wrappedSigner, txDetails,rest,toast, setTransacting, setTxReciept,setCurrentUser);
         }catch(e){
           toast.error(e)
           return
         }
+        router.push({
+          pathname: "/profile"}
+        )
 
       };
 
