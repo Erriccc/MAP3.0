@@ -316,9 +316,9 @@ const getUserNativeBalanceInWei = async (owner) => {
     }
  return true; 
 }
-
+ 
 const checkIfAddressIsVendor = async (address ) => {
-  const Map3ReadOnly = new ethers.Contract(Map3address,Map3Abi,provider)
+  const Map3ReadOnly = new ethers.Contract(Map3VendorAddress,Map3VendorsABi,provider)
   const checkIsVendor = await Map3ReadOnly.checkIsVendor(address)
     console.log("checkIsVendor: ", checkIsVendor)
 return(checkIsVendor)
