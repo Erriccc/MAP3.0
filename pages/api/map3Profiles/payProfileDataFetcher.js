@@ -65,7 +65,7 @@ export default function form(req, res) {
             VendorsCurrencyInfo: VendorsCurrencyInfo,
 
 
-        };
+        }; 
         console.log("vendorData.......................", vendorData)
 
         res.status(200).json({vendorData:vendorData, isVendor:true})

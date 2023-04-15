@@ -3,6 +3,7 @@ import Link from "next/link";
 import {useState, useEffect, useLayoutEffect, useReducer} from "react"
 import { useRouter } from "next/dist/client/router";
 import { toast } from 'react-toastify';
+import getCenter from "geolib/es/getCenter";
 
 import VendorsMap from "components/VendorsMap";
 import { NextSeo } from 'next-seo';
@@ -26,6 +27,7 @@ export default function Rentals () {
   let [tempDataInfo, setTempDataInfo] = useState([]);
   const [mapDataState, dispatchather] = useReducer(reducer,{dataFromServer:[],showDataFromServer: false, loadingInfo: true, FoundInfo: false });
   const [displayData, setDisplayData] = useState([]);
+  const [mapInitialCenter, setMapInitialCenter] = useState({});
 
 function reducer(mapDataState, action){
   
@@ -71,6 +73,24 @@ useEffect(() => {
         return
       }else{
         console.log("tempData...", await tempData)
+
+
+          //   Transform coordinates into required array of objects in the correct shape
+          const coordinates = tempData.map((result) => ({
+            latitude: parseFloat(result.vendorsLat),
+            longitude: parseFloat(result.vendorsLong),
+          }));
+          console.log(coordinates,'coordinatescoordinatescoordinatescoordinates')
+
+          // The latitude and longitude of the center of locations coordinates
+          const center = getCenter(coordinates);
+          //  return getCenter(coordinates);
+
+          console.log(center,'coordinatescoordinatescoordinatescoordinates')
+
+  
+
+      setMapInitialCenter(center)
         // setDataFromServer(tempData)
       setTempDataInfo(tempData)
       setDisplayData(tempData)
@@ -134,18 +154,21 @@ useEffect(() => {
               <div className="w-full  shrink-0 flex-col ">
 
                 <div className="ml-5 absolute overflow-y-auto h-full py-10 px-3 z-10 left-0 hidden sm:block shrink-0  w-64  3xl:w-96  ">
-                      <VerticalVendorSlider  className="" vendorsData={displayData}/>
+                      <VerticalVendorSlider  className="" vendorsData={displayData && displayData}/>
                   </div>
 
                   {/* <div className="grow pt-6 pb-9"> */}
 
                       <div className="flex justify-center w-full  rounded-lg  bg-white shadow-card dark:bg-light-dark ">
                         {/* <VendorsMap locations={coOrdinates} setHighLight={setHighLight} /> */}
-                        <VendorsMap searchResults={mapDataState.dataFromServer}  setDisplayData={setDisplayData} />
+                        <VendorsMap searchResults={mapDataState.dataFromServer}  
+                        setDisplayData={setDisplayData}
+                        center ={mapInitialCenter}
+                        />
                       </div>
                   {/* </div> */}
                   <div className="z-10 absolute w-full p-6 bottom-0 sm:hidden">
-                      <VendorSlider  className="" vendorsData={displayData}/>
+                      <VendorSlider  className="" vendorsData={displayData && displayData}/>
                   </div>
           </div>
 

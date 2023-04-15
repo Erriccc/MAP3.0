@@ -121,11 +121,11 @@ export async function checkIfOneExistById(vendorsWalletAddress) {
         AND: {
           // vendorsLat: false,
           vendorsLat: {
-            none: {} // User has no LAT and LONG
+            not: null // User has no LAT and LONG
         }
         ,AND: {
           vendorsLong: {
-            none: {} // User has no LAT and LONG
+            not: null // User has no LAT and LONG
         },
         }
         },
@@ -163,11 +163,11 @@ export async function checkIfOneExistById(vendorsWalletAddress) {
     AND: {
       // vendorsLat: false,
       vendorsLat: {
-        none: {} // User has no LAT and LONG
+        not: null // User has no LAT and LONG
     }
     ,AND: {
       vendorsLong: {
-        none: {} // User has no LAT and LONG
+        not: null // User has no LAT and LONG
     },
     }
     },

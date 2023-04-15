@@ -4,6 +4,7 @@ import {useState, useEffect, useLayoutEffect, useReducer,useContext} from "react
 import { useRouter } from "next/dist/client/router";
 import { toast } from 'react-toastify';
 import { WalletContext } from 'lib/hooks/use-connect';
+import getCenter from "geolib/es/getCenter";
 
 import VendorsMap from "components/VendorsMap";
 import { NextSeo } from 'next-seo';
@@ -28,6 +29,7 @@ export default function Rentals () {
   let [tempDataInfo, setTempDataInfo] = useState([]);
   const [mapDataState, dispatchather] = useReducer(reducer,{dataFromServer:[],showDataFromServer: false, loadingInfo: true, FoundInfo: false });
   const [displayData, setDisplayData] = useState([]);
+  const [mapInitialCenter, setMapInitialCenter] = useState({});
 
 function reducer(mapDataState, action){
   
@@ -50,6 +52,12 @@ function reducer(mapDataState, action){
     let [isOpen2, setIsOpen2] = useState(false);
 
 
+
+
+
+
+
+
 // import { useIsMounted } from 'lib/hooks/use-is-mounted';
 // import { useWindowScroll } from 'lib/hooks/use-window-scroll';
 // const isMounted = useIsMounted();
@@ -63,12 +71,31 @@ useEffect(() => {
     console.log("running useeffect to fetch search data",)
   //  if(mapDataState.loadingInfo){
     const userSearchInput = {string:map3Querry};
+    
     (async()=> {
       let tempData = await mapDataRelayer(userSearchInput)
       if(await tempData == undefined){
         return
       }else{
         console.log("tempData...", await tempData)
+
+  // const [showPopup, setShowPopup] = useState(false);
+  //   Transform coordinates into required array of objects in the correct shape
+  const coordinates = tempData.map((result) => ({
+    latitude: parseFloat(result.vendorsLat),
+    longitude: parseFloat(result.vendorsLong),
+  }));
+  console.log(coordinates,'coordinatescoordinatescoordinatescoordinates')
+
+  // The latitude and longitude of the center of locations coordinates
+  const center = getCenter(coordinates);
+  //  return getCenter(coordinates);
+
+  console.log(center,'coordinatescoordinatescoordinatescoordinates')
+
+  
+
+      setMapInitialCenter(center)
         // setDataFromServer(tempData)
       setTempDataInfo(tempData)
       setDisplayData(tempData)
@@ -131,18 +158,21 @@ useEffect(() => {
               <div className="w-full  shrink-0 flex-col ">
 
                 <div className="ml-5 absolute overflow-y-auto h-full py-10 px-3 z-10 left-0 hidden sm:block shrink-0  w-64  3xl:w-96  ">
-                      <VerticalVendorSlider  className="" vendorsData={displayData}/>
+                      <VerticalVendorSlider  className="" vendorsData={displayData && displayData}/>
                   </div>
 
                   {/* <div className="grow pt-6 pb-9"> */}
 
                       <div className="flex justify-center w-full  rounded-lg  bg-white shadow-card dark:bg-light-dark ">
                         {/* <VendorsMap locations={coOrdinates} setHighLight={setHighLight} /> */}
-                        <VendorsMap searchResults={mapDataState.dataFromServer}  setDisplayData={setDisplayData} />
+                        <VendorsMap searchResults={mapDataState.dataFromServer}  
+                        setDisplayData={setDisplayData}
+                        center ={mapInitialCenter}
+                        />
                       </div>
                   {/* </div> */}
                   <div className="z-10 absolute w-full p-6 bottom-0 sm:hidden">
-                      <VendorSlider  className="" vendorsData={displayData}/>
+                      <VendorSlider  className="" vendorsData={displayData && displayData}/>
                   </div>
           </div>
 

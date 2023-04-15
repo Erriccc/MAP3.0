@@ -6,33 +6,35 @@ import Utils from '/Utilities/utils'
 
 // import 'mapbox-gl/dist/mapbox-gl.css';
 
-const VendorsMap = ({ searchResults, setDisplayData }) => {
+const VendorsMap = ({ searchResults, setDisplayData,center }) => {
   
-  // const [showPopup, setShowPopup] = useState(false);
-  //   Transform coordinates into required array of objects in the correct shape
-  const coordinates = searchResults.map((result) => ({
-    latitude: parseFloat(result.vendorsLat),
-    longitude: parseFloat(result.vendorsLong),
-  }));
-  console.log(coordinates,'coordinatescoordinatescoordinatescoordinates')
+  // // const [showPopup, setShowPopup] = useState(false);
+  // //   Transform coordinates into required array of objects in the correct shape
+  // const coordinates = searchResults.map((result) => ({
+  //   latitude: parseFloat(result.vendorsLat),
+  //   longitude: parseFloat(result.vendorsLong),
+  // }));
+  // console.log(coordinates,'coordinatescoordinatescoordinatescoordinates')
 
-  // The latitude and longitude of the center of locations coordinates
-  const center =  (async function () {
-    // body of the function
-   getCenter(coordinates);
+  // // The latitude and longitude of the center of locations coordinates
+  // const center =  (async function () {
+  //   // body of the function
+  //  console.log(getCenter(coordinates),'getCenter(coordinates)getCenter(coordinates)')
+  //  getCenter(coordinates);
+  // //  return getCenter(coordinates);
 
-  }());
+  // }());
 
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [mapCenter, setMapCenter] = useState(null)
 
-  const [viewport, setViewport] = useState({
-    width: "100vw",
-    height: "100vh",
-    latitude: searchResults.length > 0 ? mapCenter ? mapCenter.latitude             : center.latitude  : 41.881832,
-    longitude: searchResults.length > 0 ? mapCenter ? mapCenter.longitude           : center.longitude : -87.623177,
-    zoom: 14,
-  });
+  // const [viewport, setViewport] = useState({
+  //   width: "100vw",
+  //   height: "100vh",
+  //   latitude: searchResults.length > 0 ? mapCenter ? mapCenter.latitude             : center.latitude  : 41.881832,
+  //   longitude: searchResults.length > 0 ? mapCenter ? mapCenter.longitude           : center.longitude : -87.623177,
+  //   zoom: 14,
+  // });
 
   useEffect(() => {
    if(mapCenter){
@@ -53,7 +55,7 @@ const VendorsMap = ({ searchResults, setDisplayData }) => {
 
    }
    return
-  }, [mapCenter])
+  }, [])
   
   
   return (
@@ -61,8 +63,20 @@ const VendorsMap = ({ searchResults, setDisplayData }) => {
       mapStyle= {Utils.MAPSTYLE}
       mapboxAccessToken={Utils.MAPBOXACCESSTOKEN}
       // {...viewport}
-      onViewportChange={(nextViewport) => setViewport(nextViewport)}
+      // onViewportChange={(nextViewport) => setViewport(nextViewport)}
 
+      // initialViewState={(async function () {
+      //   // body of the function
+      //  console.log(getCenter(coordinates),'getCenter(coordinates)getCenter(coordinates)')
+      //  let testCenter = getCenter(coordinates);
+      //  return {
+      //   latitude:testCenter.latitude,
+      //   longitude:testCenter.longitude,
+      //   zoom: 9
+      //  }
+      // //  return getCenter(coordinates);
+    
+      // }())}
       initialViewState={{
         latitude: searchResults.length > 0 ?center.latitude : 41.881832,
         longitude: searchResults.length > 0 ? center.longitude : -87.623177,
@@ -70,6 +84,11 @@ const VendorsMap = ({ searchResults, setDisplayData }) => {
       // longitude: searchResults.length > 0 ? mapCenter ? mapCenter.longitude           : center.longitude : -87.623177,
         zoom: 6
       }}
+
+
+
+
+      
       style={{width: "100vw", height: "100vh"}}
 
     >
