@@ -200,18 +200,39 @@ const signUpTransactionSender = async (signer,txdata, txValue,UsertransactionInp
   const dbSignUpUserInput = {...UsertransactionInput, vendorsLat: toNumberString(UsertransactionInput.vendorsLat), vendorsLong:  toNumberString( UsertransactionInput.vendorsLong)}
   let dbUser = await dbUpdate(dbSignUpUserInput) 
 
-
+  
   //Check if user already exists in the database
-  if(await checkUserFromDb(UsertransactionInput.vendorsWalletAddress)){
-    console.log('dbUser......Already Exists', dbUser)
+  if(
+    await checkUserFromDb(UsertransactionInput.vendorsWalletAddress)&&
+    await Utils.checkIfAddressIsVendor(UsertransactionInput.vendorsWalletAddress)
+  ){
+    console.log('dbUser......Already Exists both on chain and off chain', dbUser)
     return ({tx2:'user already exists', dbUser})
   }else{
-    console.log('dbUser......Brand new User', dbUser)
+    console.log('dbUser......Brand new User. Starting registration transaction')
     const tx2 = await map3SignUpExecutor(signer, txdata, txValue,UsertransactionInput)
     return ({tx2, dbUser}) 
   }
  
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

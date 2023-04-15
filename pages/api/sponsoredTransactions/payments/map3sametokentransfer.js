@@ -1,4 +1,4 @@
-  const apiUtils = require('../../../Utilities/apiUtils');
+  const apiUtils = require('/Utilities/apiUtils');
 
 // export default function handler(req, res) {
 //     res.status(200).json({ name: 'John Doe' })
