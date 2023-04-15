@@ -4,14 +4,18 @@ import {useState, useEffect, useLayoutEffect, useReducer,useContext} from "react
 import { useRouter } from "next/dist/client/router";
 import { toast } from 'react-toastify';
 import { WalletContext } from 'lib/hooks/use-connect';
-import DashboardLayout from 'layouts/_dashboard';
+import getCenter from "geolib/es/getCenter";
 
+import VendorsMap from "components/VendorsMap";
 import { NextSeo } from 'next-seo';
 import VendorSlider from '/components/ui/vendorCard';
 import VerticalVendorSlider from '/components/ui/verticalVendorCard';
 import LoadingSkeleton from '/components/ui/LoadingSkeleton';
+import Hamburger from '/components/ui/hamburger';
+import FilterExploreButton from '/components/ui/FilterExploreButton';
 import LoadingView from '/components/ui/LoadingView';
 
+import SearchButton from '/components/search/button';
 import { useDrawer } from '/components/drawer-views/context';
 
 import {mapDataRelayer} from '/Utilities/FrontEndUtilities/FEmapDataRelayer'
@@ -25,6 +29,7 @@ export default function Rentals () {
   let [tempDataInfo, setTempDataInfo] = useState([]);
   const [mapDataState, dispatchather] = useReducer(reducer,{dataFromServer:[],showDataFromServer: false, loadingInfo: true, FoundInfo: false });
   const [displayData, setDisplayData] = useState([]);
+  const [mapInitialCenter, setMapInitialCenter] = useState({});
 
 function reducer(mapDataState, action){
   
@@ -43,6 +48,23 @@ function reducer(mapDataState, action){
 
   const map3Querry = "*";
   const { openDrawer } = useDrawer();
+    let [isOpen, setIsOpen] = useState(false);
+    let [isOpen2, setIsOpen2] = useState(false);
+
+
+
+
+
+
+
+
+// import { useIsMounted } from 'lib/hooks/use-is-mounted';
+// import { useWindowScroll } from 'lib/hooks/use-window-scroll';
+// const isMounted = useIsMounted();
+// let windowScroll = useWindowScroll();
+// ${isMounted && windowScroll.y > 10? : }
+
+
 
 useEffect(() => {
   
@@ -56,6 +78,24 @@ useEffect(() => {
         return
       }else{
         console.log("tempData...", await tempData)
+
+  // const [showPopup, setShowPopup] = useState(false);
+  //   Transform coordinates into required array of objects in the correct shape
+  const coordinates = tempData.map((result) => ({
+    latitude: parseFloat(result.vendorsLat),
+    longitude: parseFloat(result.vendorsLong),
+  }));
+  console.log(coordinates,'coordinatescoordinatescoordinatescoordinates')
+
+  // The latitude and longitude of the center of locations coordinates
+  const center = getCenter(coordinates);
+  //  return getCenter(coordinates);
+
+  console.log(center,'coordinatescoordinatescoordinatescoordinates')
+
+  
+
+      setMapInitialCenter(center)
         // setDataFromServer(tempData)
       setTempDataInfo(tempData)
       setDisplayData(tempData)
@@ -92,13 +132,46 @@ useEffect(() => {
   return (
     <>
     <NextSeo title="map of crypto friendly Vendors" description="Map3 - find vendors that accept crypto near you"/>
-    <DashboardLayout>
     
       {mapDataState.showDataFromServer && 
 
               <div className=" ">
+
+              <nav className={`fixed top-12 z-10 right-0`}
+                          >
+                    <div className="flex px-4 sm:px-6 lg:px-8 xl:px-10 3xl:px-12">
+
+                      <div className="flex flex-col  items content-end mt-5 ">
+                          <div className="m-2 rounded-full bg-gradient-to-b from-gray-50 to-gray-100 shadow-card backdrop-blur dark:from-dark dark:to-dark/80">
+                            <SearchButton variant="transparent" className="dark:text-white"/>
+                          </div>
+                          <div className="m-2 rounded-full bg-gradient-to-b from-gray-50 to-gray-100 shadow-card backdrop-blur dark:from-dark dark:to-dark/80">
+                            <Hamburger isOpen={isOpen} onClick={() => openDrawer('MOBILE_DASHBOARD_SIDEBAR')} variant="transparent" className="dark:text-white "/>
+                        </div>
+
+                        <div className="mx-auto my-3 cursor-pointer rounded-full shadow-card backdrop-blur ">
+                            <FilterExploreButton onClick={() => openDrawer('PROFILES_DRAWER')} variant="transparent" className="text-white"/>
+                        </div>
+                      </div>
+                    </div>
+                  </nav>
               <div className="w-full  shrink-0 flex-col ">
-                  <div className="w-full p-6 bottom-0">
+
+                <div className="ml-5 absolute overflow-y-auto h-full py-10 px-3 z-10 left-0 hidden sm:block shrink-0  w-64  3xl:w-96  ">
+                      <VerticalVendorSlider  className="" vendorsData={displayData && displayData}/>
+                  </div>
+
+                  {/* <div className="grow pt-6 pb-9"> */}
+
+                      <div className="flex justify-center w-full  rounded-lg  bg-white shadow-card dark:bg-light-dark ">
+                        {/* <VendorsMap locations={coOrdinates} setHighLight={setHighLight} /> */}
+                        <VendorsMap searchResults={mapDataState.dataFromServer}  
+                        setDisplayData={setDisplayData}
+                        center ={mapInitialCenter}
+                        />
+                      </div>
+                  {/* </div> */}
+                  <div className="z-10 absolute w-full p-6 bottom-0 sm:hidden">
                       <VendorSlider  className="" vendorsData={displayData && displayData}/>
                   </div>
           </div>
@@ -112,9 +185,6 @@ useEffect(() => {
           <LoadingView/>
 
           }
-
-    </DashboardLayout>
-
      </>
   );
 };
