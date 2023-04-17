@@ -1,4 +1,3 @@
-import Image from '/components/ui/image';
 import { ArrowUp } from '/components/icons/arrow-up';
 import { Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -109,7 +108,7 @@ export default function VendorSlider({ vendorsData }) {
       observer={true} dir="ltr"
       autoplay={{
         delay: 1000,
-        disableOnInteraction: false,
+        disableOnInteraction: true,
       }}
       pagination={{
         clickable: true,

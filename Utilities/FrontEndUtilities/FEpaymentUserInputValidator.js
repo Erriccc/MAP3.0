@@ -12,7 +12,7 @@ const PaymentInputValidator = async (UsertransactionInput, setValidationResponce
 
         }catch(e){
             setvalidatingInput(false);
-            setValidationResponce("invalid senders address")
+            setValidationResponce("Please Sign in")
             return false;
         }
         console.log("validation passed for sender");
@@ -23,7 +23,7 @@ const PaymentInputValidator = async (UsertransactionInput, setValidationResponce
 
         }catch(e){
             setvalidatingInput(false);
-            setValidationResponce("invalid reciver address")
+            setValidationResponce("press  + to add a reciver")
             return false;
         }
         console.log("validation passed for reciver");

@@ -109,7 +109,7 @@ function reducer(mapDataState, action){
                         //   currentUser?.vendorsImageUrl
                         // )}`}
                         src = {item?.vendorsImageUrl}
-                        alt="Bordered avatar"
+                        alt="user image avatar"
                         />
               <span className="text-sm tracking-tight text-gray-600 dark:text-white">
                 {item.vendorsName}

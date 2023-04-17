@@ -28,7 +28,7 @@ export default function AuthorCard({ image, name, role }) {
         //   currentUser?.vendorsImageUrl
         // )}`}
         src = {currentUser?.vendorsImageUrl}
-        alt="Bordered avatar"
+        alt="user image"
         />
 
            

@@ -8,7 +8,6 @@ import { NextSeo } from 'next-seo';
 import { useCopyToClipboard } from 'lib/hooks/use-copy-to-clipboard';
 import DashboardLayout from 'layouts/_dashboard';
 import Button from '/components/ui/button';
-import Image from '/components/ui/image';
 import { Copy } from '/components/icons/copy';
 import { Check } from '/components/icons/check';
 import AuthorInformation from '/components/author/author-information';
@@ -295,20 +294,7 @@ const PayVendorPage = () => {
 
       <DashboardLayout>
         {/* Profile Cover Image */}
-        {/* <div className="relative h-36 w-full overflow-hidden rounded-lg sm:h-44 md:h-64 xl:h-80 2xl:h-96 3xl:h-[448px]">
-          <Image 
-          src={`/api/imagefetcher?url=${encodeURIComponent(
-            vendorDataState.dataFromServer?.vendorsImageUrl
-          )}`}
-          layout="fill" objectFit="cover" alt="Cover Image"/>
-        </div> */}
         <div className="relative h-36 w-full overflow-hidden rounded-lg sm:h-44 md:h-64 xl:h-80 2xl:h-96 3xl:h-[448px]">
-          {/* <Image 
-          src = {`/api/imagefetcher?url=${encodeURIComponent(
-            currentUser?.vendorsImageUrl && currentUser.vendorsImageUrl
-          )}`}
-
-          layout="fill" objectFit="cover" alt="Cover Image"/> */}
                   <div className="bg-cover bg-center" 
               // style="background-image: url(...)"
               style={{ backgroundImage:`url(${vendorDataState.dataFromServer?.vendorsImageUrl})`,
@@ -327,15 +313,9 @@ const PayVendorPage = () => {
         //   currentUser?.vendorsImageUrl
         // )}`}
         src = {vendorDataState.dataFromServer?.vendorsImageUrl}
-        alt="Bordered avatar"
+        alt="user image avatar"
         />
-          {/* <div className="relative z-5 mx-auto -mt-12 h-24 w-24 shrink-0 overflow-hidden rounded-full border-[5px] border-white shadow-large dark:border-gray-500 sm:-mt-14 sm:h-28 sm:w-28 md:mx-0 md:-mt-16 md:h-32 md:w-32 xl:mx-0 3xl:-mt-20 3xl:h-40 3xl:w-40 3xl:border-8">
-            <Image 
-            src={`/api/imagefetcher?url=${encodeURIComponent(
-              vendorDataState.dataFromServer?.vendorsImageUrl
-            )}`}
-             layout="fill" objectFit="cover" className="rounded-full" alt="Author"/>
-          </div> */}
+        
           {/* Profile Info */}
           <div className="flex w-full flex-col pt-4 md:flex-row md:pt-10 lg:flex-row xl:pt-12">
             <div className="shrink-0 border-dashed border-gray-200 dark:border-gray-700 md:w-72 ltr:md:border-r md:ltr:pr-7 rtl:md:border-l md:rtl:pl-7 lg:ltr:pr-10 lg:rtl:pl-10 xl:ltr:pr-14 xl:rtl:pl-14 2xl:w-80 3xl:w-96 3xl:ltr:pr-16 3xl:rtl:pl-16">
