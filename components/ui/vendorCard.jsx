@@ -2,6 +2,7 @@ import Image from '/components/ui/image';
 import { ArrowUp } from '/components/icons/arrow-up';
 import { Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination, Navigation } from "swiper";
 import {useState, useEffect, useLocation} from "react"
 import { useRouter } from "next/dist/client/router";
 import {getTokenSymbol} from'../../Utilities/utils';
@@ -22,98 +23,57 @@ export  function VendorCollectionCard({ walletAddress, name, vendorsToken, imgUr
 
 
     return (
-    <div className={cn('group relative overflow-hidden rounded-lg transition-transform hover:-translate-y-1', className)}>
-      <div className="relative flex aspect-[10/11] w-full justify-center overflow-hidden rounded-lg">
-        <Image 
-        src={`/api/imagefetcher?url=${encodeURIComponent(
-          imgUrl
-        )}`}
-        layout="fill" quality={100} objectFit="cover" alt={name}/>
-      </div>
-      <div className="absolute top-0 left-0 z-[5] flex h-full w-full flex-col justify-between bg-gradient-to-t from-black p-5 md:p-6">
-        <AnchorLink 
-        // href={`/pay/${walletAddress}?vendorsToken=${vendorsToken}?vendorsName=${name}&vendorsTokenSymbol=${vendorsTokenSymbol}`}
-         // href = {{
-        //   pathname: '/pay/[walletAddress]',
-        //   query: {
-        //       walletAddress: walletAddress,
-        //       vendorsToken: vendorsToken,
-        //       vendorsName: name,
-        //       vendorsTokenSymbol:vendorsTokenSymbol,
-        //   },
+    <div >
+      <div className="bg-cover bg-center" 
+      // style="background-image: url(...)"
+      style={{ backgroundImage:`url(${imgUrl})`,
+      width: '100%',
+      height: '100%',
+    }}
+      >
+          <div className="relative flex h-full w-full flex-col justify-between bg-gradient-to-t from-black p-5 md:p-6">
 
-        // }}
+<AnchorLink 
+            href = {{
+              pathname: '/pay/[walletAddress]',
+              query: {
+                  walletAddress: walletAddress
+              },
+            }}
+            >
+          {imgUrl && (
+              <img className="h-12 w-12  p-1 rounded-lg ring-2 ring-gray-300 dark:ring-gray-500" 
+              src = {imgUrl}
+              alt="name"
+              />
+                )}
+          <div className="p-4">
+              <h2 className="truncate text-lg font-medium -tracking-wider text-white">
+                {name}
+              </h2>
+               
+            </div>
+          
 
-        href = {{
-          pathname: '/pay/[walletAddress]',
-          query: {
-              walletAddress: walletAddress
-              // vendorsToken: vendorsToken,
-              // vendorsName: name,
-              // vendorsTokenSymbol:vendorsTokenSymbol,
-          },
-
-        }}
-
-        className="absolute top-0 left-0 z-10 h-full w-full"/>
-        <div className="flex justify-between gap-2">
-          {/* <div className="inline-flex h-8 shrink-0 items-center rounded-2xl bg-white/20 px-4 text-xs font-medium uppercase -tracking-wide text-white
-          backdrop-blur-[40px]">
-            {vendorsTokenSymbol}
-            Active ?
-          </div> */}
-          {imgUrl && (<div className="h-12 w-12 rounded-lg bg-white/20 p-2 backdrop-blur-[40px]">
-              <Image 
-              src={`/api/imagefetcher?url=${encodeURIComponent(
-                imgUrl
-              )}`}
-
-              alt={name} width={48} height={48} className="rounded-[6px]"/>
-            </div>)}
-        </div>
-        <div className="block">
-          <h2 className="mb-1.5 truncate text-lg font-medium -tracking-wider text-white">
-            {name}
-          </h2>
-          {/* <div className="text-sm font-medium -tracking-wide text-[#B6AAA2]">
-            {description}
-          </div> */}
           <AnchorLink 
-        // href = {{
-        //   pathname: '/pay/[walletAddress]',
-        //   query: {
-        //       walletAddress: walletAddress,
-        //       vendorsToken: vendorsToken,
-        //       vendorsName: name,
-        //       vendorsTokenSymbol:vendorsTokenSymbol,
-        //   },
-
-        // }}
-
         href = {{
           pathname: '/pay/[walletAddress]',
           query: {
               walletAddress: walletAddress
-              // vendorsToken: vendorsToken,
-              // vendorsName: name,
-              // vendorsTokenSymbol:vendorsTokenSymbol,
           },
-
         }}
-          className="relative z-10 mt-3.5 inline-flex items-center rounded-3xl bg-white/20 p-2 backdrop-blur-[40px]">
+          className="relative mt-3.5 inline-flex items-center rounded-3xl bg-white/20 p-2 backdrop-blur-[40px]">
              <div className="truncate text-sm -tracking-wide text-white ltr:ml-2 ltr:pr-2 rtl:mr-2 rtl:pl-2">
               {vendorsTokenSymbol}
             </div>
-            
-            {/* <div className="flex shrink-0 items-center">
-            </div>
-
-            <div className="truncate text-sm -tracking-wide text-white ltr:ml-2 ltr:pr-2 rtl:mr-2 rtl:pl-2">
-              {vendorsTokenSymbol}
-            </div> */}
           </AnchorLink>
-        </div>
-      </div>
+
+          </AnchorLink>
+          </div>
+          </div>
+
+    {/* <div className={cn('group relative overflow-hidden rounded-lg transition-transform hover:-translate-y-1', className)}> */}
+        
     </div>);
 }
 
@@ -141,7 +101,24 @@ export default function VendorSlider({ vendorsData }) {
         },
     };
     return (<div>
-      <Swiper modules={[Scrollbar, A11y]} spaceBetween={24} slidesPerView={1.5} scrollbar={{ draggable: true }} breakpoints={sliderBreakPoints} observer={true} dir="ltr">
+      <Swiper 
+      modules={[Autoplay,Pagination, Navigation, Scrollbar, A11y]} 
+      spaceBetween={10} slidesPerView={2} 
+      scrollbar={{ draggable: true }} 
+      breakpoints={sliderBreakPoints} 
+      observer={true} dir="ltr"
+      autoplay={{
+        delay: 1000,
+        disableOnInteraction: false,
+      }}
+      pagination={{
+        clickable: true,
+      }}
+      navigation={true}
+      
+      
+      
+      >
         {vendorsData.map((vendor) => (
         
         <SwiperSlide key={vendor.vendorsWalletAddress}>

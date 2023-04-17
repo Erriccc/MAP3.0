@@ -24,16 +24,17 @@ export  function VendorCollectionCard({ walletAddress, name, vendorsToken, imgUr
 
 
     return (
-    <div className={cn(' relative overflow-hidden rounded-lg transition-transform hover:-translate-y-1', className)}>
-      {/* <div className="relative flex aspect-[8/11] w-full justify-center overflow-hidden rounded-lg"> */}
-      <div className="relative flex aspect-[10/12] w-full justify-center overflow-hidden rounded-lg">
-        <Image 
-        src={`/api/imagefetcher?url=${encodeURIComponent(
-          imgUrl
-        )}`}
-        layout="fill" quality={100} objectFit="cover" alt={name}/>
-      </div>
-      <div className="absolute top-0 left-0 z-[5] flex h-full w-full flex-col justify-between bg-gradient-to-t from-black p-5 md:p-6">
+    <div className={cn('  overflow-hidden rounded-lg ', className)}>
+      
+      <div className="bg-cover bg-center" 
+      // style="background-image: url(...)"
+      style={{ backgroundImage:`url(${imgUrl})`,
+      width: '100%',
+      height: '100%',
+    }}
+      >
+      
+      <div className=" flex h-full w-full flex-col justify-between bg-gradient-to-t from-black p-5 md:p-6">
         <AnchorLink 
         href = {{
           pathname: '/pay/[walletAddress]',
@@ -42,18 +43,16 @@ export  function VendorCollectionCard({ walletAddress, name, vendorsToken, imgUr
           },
         }}
 
-        className="absolute top-0 left-0 z-10 h-full w-full"/>
-        <div className="flex justify-between gap-2">
-          {imgUrl && (<div className="h-12 w-12 rounded-lg bg-white/20 p-2 backdrop-blur-[40px]">
-              <Image 
-              src={`/api/imagefetcher?url=${encodeURIComponent(
-                imgUrl
-              )}`}
-
-              alt={name} width={48} height={48} className="rounded-[6px]"/>
-            </div>)}
-        </div>
-        <div className="">
+        // className=" h-full w-full"
+        />
+        {imgUrl && (
+              <img className="h-12 w-12  p-1 rounded-lg ring-4 ring-gray-300 dark:ring-gray-500" 
+              src = {imgUrl}
+              alt="name"
+              />
+                )}
+        <div className="pt-5">
+          
           <div className="mb-1.5 text-lg font-medium -tracking-wider text-white">
             {name}
           </div>
@@ -64,7 +63,7 @@ export  function VendorCollectionCard({ walletAddress, name, vendorsToken, imgUr
               walletAddress: walletAddress
           },
         }}
-          className="relative z-10 mt-3.5 inline-flex items-center rounded-3xl bg-white/20 p-2 backdrop-blur-[40px]">
+          className="relative mt-3.5 inline-flex items-center rounded-3xl bg-white/20 p-2 backdrop-blur-[40px]">
              <div className="truncate text-sm -tracking-wide text-white ltr:ml-2 ltr:pr-2 rtl:mr-2 rtl:pl-2">
               {vendorsTokenSymbol}
             </div>
@@ -74,7 +73,9 @@ export  function VendorCollectionCard({ walletAddress, name, vendorsToken, imgUr
           
         </div>
       </div>
-    </div>);
+    </div>
+    </div>
+    );
 }
  
 export default function VerticalVendorSlider({ vendorsData }) {

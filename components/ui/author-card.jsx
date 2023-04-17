@@ -21,14 +21,24 @@ export default function AuthorCard({ image, name, role }) {
       <ActiveLink href="/profile">
     
     <div className="flex items-center rounded-lg bg-gray-100 p-5 dark:bg-light-dark">
-    <div className="relative mx-auto h-20 w-20 shrink-0 overflow-hidden rounded-full border-[5px] border-white shadow-large dark:border-gray-500 md:mx-0  3xl:border-8">
-            <Image 
+    {/* <div className="relative mx-auto h-20 w-20 shrink-0 overflow-hidden rounded-full md:mx-0 "> */}
+                  
+        <img className="w-20 h-20 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" 
+        // src = {`/api/imagefetcher?url=${encodeURIComponent(
+        //   currentUser?.vendorsImageUrl
+        // )}`}
+        src = {currentUser?.vendorsImageUrl}
+        alt="Bordered avatar"
+        />
+
+           
+            {/* <Image 
             // src={currentUser?.vendorsImageUrl}  
             src = {`/api/imagefetcher?url=${encodeURIComponent(
               currentUser?.vendorsImageUrl
             )}`}
-            layout="fill" objectFit="contain" className="rounded-full" alt="Author"/>
-          </div>
+            layout="fill" objectFit="contain" className="rounded-full" alt="Author"/> */}
+          {/* </div> */}
       {/* <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-3 bg-gradient-to-r from-green-300 to-gray-300 border-white drop-shadow-main dark:border-gray-400">
       </div> */}
       <div className="ltr:pl-3 rtl:pr-3">

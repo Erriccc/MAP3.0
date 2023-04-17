@@ -33,7 +33,7 @@ export default function SelectWallet({ ...props }) {
         Privacy Policy. */}
         please connect your a wallet to get access to key features
       </p>
-    <HelpSettingUpWallet moduleTitle={"need a new wallet?"}/>
+    <HelpSettingUpWallet moduleTitle={"need a private wallet?"}/>
 
         {/* DISPLAY SIGN IN/UP BUTTON  */}
 

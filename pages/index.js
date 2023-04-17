@@ -10,8 +10,11 @@ import { NextSeo } from 'next-seo';
 import VendorSlider from '/components/ui/vendorCard';
 import VerticalVendorSlider from '/components/ui/verticalVendorCard';
 import LoadingSkeleton from '/components/ui/LoadingSkeleton';
+import Hamburger from '/components/ui/hamburger';
+import FilterExploreButton from '/components/ui/FilterExploreButton';
 import LoadingView from '/components/ui/LoadingView';
 
+import SearchButton from '/components/search/button';
 import { useDrawer } from '/components/drawer-views/context';
 
 import {mapDataRelayer} from '/Utilities/FrontEndUtilities/FEmapDataRelayer'
@@ -58,7 +61,7 @@ useEffect(() => {
         console.log("tempData...", await tempData)
         // setDataFromServer(tempData)
       setTempDataInfo(tempData)
-      setDisplayData(tempData)
+      // setDisplayData(tempData)
       dispatchather({type:"FOUND"})
       console.log('done transfering')
       }
@@ -99,7 +102,7 @@ useEffect(() => {
               <div className=" ">
               <div className="w-full  shrink-0 flex-col ">
                   <div className="w-full p-6 bottom-0">
-                      <VendorSlider  className="" vendorsData={displayData && displayData}/>
+                      <VendorSlider  className="" vendorsData={mapDataState?.dataFromServer && mapDataState.dataFromServer}/>
                   </div>
           </div>
 

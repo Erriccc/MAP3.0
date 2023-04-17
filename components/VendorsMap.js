@@ -82,7 +82,7 @@ const VendorsMap = ({ searchResults, setDisplayData,center }) => {
         longitude: searchResults.length > 0 ? center.longitude : -87.623177,
       // latitude: searchResults.length > 0 ? mapCenter ? mapCenter.latitude             : center.latitude  : 41.881832,
       // longitude: searchResults.length > 0 ? mapCenter ? mapCenter.longitude           : center.longitude : -87.623177,
-        zoom: 6
+        zoom: 4
       }}
 
 
@@ -115,13 +115,18 @@ const VendorsMap = ({ searchResults, setDisplayData,center }) => {
             // className='animate-bounce'
           >
                 {/* 📌 */}
-                <p
+                {/* <p
                 role="img"
                 className="cursor-pointer text-2xl animate-bounce"
                 aria-label="push-pin"
               >
                 📌
-              </p>
+              </p> */}
+
+          <img className="h-6 w-6  p-1 rounded-lg ring-2 ring-gray-200 dark:ring-gray-400" 
+          src = {result.vendorsImageUrl}
+          alt="name"
+          />
           </Marker>
           ))}
 

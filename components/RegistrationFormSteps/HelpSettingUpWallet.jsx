@@ -8,10 +8,8 @@ import cn from 'classnames';
 // import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext";
 
 const UsefulResources = [
-    {resourceType: 'metamask for Mobile', transactionUrl:"https://www.google.com"},
-    {resourceType: 'metamask for Pc', transactionUrl:"https://www.google.com"},
-    {resourceType: 'Trust Wallet for Mobile', transactionUrl:"https://www.google.com"},
-    {resourceType: 'Trust Wallet for Pc', transactionUrl:"https://www.google.com"},
+    {resourceType: 'Metamask Wallet', transactionUrl:"https://metamask.io/"},
+    {resourceType: 'Trust Wallet', transactionUrl:"https://trustwallet.com/"},
 ]
 
 

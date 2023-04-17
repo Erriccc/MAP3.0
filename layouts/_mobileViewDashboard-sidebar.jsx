@@ -33,7 +33,7 @@ const menuItems = [
         href: routes.home,
     },
     {
-      name: 'Map3 PAY',
+      name: '0x Pay',
       icon: <PoolIcon />,
       href: routes.pay,
   },
@@ -63,12 +63,12 @@ const menuItems = [
     //     href: routes.pay,
     // },
     {
-        name: 'MAP3 Vendors',
+        name: 'Vendors',
         icon: <CompassIcon />,
         href: routes.appvendors,
     },
     {
-        name: 'Create PROFILE',
+        name: 'Edit PROFILE',
         icon: <PlusCircle />,
         href: routes.registerVendor,
     },

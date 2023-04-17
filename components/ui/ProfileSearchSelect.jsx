@@ -94,7 +94,7 @@ function reducer(mapDataState, action){
                 }
         {searchKeyword?.length >0 && mapDataState?.dataFromServer?.length > 0 ? (mapDataState?.dataFromServer.map((item, index) => (
         <li key={index} role="listitem" tabIndex={index} onClick={() => handleSelectedCoin(item.vendorsWalletAddress)} className="mb-1 flex cursor-pointer items-center gap-3 py-1.5 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-600">
-              <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full shadow-card">
+              {/* <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full shadow-card">
                 <Image 
                 src={`/api/imagefetcher?url=${encodeURIComponent(
                   item.vendorsImageUrl
@@ -102,7 +102,15 @@ function reducer(mapDataState, action){
                 
                 // placeholder="blur" 
                 layout="fill" objectFit="cover" className="rounded-full" alt={item.vendorsName}/>
-              </div>
+              </div> */}
+
+                <img className="h-6 w-6  p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" 
+                        // src = {`/api/imagefetcher?url=${encodeURIComponent(
+                        //   currentUser?.vendorsImageUrl
+                        // )}`}
+                        src = {item?.vendorsImageUrl}
+                        alt="Bordered avatar"
+                        />
               <span className="text-sm tracking-tight text-gray-600 dark:text-white">
                 {item.vendorsName}
               </span>
