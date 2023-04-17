@@ -272,6 +272,9 @@ const getImageUrl = async (userImage) => {
         console.log(`> ✅ web3.storage now hosting ${cid}`)
         // console.log(`https://dweb.link/ipfs/${cid}`)
         console.log(`https://dweb.link/ipfs/${cid}/${imageLocalName}`)
+        console.log(`https://${cid}.dweb.link/ipfs/${imageLocalName}`)
+        console.log (`https://${cid}.ipfs.dweb.link/${imageLocalName}`)
+
        
         let totalBytes = 0
         for await (const upload of client.list()) {
@@ -279,7 +282,9 @@ const getImageUrl = async (userImage) => {
         } 
         console.log(`> ⁂ ${totalBytes.toLocaleString()} bytes stored!`)
         // return (`https://dweb.link/ipfs/${cid}`)
-        return (`https://dweb.link/ipfs/${cid}/${imageLocalName}`)
+        // return (`https://dweb.link/ipfs/${cid}/${imageLocalName}`)
+        // return (`https://${cid}.dweb.link/ipfs/${imageLocalName}`)
+        return (`https://${cid}.ipfs.dweb.link/${imageLocalName}`)
 }
 
 function getKeyWordArray (UserInput){

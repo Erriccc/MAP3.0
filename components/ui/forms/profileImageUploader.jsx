@@ -8,7 +8,7 @@ import { DotsIcon } from '/components/icons/dots-icon';
 function Uploader({getSelectedFile, uploadedImageUrl}) { 
     const [files, setFiles] = useState([]);
     const { getRootProps, getInputProps } = useDropzone({
-        accept: 'image/*',
+        accept: 'image/jpeg, image/png',
         multiple: false,
         onDrop: (acceptedFiles) => {
             setFiles(acceptedFiles.map((file) => Object.assign(file, {
