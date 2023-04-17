@@ -115,18 +115,18 @@ const VendorsMap = ({ searchResults, setDisplayData,center }) => {
             // className='animate-bounce'
           >
                 {/* 📌 */}
-                {/* <p
+                <p
                 role="img"
                 className="cursor-pointer text-2xl animate-bounce"
                 aria-label="push-pin"
               >
                 📌
-              </p> */}
+              </p>
 
-          <img className="h-6 w-6  p-1 rounded-lg ring-2 ring-gray-200 dark:ring-gray-400" 
+          {/* <img className="h-6 w-6  p-1 rounded-lg ring-2 ring-gray-200 dark:ring-gray-400" 
           src = {result.vendorsImageUrl}
           alt="name"
-          />
+          /> */}
           </Marker>
           ))}
 
