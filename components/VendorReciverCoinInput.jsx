@@ -6,7 +6,7 @@ import Utils from '/Utilities/utils'
 
 
 // isMounted && windowScroll.y > 10
-
+ 
 
 const decimalPattern = /^[0-9]*[.,]?[0-9]*$/;
 // export default function VendorReciverCoinInput({ tokenAddress, label, getCoinValue, className, ...rest }) {

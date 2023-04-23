@@ -31,7 +31,7 @@ function RegisterVendor() {
 
   useEffect(() => {
 
-  let isMounted = true;
+    let isMounted = true;
     console.log('refreshing...')
     document.documentElement.style.removeProperty('overflow');
     return () => { isMounted = false };

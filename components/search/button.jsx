@@ -6,7 +6,6 @@ export default function SearchButton({ ...props }) {
     return (<Button {...props} onClick={
       () => {
       openModal('SEARCH_VIEW')
-      console.log("hi")
       }
       } shape="circle" aria-label="Search">
       <SearchIcon className="h-auto w-3.5 sm:w-auto"/>

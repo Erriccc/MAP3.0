@@ -8,7 +8,7 @@ import PayAnonymous from './PayAnonymous';
 import {map3Pay,approveSendersToken,testAccount,Map3address,numberExponentToLarge,
     WholeTOWeiDecimals,IERC20Abi,getTokenSymbol
   } from'../Utilities/utils';
-
+  
 export default function SearchVendorInfo({walletAddress, city,name,imgUrl, distance, description,vendorsToken}) {
     const [highLight, setHighLight] = useState();
   const { Moralis, account } = useMoralis();

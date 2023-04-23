@@ -15,7 +15,7 @@ export function UseContextProvider({ children }) {
     // console.log('MISC AUTH RENDER')
   userData === '' && currentUser !== undefined &&  (async  () => {
     try {
-      const symbol = await Utils.magicProviderTokenSymbol(currentUser.vendorsToken,provider)
+      const symbol = await Utils.magicProviderTokenSymbol(currentUser.vendorsToken,provider) 
       const tagwords = currentUser.keyWords.toString()
       setUserData({ ...currentUser,keyWords:tagwords, currencySymbol: symbol});
     } catch (error) {

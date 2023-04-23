@@ -25,7 +25,7 @@ export default function GeoAddress() {
     setUserData({ ...userData,
   ['vendorsLat']:addrressLat,
   ['vendorsLong']:addrressLong,
-  ['vendorsStreetAddress']: addrressName,
+  ['vendorsStreetAddress']: addrressName, 
 
   });
       console.log('long and lat', addrressLong, addrressLat)

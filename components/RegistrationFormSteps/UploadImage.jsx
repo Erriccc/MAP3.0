@@ -59,7 +59,7 @@ export default function UploadImage() {
                    </div>
                     ):(
 
-
+ 
             <div className="mb-8">
             <InputLabel title="Image Url" />
             <Input  placeholder="https://cdn.pixabay.com/photo/2015/09/21/14/24/supermarket-949913__340.jpg" inputClassName="spin-button-hidden"

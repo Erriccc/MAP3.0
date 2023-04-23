@@ -30,6 +30,11 @@ import { WalletProvider } from 'lib/hooks/use-connect';
 import{UrlProvider} from 'Utilities/FrontEndUtilities/FEUrlContext'
 import { Analytics } from '@vercel/analytics/react';
 
+import {
+  PlasmicRootProvider,
+} from '@plasmicapp/loader-nextjs';
+import { PLASMIC } from '/plasmic-init';
+
 // page progress bar
 const progress = new ProgressBar({
   size: 3,
@@ -80,8 +85,13 @@ export default function MyApp({ Component, pageProps }) {
           {/* <Appnav /> */}
           <NotificationProvider>
 
+          <PlasmicRootProvider
+                    loader={PLASMIC}
+                >
           <Component {...pageProps} />
           <Analytics />
+          </PlasmicRootProvider>
+
           <ToastContainer
             position="top-right"
             autoClose={1000}

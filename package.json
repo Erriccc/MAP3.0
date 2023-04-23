@@ -19,6 +19,7 @@
         "@nomiclabs/hardhat-ethers": "^2.0.6",
         "@nomiclabs/hardhat-waffle": "^2.0.3",
         "@openzeppelin/contracts": "^4.6.0",
+        "@plasmicapp/loader-nextjs": "^1.0.259",
         "@prisma/client": "^4.10.1",
         "@tailwindcss/forms": "0.5.2",
         "@tailwindcss/typography": "0.5.2",
