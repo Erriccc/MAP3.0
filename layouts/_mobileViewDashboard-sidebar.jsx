@@ -33,6 +33,11 @@ const menuItems = [
         href: routes.home,
     },
     {
+      name: 'Qr Code',
+      icon: <DiskIcon />,
+      href: routes.qrCode,
+  },
+    {
       name: '0x Pay',
       icon: <PoolIcon />,
       href: routes.pay,
@@ -68,7 +73,7 @@ const menuItems = [
         href: routes.appvendors,
     },
     {
-        name: 'Edit PROFILE',
+        name: 'Settings',
         icon: <PlusCircle />,
         href: routes.registerVendor,
     },
@@ -159,7 +164,7 @@ export default function MobileSidebar({ className }) {
         onClick={() => router.push("./")}
         className="relative flex items-center justify-center py-1 cursor-pointer"
       >
-        <h1 className="text-blue-500 font-bold">map<span className="text-gray-500 font-bold">3</span></h1>
+        <h1 className="text-blue-500 font-bold">0x<span className="text-gray-500 font-bold">maps</span></h1>
       </div>
 
         <div className="md:hidden">

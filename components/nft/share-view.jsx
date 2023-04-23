@@ -11,7 +11,7 @@ import { useUrlContext } from "/Utilities/FrontEndUtilities/FEUrlContext";
 export default function ShareView({ nftSlug = '#' }) {
 
   const { currentUrl, setCurrentUrl } = useUrlContext();
-
+ 
 
     // const nftUrl = `${process.env.NEXT_PUBLIC_WEBSITE_URL}`;
     const nftUrl = currentUrl && currentUrl;

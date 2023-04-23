@@ -23,7 +23,6 @@ model OXProfile {
   vendorsStreetAddress String?
   vendorsImageUrl String @default("https://gateway.pinata.cloud/ipfs/QmREjM3TDrG931ecoNXMifpnVruFnzgw6Rv3DRpECLvVRp?_gl=1*6yrfy5*_ga*MTgzOTY5NDM1Mi4xNjc2NzUwMzUz*_ga_5RMPXG14TE*MTY3NzAzNDkzNy41LjAuMTY3NzAzNDk0MC41Ny4wLjA.%22,")
   vendorsWebsiteUrl String @default("https://0xmaps.xyz")
-
   vendorsToken String @default("0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174")
 }
 

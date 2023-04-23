@@ -4,6 +4,7 @@ const routes = {
     registerVendor:'/registerVendor/',
     completeSetup:'/completeSetup/',
     profile: '/profile',
+    qrCode: '/qrCode',
     swap: '/swap',
     liquidity: '/liquidity',
     liquidityPosition: '/liquidity-position',
