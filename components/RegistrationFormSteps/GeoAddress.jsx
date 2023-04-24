@@ -37,7 +37,7 @@ export default function GeoAddress() {
   return ( 
     <div className="flex flex-col ">
        <div className="flex items-center justify-between gap-4 mt-5">
-                        <InputLabel  subTitle="Add physical address to your profile"/>
+                        <InputLabel  subTitle="Get on the Map"/>
                         {/* <InputLabel title="Put on marketplace" subTitle="Enter price to allow users instantly purchase your NFT"/> */}
                         <div className="shrink-0">
                         <Switch checked={hasGeoAddress} onChange={() => setHasGeoAddress(!hasGeoAddress)}>

@@ -2,7 +2,11 @@ import prisma from '.'
 
 export async function getAll() {
   try {
-    const users = await prisma.OXProfile.findMany()
+    const users = await prisma.OXProfile.findMany({
+      where: {
+        isVendor: true,
+      },
+    })
     return users
   } catch (error) {
     return { error }
@@ -121,16 +125,20 @@ export async function checkIfOneExistById(vendorsWalletAddress) {
             },
           }
         ],
+        // AND: {
+        //   // vendorsLat: false,
+        //   vendorsLat: {
+        //     not: null // User has no LAT and LONG
+        // }
+        // ,AND: {
+        //   vendorsLong: {
+        //     not: null // User has no LAT and LONG
+        // },
+        // }
+        // },
         AND: {
           // vendorsLat: false,
-          vendorsLat: {
-            not: null // User has no LAT and LONG
-        }
-        ,AND: {
-          vendorsLong: {
-            not: null // User has no LAT and LONG
-        },
-        }
+          isVendor: true
         },
       },
     })
@@ -163,16 +171,20 @@ export async function checkIfOneExistById(vendorsWalletAddress) {
         }
       },
     ],
+    // AND: {
+    //   // vendorsLat: false,
+    //   vendorsLat: {
+    //     not: null // User has no LAT and LONG
+    // }
+    // ,AND: {
+    //   vendorsLong: {
+    //     not: null // User has no LAT and LONG
+    // },
+    // }
+    // },
     AND: {
       // vendorsLat: false,
-      vendorsLat: {
-        not: null // User has no LAT and LONG
-    }
-    ,AND: {
-      vendorsLong: {
-        not: null // User has no LAT and LONG
-    },
-    }
+      isVendor: true
     },
   },
 })

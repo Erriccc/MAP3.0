@@ -6,6 +6,7 @@ import { useStepperContext } from "/Utilities/FrontEndUtilities/FEStepperContext
 import InputLabel from '/components/ui/input-label';
 import Input from '/components/ui/forms/input';
 import { Switch } from '/components/ui/switch';
+import GeoAddress from '/components/RegistrationFormSteps/GeoAddress'; 
 
 
 export default function Details() {
@@ -35,8 +36,10 @@ export default function Details() {
              name="vendorsName"
             />
           </div>
+          <div className="mt-5">
 
-
+          <GeoAddress/>
+          </div>
           {/* <div className="mb-8">
             <InputLabel title="Email" subTitle="notifications on your account will  be sent here"/>
             <Input  placeholder="email address" inputClassName="spin-button-hidden"

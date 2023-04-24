@@ -68,14 +68,14 @@ const menuItems = [
     //     href: routes.pay,
     // },
     {
-        name: 'Vendors',
+        name: '0x Map',
         icon: <CompassIcon />,
         href: routes.appvendors,
     },
     {
         name: 'Settings',
         icon: <PlusCircle />,
-        href: routes.registerVendor,
+        href: routes.profileSetUp,
     },
     //   {
     //     name: 'Create PROFILE',

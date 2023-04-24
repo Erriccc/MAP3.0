@@ -42,30 +42,21 @@ function Uploader({getSelectedFile, uploadedImageUrl}) {
     
       <div {...getRootProps({})}>
         <input {...getInputProps()} 
-        // onChange={(e) => setFiles(e.target.value)}
-        // onChange={}
         />
         {files.length > 0 ? (thumbs) : (
             <div>
               {uploadedImageUrl?.length >0 ? (
                   <div>
                     {/* <div className="relative h-36 w-full overflow-hidden rounded-lg sm:h-44 md:h-64 xl:h-80 2xl:h-96 3xl:h-[448px]"> */}
-           <img className="relative w-1/2 h-auto p-1 rounded-lg ring-2 ring-gray-300 dark:ring-gray-500" 
-
-        // src = {`/api/imagefetcher?url=${encodeURIComponent(
-        //   currentUser?.vendorsImageUrl
-        // )}`}
-        src = {uploadedImageUrl}
-        alt="user image avatar"
-        />
-                        {/* </div> */}
-
+           <img className="relative w-1/2 h-auto mx-auto p-1 rounded-lg ring-2 ring-gray-300 dark:ring-gray-500" 
+                  src = {uploadedImageUrl}
+                  alt="user image avatar"
+                  />
                   </div>
 
               ):(
                 <div>
                         <Button>
-                      {/* <DotsIcon/> */}
                       Upload
                         </Button>
                 </div>

@@ -3,6 +3,7 @@ const routes = {
     pay:'/pay',
     registerVendor:'/registerVendor/',
     completeSetup:'/completeSetup/',
+    profileSetUp:'/profileSetUp/',
     profile: '/profile',
     qrCode: '/qrCode',
     swap: '/swap',

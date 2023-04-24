@@ -57,7 +57,6 @@ function RegisterVendor() {
       <p className="text-center text-sm leading-loose tracking-tight text-gray-600 dark:text-gray-400">
         Join Our Community
       </p>
-    <HelpSettingUpWallet moduleTitle={"new to web3 wallets?"}/>
       {isConnected ? (
         <div className='flex flex-col'>
           <Button size="large" shape="rounded"  className="mt-6 flex mx-auto justify-center items-center uppercase xs:mt-8 xs:tracking-widest"
@@ -70,7 +69,8 @@ function RegisterVendor() {
             <Button size="large" shape="rounded"  className="mt-6 flex mx-auto justify-center items-center uppercase xs:mt-8 xs:tracking-widest"
                   onClick={async ()=>{
                     router.push({
-                      pathname: routes.completeSetup
+                      // pathname: routes.completeSetup
+                      pathname: routes.profileSetUp
                     });
                   }}
                   >Become A Vendor</Button>
