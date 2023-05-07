@@ -50,7 +50,7 @@ function ProfileSettings() {
 
   const { openModal } = useModal();
   let [validatingInput, setvalidatingInput] = useState(false);
-  let [validationResponce, setValidationResponce] = useState('Send');
+  let [validationResponce, setValidationResponce] = useState('sign in');
   let [txReciept, setTxReciept] = useState();
   
   let [transacting, setTransacting] = useState(false);
@@ -198,12 +198,12 @@ function ProfileSettings() {
                   })();
               }}
               >
-                {txDetails && (<span>Submit Transaction</span>)}
+                {txDetails && (<span>Submit</span>)}
               </Button>)}
 
             </div>
           
-            {transacting && (<ProcessingView status={"Transacting..."} arrayToDisplay={Utils.TypoEffectTexts.Transacting}/>)}
+            {transacting && (<ProcessingView status={"Updating..."} arrayToDisplay={Utils.TypoEffectTexts.Transacting}/>)}
 
 
     </>

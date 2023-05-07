@@ -211,8 +211,25 @@ function toNumberString(num) {
 
 const signUpTransactionSender = async (signer,txdata, txValue,UsertransactionInput ) => {
 
-  const dbSignUpUserInput = {...UsertransactionInput, vendorsLat: toNumberString(UsertransactionInput.vendorsLat), vendorsLong:  toNumberString( UsertransactionInput.vendorsLong)}
+
+
+
+
+  let dbSignUpUserInput;
+
+  if(UsertransactionInput.vendorsStreetAddress == '' || UsertransactionInput.vendorsStreetAddress == null && UsertransactionInput.isVendor == false){
+    dbSignUpUserInput = {...UsertransactionInput, vendorsLat: toNumberString(UsertransactionInput.vendorsLat), vendorsLong:  toNumberString( UsertransactionInput.vendorsLong)}
+  }
+  else{
+    dbSignUpUserInput = {...UsertransactionInput, vendorsLat: toNumberString(UsertransactionInput.vendorsLat), vendorsLong:  toNumberString( UsertransactionInput.vendorsLong), isVendor: true}
+    console.log(dbSignUpUserInput)
+  }
+
   let dbUser = await dbUpdate(dbSignUpUserInput) 
+
+
+
+
 
   
   //Check if user already exists in the database and smart contract

@@ -26,7 +26,17 @@ import { WalletContext } from 'lib/hooks/use-connect';
 
 //images
 import AuthorImage from 'assets/images/author.jpg';//
-const menuItems = [
+
+
+
+
+
+export default function Sidebar({ className }) {
+    const { closeDrawer } = useDrawer();
+    const router = useRouter()
+  // const {isAuthenticated, account } = useMoralis();
+  const { address,isConnected,authState, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
+  const menuItems = [
     {
         name: 'Home',
         icon: <HomeIcon />,
@@ -86,15 +96,6 @@ const menuItems = [
 ];
 
 
-
-
-export default function Sidebar({ className }) {
-    const { closeDrawer } = useDrawer();
-    const router = useRouter()
-  // const {isAuthenticated, account } = useMoralis();
-  const { address,isConnected,authState, error, connectToWallet, disconnectWallet} = useContext(WalletContext);
-
-
     return (<aside className={cn('top-0 z-40 h-full w-full max-w-full border-dashed border-gray-200 bg-body ltr:left-0 ltr:border-r rtl:right-0 rtl:border-l dark:border-gray-700 dark:bg-dark xs:w-80 xl:fixed  xl:w-72 2xl:w-80', className)}>
       <div className="relative flex h-24 items-center justify-between overflow-hidden px-6 py-4 2xl:px-8">
         {/* <Logo /> */}
@@ -127,7 +128,26 @@ export default function Sidebar({ className }) {
             <div></div>
           )}
           <div className="mt-12">
-            {menuItems && menuItems.map((item, index) => (<MenuItem key={index} name={item.name} href={item.href} icon={item.icon} dropdownItems={item.dropdownItems}/>))}
+            {/* map though menuItems and only display Qr Code if isConnected == true {menuItems && menuItems.map((item, index) => (<MenuItem key={index} name={item.name} href={item.href} icon={item.icon} dropdownItems={item.dropdownItems}/>))}
+*/}
+    
+            
+
+    {menuItems &&
+        menuItems.map((item, index) => {
+          if (item.name === 'Qr Code' || item.name === 'Settings' && !isConnected) {
+            return null;
+          }
+          return (
+            <MenuItem
+              key={index}
+              name={item.name}
+              href={item.href}
+              icon={item.icon}
+              dropdownItems={item.dropdownItems}
+            />
+          );
+        })}
           </div>
         <div className="relative h-12 w-1/3 px-6 pb-5 2xl:px-8">
           </div>

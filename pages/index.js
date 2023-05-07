@@ -121,7 +121,13 @@ useEffect(() => {
     <DashboardLayout>
               
 {/* <PlasmicComponent component='LandingPageIntro' /> */}
-
+{/* <iframe height="625" title="AlchemyPay On/Off Ramp Widget"
+src="https://ramptest.alchemypay.org/?crypto=USDT&network=BSC&appId=f83Is2y7L425rxl8&sign=TUqyu6jxuhLsO7qtJmGplbI3CSGHNyvrETmlWDagGytpQio3VWFgGUcOxW2Ts6TQX3lyDQTwj%2F96uqSPXxQtieX2bZ2ddWacM3tIA%2Fo58Mc%3D&address=0xeaf936e4bd0cf40958e74fce896e976459a83b90" 
+frameborder="no" allowtransparency="true" allowfullscreen="" 
+// style="display: block; width: 100%; max-height: 625px; max-width: 500px;"
+className="w-100 h-100  "
+>
+</iframe> */}
 <PlasmicComponent
   component="LandingPageIntro"
   componentProps={{

@@ -13,9 +13,10 @@ import useInput from "/lib/hooks/useInput";
 export default function GeoAddress() { 
 
   const { userData, setUserData } = useStepperContext();
-  const address = useInput(userData.vendorsStreetAddress); 
+  const address = useInput(userData?.vendorsStreetAddress); 
+  // const address = useInput(userData.vendorsStreetAddress); 
 
-  let [hasGeoAddress, setHasGeoAddress] = useState(false);
+  let [hasGeoAddress, setHasGeoAddress] = useState(true);
 
   const handleGeoCode = (suggestion) => {
         const addrressLong = suggestion.geometry.coordinates[0]
